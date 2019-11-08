@@ -3,7 +3,7 @@
 require(__DIR__ . '/_cli.php');
 
 if (!file_exists(DATA_PATH . '/do-install.txt')) {
-	fail('FreshRSS looks to be already installed! Please use `./cli/reconfigure.php` instead.');
+	fail('FreshRSS seems to be already installed! Please use `./cli/reconfigure.php` instead.');
 }
 
 $params = array(
@@ -82,10 +82,26 @@ if (file_put_contents(join_path(DATA_PATH, 'config.php'),
 	fail('FreshRSS could not write configuration file!: ' . join_path(DATA_PATH, 'config.php'));
 }
 
-$config['db']['default_user'] = $config['default_user'];
-if (!checkDb($config['db'])) {
+if (function_exists('opcache_reset')) {
+	opcache_reset();
+}
+
+Minz_Configuration::register('system', DATA_PATH . '/config.php', FRESHRSS_PATH . '/config.default.php');
+FreshRSS_Context::$system_conf = Minz_Configuration::get('system');
+
+Minz_Session::_param('currentUser', $config['default_user']);
+
+$ok = false;
+try {
+	$ok = initDb();
+} catch (Exception $ex) {
+	$_SESSION['bd_error'] = $ex->getMessage();
+	$ok = false;
+}
+
+if (!$ok) {
 	@unlink(join_path(DATA_PATH, 'config.php'));
-	fail('FreshRSS database error: ' . (empty($config['db']['error']) ? 'Unknown error' : $config['db']['error']));
+	fail('FreshRSS database error: ' . (empty($_SESSION['bd_error']) ? 'Unknown error' : $_SESSION['bd_error']));
 }
 
 echo '• Remember to create the default user: ', $config['default_user'] , "\n",

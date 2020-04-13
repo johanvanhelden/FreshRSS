@@ -3,10 +3,11 @@
 return array(
 	'action' => array(
 		'actualize' => '새 글 가져오기',
-		'back' => '← Go back', //TODO - Translation
+		'back' => '← Go back',	// TODO - Translation
 		'back_to_rss_feeds' => '← RSS 피드로 돌아가기',
 		'cancel' => '취소',
 		'create' => '생성',
+		'demote' => 'Demote',	// TODO - Translation
 		'disable' => '비활성화',
 		'empty' => '비우기',
 		'enable' => '활성화',
@@ -16,6 +17,8 @@ return array(
 		'manage' => '관리',
 		'mark_favorite' => '즐겨찾기에 등록',
 		'mark_read' => '읽음으로 표시',
+		'promote' => 'Promote',	// TODO - Translation
+		'purge' => 'Purge',	// TODO - Translation
 		'remove' => '삭제',
 		'see_website' => '웹사이트 열기',
 		'submit' => '설정 저장',
@@ -23,30 +26,30 @@ return array(
 		'update' => '변경',
 	),
 	'auth' => array(
-		'accept_tos' => 'I accept the <a href="%s">Terms of Service</a>.', // TODO - Translation
+		'accept_tos' => 'I accept the <a href="%s">Terms of Service</a>.',	// TODO - Translation
 		'email' => '메일 주소',
 		'keep_logged_in' => '로그인 유지 <small>(%s 일)</small>',
 		'login' => '로그인',
 		'logout' => '로그아웃',
 		'password' => array(
-			'_' => '암호',
 			'format' => '<small>7 글자 이상이어야 합니다</small>',
+			'_' => '암호',
 		),
 		'registration' => array(
-			'_' => '새 계정',
 			'ask' => '새 계정을 만들까요?',
 			'title' => '계정 생성',
+			'_' => '새 계정',
 		),
 		'reset' => '인증 초기화',
 		'username' => array(
-			'_' => '사용자 이름',
 			'admin' => '관리자 이름',
 			'format' => '<small>알파벳과 숫자를 포함할 수 있고 최대 16 글자</small>',
+			'_' => '사용자 이름',
 		),
 	),
 	'date' => array(
-		'Apr' => '\\A\\p\\r\\i\\l',
 		'apr' => '4월',
+		'Apr' => '\\A\\p\\r\\i\\l',
 		'april' => '4월',
 		'Aug' => '\\A\\u\\g\\u\\s\\t',
 		'aug' => '8월',
@@ -64,13 +67,16 @@ return array(
 		'Jan' => '\\J\\a\\n\\u\\a\\r\\y',
 		'jan' => '1월',
 		'january' => '1월',
-		'Jul' => '\\J\\u\\l\\y',
 		'jul' => '7월',
+		'Jul' => '\\J\\u\\l\\y',
 		'july' => '7월',
 		'Jun' => '\\J\\u\\n\\e',
 		'jun' => '6월',
 		'june' => '6월',
+		'last_2_year' => 'Last two years',	// TODO - Translation
 		'last_3_month' => '최근 3 개월',
+		'last_3_year' => 'Last three years',	// TODO - Translation
+		'last_5_year' => 'Last five years',	// TODO - Translation
 		'last_6_month' => '최근 6 개월',
 		'last_month' => '최근 한 달',
 		'last_week' => '최근 한 주',
@@ -78,12 +84,12 @@ return array(
 		'Mar' => '\\M\\a\\r\\c\\h',
 		'mar' => '3월',
 		'march' => '3월',
-		'May' => '\\M\\a\\y',
 		'may' => '5월',
+		'May' => '\\M\\a\\y',
 		'may_' => '5월',
-		'Nov' => '\\N\\o\\v\\e\\m\\b\\e\\r',
 		'mon' => '월',
 		'month' => '개월',
+		'Nov' => '\\N\\o\\v\\e\\m\\b\\e\\r',
 		'nov' => '11월',
 		'november' => '11월',
 		'Oct' => '\\O\\c\\t\\o\\b\\e\\r',
@@ -100,9 +106,10 @@ return array(
 		'wed' => '수',
 		'yesterday' => '어제',
 	),
+	'dir' => 'ltr',
 	'freshrss' => array(
-		'_' => 'FreshRSS',
 		'about' => '정보',
+		'_' => 'FreshRSS',
 	),
 	'js' => array(
 		'category_empty' => '빈 카테고리',
@@ -129,6 +136,7 @@ return array(
 		'oc' => 'Occitan',
 		'pt-br' => 'Português (Brasil)',
 		'ru' => 'Русский',
+		'sk' => 'Slovenčina',	// TODO - Translation
 		'tr' => 'Türkçe',
 		'zh-cn' => '简体中文',
 	),
@@ -163,11 +171,11 @@ return array(
 		'previous' => '이전',
 	),
 	'period' => array(
-		'days' => 'days',	//TODO - Translation
-		'hours' => 'hours',	//TODO - Translation
-		'months' => 'months',	//TODO - Translation
-		'weeks' => 'weeks',	//TODO - Translation
-		'years' => 'years',	//TODO - Translation
+		'days' => 'days',	// TODO - Translation
+		'hours' => 'hours',	// TODO - Translation
+		'months' => 'months',	// TODO - Translation
+		'weeks' => 'weeks',	// TODO - Translation
+		'years' => 'years',	// TODO - Translation
 	),
 	'share' => array(
 		'blogotext' => 'Blogotext',

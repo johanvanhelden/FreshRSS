@@ -9,6 +9,12 @@ if (!function_exists('mb_strcut')) {
 	}
 }
 
+if (COPY_SYSLOG_TO_STDERR) {
+	openlog('FreshRSS', LOG_CONS | LOG_ODELAY | LOG_PID | LOG_PERROR, LOG_USER);
+} else {
+	openlog('FreshRSS', LOG_CONS | LOG_ODELAY | LOG_PID, LOG_USER);
+}
+
 /**
  * Build a directory path by concatenating a list of directory names.
  *
@@ -49,13 +55,19 @@ spl_autoload_register('classAutoloader');
 
 function idn_to_puny($url) {
 	if (function_exists('idn_to_ascii')) {
-		$parts = parse_url($url);
-		if (!empty($parts['host'])) {
-			$idn = $parts['host'];
-			$puny = idn_to_ascii($idn, 0, INTL_IDNA_VARIANT_UTS46);
+		$idn = parse_url($url, PHP_URL_HOST);
+		if ($idn != '') {
+			// https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+			if (defined('INTL_IDNA_VARIANT_UTS46')) {
+				$puny = idn_to_ascii($idn, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+			} elseif (defined('INTL_IDNA_VARIANT_2003')) {
+				$puny = idn_to_ascii($idn, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+			} else {
+				$puny = idn_to_ascii($idn);
+			}
 			$pos = strpos($url, $idn);
-			if ($pos !== false) {
-				return substr_replace($url, $puny, $pos, strlen($idn));
+			if ($puny != '' && $pos !== false) {
+				$url = substr_replace($url, $puny, $pos, strlen($idn));
 			}
 		}
 	}
@@ -81,6 +93,14 @@ function safe_ascii($text) {
 	return filter_var($text, FILTER_DEFAULT, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
 }
 
+if (function_exists('mb_convert_encoding')) {
+	function safe_utf8($text) { return mb_convert_encoding($text, 'UTF-8', 'UTF-8'); }
+} elseif (function_exists('iconv')) {
+	function safe_utf8($text) { return iconv('UTF-8', 'UTF-8//IGNORE', $text); }
+} else {
+	function safe_utf8($text) { return $text; }
+}
+
 function escapeToUnicodeAlternative($text, $extended = true) {
 	$text = htmlspecialchars_decode($text, ENT_QUOTES);
 
@@ -96,36 +116,6 @@ function escapeToUnicodeAlternative($text, $extended = true) {
 	}
 
 	return trim(str_replace($problem, $replace, $text));
-}
-
-/**
- * Test if a given server address is publicly accessible.
- *
- * Note: for the moment it tests only if address is corresponding to a
- * localhost address.
- *
- * @param $address the address to test, can be an IP or a URL.
- * @return true if server is accessible, false otherwise.
- * @todo improve test with a more valid technique (e.g. test with an external server?)
- */
-function server_is_public($address) {
-	$host = parse_url($address, PHP_URL_HOST);
-
-	$is_public = !in_array($host, array(
-		'localhost',
-		'localhost.localdomain',
-		'[::1]',
-		'ip6-localhost',
-		'localhost6',
-		'localhost6.localdomain6',
-	));
-
-	if ($is_public) {
-		$is_public &= !preg_match('/^(10|127|172[.]16|192[.]168)[.]/', $host);
-		$is_public &= !preg_match('/^(\[)?(::1$|fc00::|fe80::)/i', $host);
-	}
-
-	return (bool)$is_public;
 }
 
 function format_number($n, $precision = 0) {
@@ -174,19 +164,12 @@ function html_only_entity_decode($text) {
 	return strtr($text, $htmlEntitiesOnly);
 }
 
-function prepareSyslog() {
-	return COPY_SYSLOG_TO_STDERR ? openlog("FreshRSS", LOG_PERROR | LOG_PID, LOG_USER) : false;
-}
-
 function customSimplePie($attributes = array()) {
 	$system_conf = Minz_Configuration::get('system');
 	$limits = $system_conf->limits;
 	$simplePie = new SimplePie();
 	$simplePie->set_useragent(FRESHRSS_USERAGENT);
 	$simplePie->set_syslog($system_conf->simplepie_syslog_enabled);
-	if ($system_conf->simplepie_syslog_enabled) {
-		prepareSyslog();
-	}
 	$simplePie->set_cache_location(CACHE_PATH);
 	$simplePie->set_cache_duration($limits['cache_duration']);
 

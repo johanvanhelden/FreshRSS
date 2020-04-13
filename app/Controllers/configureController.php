@@ -105,6 +105,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 			FreshRSS_Context::$user_conf->posts_per_page = Minz_Request::param('posts_per_page', 10);
 			FreshRSS_Context::$user_conf->view_mode = Minz_Request::param('view_mode', 'normal');
 			FreshRSS_Context::$user_conf->default_view = Minz_Request::param('default_view', 'adaptive');
+			FreshRSS_Context::$user_conf->show_fav_unread = Minz_Request::param('show_fav_unread', false);
 			FreshRSS_Context::$user_conf->auto_load_more = Minz_Request::param('auto_load_more', false);
 			FreshRSS_Context::$user_conf->display_posts = Minz_Request::param('display_posts', false);
 			FreshRSS_Context::$user_conf->display_categories = Minz_Request::param('display_categories', false);
@@ -134,13 +135,16 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 	}
 
 	/**
-	 * This action handles the sharing configuration page.
+	 * This action handles the integration configuration page.
 	 *
-	 * It displays the sharing configuration page.
+	 * It displays the integration configuration page.
 	 * If this action is reached through a POST request, it stores all
 	 * configuration values then sends a notification to the user.
+	 *
+	 * Before v1.16, we used sharing instead of integration. This has
+	 * some unwanted behavior when the end-user was using an ad-blocker.
 	 */
-	public function sharingAction() {
+	public function integrationAction() {
 		if (Minz_Request::isPost()) {
 			$params = Minz_Request::fetchPOST();
 			FreshRSS_Context::$user_conf->sharing = $params['share'];
@@ -148,7 +152,7 @@ class FreshRSS_configure_Controller extends Minz_ActionController {
 			invalidateHttpCache();
 
 			Minz_Request::good(_t('feedback.conf.updated'),
-			                   array('c' => 'configure', 'a' => 'sharing'));
+			                   array('c' => 'configure', 'a' => 'integration'));
 		}
 
 		Minz_View::prependTitle(_t('conf.sharing.title') . ' · ');

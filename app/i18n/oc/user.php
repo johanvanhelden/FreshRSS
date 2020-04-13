@@ -22,16 +22,23 @@ return array(
 			'title' => 'Validacion de l’adreça electronica',
 		),
 	),
+	'mailer' => array(
+		'email_need_validation' => array(
+			'body' => 'Venètz de vos marcar sus %s mas vos cal encara validar l’adreça electronica. Per aquò far, seguissètz lo ligam :',
+			'title' => 'Vos cal validar vòstra adreça electronica',
+			'welcome' => 'La benvenguda %s,',
+		),
+	),
+	'password' => array(
+		'invalid' => 'Lo senhal es invalid.',
+	),
 	'tos' => array(
 		'feedback' => array(
 			'invalid' => 'Vos cal acceptar las condicions d’utilizacion per poder vos inscriure.',
 		),
 	),
-	'mailer' => array(
-		'email_need_validation' => array(
-			'title' => 'Vos cal validar vòstra adreça electronica',
-			'welcome' => 'La benvenguda %s,',
-			'body' => 'Venètz de vos marcar sus %s mas vos cal encara validar l’adreça electronica. Per aquò far, seguissètz lo ligam :',
-		),
+	'username' => array(
+		'invalid' => 'Lo nom d’utilizaire es invalid.',
+		'taken' => 'Lo nm d’utilizaire %s es pres.',
 	),
 );

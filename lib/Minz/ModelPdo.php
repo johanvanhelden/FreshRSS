@@ -28,12 +28,12 @@ class Minz_ModelPdo {
 		if ($currentUser === null) {
 			$currentUser = Minz_Session::param('currentUser');
 		}
-		if ($currentUser == '') {
-			throw new Minz_PDOConnectionException('Current user must not be empty!', '', Minz_Exception::ERROR);
-		}
 		if ($currentPdo != null) {
 			$this->pdo = $currentPdo;
 			return;
+		}
+		if ($currentUser == '') {
+			throw new Minz_PDOConnectionException('Current user must not be empty!', '', Minz_Exception::ERROR);
 		}
 		if (self::$usesSharedPdo && self::$sharedPdo != null &&
 			($currentUser == '' || $currentUser === self::$sharedCurrentUser)) {
@@ -91,7 +91,7 @@ class Minz_ModelPdo {
 			self::$sharedPdo = $this->pdo;
 		} catch (Exception $e) {
 			throw new Minz_PDOConnectionException(
-				$dsn . $dsnParams,
+				$e->getMessage(),
 				$db['user'], Minz_Exception::ERROR
 			);
 		}

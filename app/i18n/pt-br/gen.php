@@ -3,10 +3,11 @@
 return array(
 	'action' => array(
 		'actualize' => 'Atualizar',
-		'back' => '← Go back', //TODO - Translation
+		'back' => '← Voltar',
 		'back_to_rss_feeds' => '← Volte para o seu feeds RSS',
 		'cancel' => 'Cancelar',
 		'create' => 'Criar',
+		'demote' => 'Despromover',
 		'disable' => 'Desabilitar',
 		'empty' => 'Vazio',
 		'enable' => 'Habilitar',
@@ -16,37 +17,39 @@ return array(
 		'manage' => 'Gerenciar',
 		'mark_favorite' => 'Marcar como favorito',
 		'mark_read' => 'Marcar como lido',
+		'promote' => 'Promover',
+		'purge' => 'Limpar',
 		'remove' => 'Remover',
 		'see_website' => 'Ver o site',
 		'submit' => 'Enviar',
 		'truncate' => 'Deletar todos os artigos',
-		'update' => 'Update',	//TODO - Translation
+		'update' => 'Atualizar',
 	),
 	'auth' => array(
-		'accept_tos' => 'I accept the <a href="%s">Terms of Service</a>.', // TODO - Translation
+		'accept_tos' => 'Eu aceito os <a href="%s">Termos de serviço</a>.',
 		'email' => 'Endereço de e-mail',
 		'keep_logged_in' => 'Mantenha logado por <small>(%s days)</small>',
-		'login' => 'Login',
-		'logout' => 'Logout',
+		'login' => 'Entrar',
+		'logout' => 'Sair',
 		'password' => array(
-			'_' => 'Senha',
 			'format' => '<small>Ao menos 7 caracteres</small>',
+			'_' => 'Senha',
 		),
 		'registration' => array(
-			'_' => 'Nova conta',
 			'ask' => 'Criar novoa conta?',
 			'title' => 'Criação de conta',
+			'_' => 'Nova conta',
 		),
 		'reset' => 'Reset autenticação',
 		'username' => array(
-			'_' => 'Usuário',
 			'admin' => 'Usuário administrador',
-			'format' => '<small>máximo 16 caracteres alphanumericos</small>',
+			'format' => '<small>Máximo 16 caracteres alphanumericos</small>',
+			'_' => 'Usuário',
 		),
 	),
 	'date' => array(
-		'Apr' => '\\A\\b\\r\\i\\l',
 		'apr' => 'abr',
+		'Apr' => '\\A\\b\\r\\i\\l',
 		'april' => 'Abr',
 		'Aug' => '\\A\\g\\o\\s\\t\\o',
 		'aug' => 'ago',
@@ -64,8 +67,8 @@ return array(
 		'Jan' => '\\J\\a\\n\\e\\i\\r\\o',
 		'jan' => 'jan',
 		'january' => 'Jan',
-		'Jul' => '\\J\\u\\l\\h\\o',
 		'jul' => 'jul',
+		'Jul' => '\\J\\u\\l\\h\\o',
 		'july' => 'Jul',
 		'Jun' => '\\J\\u\\n\\h\\o',
 		'jun' => 'jun',
@@ -78,8 +81,8 @@ return array(
 		'Mar' => '\\M\\a\\r\\ç\\o',
 		'mar' => 'mar',
 		'march' => 'Mar',
-		'May' => '\\M\\a\\i\\o',
 		'may' => 'Mai',
+		'May' => '\\M\\a\\i\\o',
 		'may_' => 'Mai',
 		'mon' => 'Seg',
 		'month' => 'meses',
@@ -100,9 +103,10 @@ return array(
 		'wed' => 'Qua',
 		'yesterday' => 'Ontem',
 	),
+	'dir' => 'ltr',
 	'freshrss' => array(
-		'_' => 'FreshRSS',
 		'about' => 'Sobre FreshRSS',
+		'_' => 'FreshRSS',
 	),
 	'js' => array(
 		'category_empty' => 'Categoria vazia',
@@ -114,7 +118,7 @@ return array(
 			'title_new_articles' => 'FreshRSS: novos artigos!',
 		),
 		'new_article' => 'Há novos artigos disponíveis, clique para atualizar a página.',
-		'should_be_activated' => 'JavaScript precisa estar ativo',
+		'should_be_activated' => 'O JavaScript precisa estar ativo',
 	),
 	'lang' => array(
 		'cz' => 'Čeština',
@@ -129,6 +133,7 @@ return array(
 		'oc' => 'Occitan',
 		'pt-br' => 'Português (Brasil)',
 		'ru' => 'Русский',
+		'sk' => 'Slovenčina',
 		'tr' => 'Türkçe',
 		'zh-cn' => '简体中文',
 	),
@@ -163,11 +168,11 @@ return array(
 		'previous' => 'Anterior',
 	),
 	'period' => array(
-		'days' => 'days',	//TODO - Translation
-		'hours' => 'hours',	//TODO - Translation
-		'months' => 'months',	//TODO - Translation
-		'weeks' => 'weeks',	//TODO - Translation
-		'years' => 'years',	//TODO - Translation
+		'days' => 'dias',
+		'hours' => 'horas',
+		'months' => 'meses',
+		'weeks' => 'semanas',
+		'years' => 'anos',
 	),
 	'share' => array(
 		'blogotext' => 'Blogotext',
@@ -190,7 +195,7 @@ return array(
 		'wallabagv2' => 'wallabag v2',
 	),
 	'short' => array(
-		'attention' => 'Atencão!',
+		'attention' => 'Atenção!',
 		'blank_to_disable' => 'Deixe em branco para desativar',
 		'by_author' => 'Por:',
 		'by_default' => 'Por padrão',

@@ -22,16 +22,23 @@ return array(
 			'title' => 'Email address validation',
 		),
 	),
+	'mailer' => array(
+		'email_need_validation' => array(
+			'body' => 'You’ve just registered on %s but you still need to validate your email. For that, just follow the link:',
+			'title' => 'You need to validate your account',
+			'welcome' => 'Welcome %s,',
+		),
+	),
+	'password' => array(
+		'invalid' => 'The password is invalid.',
+	),
 	'tos' => array(
 		'feedback' => array(
 			'invalid' => 'You must accept the Terms of Service to be able to register.',
 		),
 	),
-	'mailer' => array(
-		'email_need_validation' => array(
-			'title' => 'You need to validate your account',
-			'welcome' => 'Welcome %s,',
-			'body' => 'You’ve just registered on %s but you still need to validate your email. For that, just follow the link:',
-		),
+	'username' => array(
+		'invalid' => 'The username is invalid.',
+		'taken' => 'The username %s is taken.',
 	),
 );

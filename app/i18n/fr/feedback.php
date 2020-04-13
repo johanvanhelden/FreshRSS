@@ -1,12 +1,18 @@
 <?php
 
 return array(
-	'admin' => array(
-		'optimization_complete' => 'Optimisation terminée.',
-	),
 	'access' => array(
 		'denied' => 'Vous n’avez pas le droit d’accéder à cette page !',
 		'not_found' => 'La page que vous cherchez n’existe pas !',
+	),
+	'admin' => array(
+		'optimization_complete' => 'Optimisation terminée.',
+	),
+	'api' => array(
+		'password' => array(
+			'failed' => 'Votre mot de passe n’a pas pu être mis à jour',
+			'updated' => 'Votre mot de passe a été mis à jour',
+		),
 	),
 	'auth' => array(
 		'form' => array(
@@ -38,9 +44,9 @@ return array(
 			'ko' => '%s ne peut pas être activée. <a href="%s">Consulter les logs de FreshRSS</a> pour plus de détails.',
 			'ok' => '%s est désormais activée',
 		),
-		'no_access' => 'Vous n’avez aucun accès sur %s',
 		'not_enabled' => '%s n’est pas encore activée',
 		'not_found' => '%s n’existe pas',
+		'no_access' => 'Vous n’avez aucun accès sur %s',
 	),
 	'import_export' => array(
 		'export_no_zip_extension' => 'L’extension ZIP n’est pas présente sur votre serveur. Veuillez essayer d’exporter les fichiers un par un.',
@@ -66,10 +72,10 @@ return array(
 			'emptied' => 'La catégorie a été vidée.',
 			'error' => 'La catégorie n’a pas pu être modifiée',
 			'name_exists' => 'Une catégorie possède déjà ce nom.',
-			'no_id' => 'Vous devez préciser l’id de la catégorie.',
-			'no_name' => 'Vous devez préciser un nom pour la catégorie.',
 			'not_delete_default' => 'Vous ne pouvez pas supprimer la catégorie par défaut !',
 			'not_exist' => 'Cette catégorie n’existe pas !',
+			'no_id' => 'Vous devez préciser l’id de la catégorie.',
+			'no_name' => 'Vous devez préciser un nom pour la catégorie.',
 			'over_max' => 'Vous avez atteint votre limite de catégories (%d)',
 			'updated' => 'La catégorie a été mise à jour.',
 		),
@@ -78,15 +84,25 @@ return array(
 			'actualizeds' => 'Les flux ont été mis à jour.',
 			'added' => 'Le flux <em>%s</em> a bien été ajouté.',
 			'already_subscribed' => 'Vous êtes déjà abonné à <em>%s</em>',
+			'cache_cleared' => 'Le cache de <em>%s</em> a été vidée.',
 			'deleted' => 'Le flux a été supprimé.',
 			'error' => 'Une erreur est survenue',
 			'internal_problem' => 'Le flux ne peut pas être ajouté. <a href="%s">Consulter les logs de FreshRSS</a> pour plus de détails. Vous pouvez essayer de forcer l’ajout par addition de <code>#force_feed</code> à l’URL.',
 			'invalid_url' => 'L’url <em>%s</em> est invalide.',
+			'not_added' => '<em>%s</em> n’a pas pu être ajouté.',
+			'not_found' => 'Le flux n\'a pas pu être trouvé.',
+			'no_refresh' => 'Il n’y a aucun flux à actualiser…',
 			'n_actualized' => '%d flux ont été mis à jour.',
 			'n_entries_deleted' => '%d articles ont été supprimés.',
-			'no_refresh' => 'Il n’y a aucun flux à actualiser…',
-			'not_added' => '<em>%s</em> n’a pas pu être ajouté.',
 			'over_max' => 'Vous avez atteint votre limite de flux (%d)',
+			'reloaded' => '<em>%s</em> a été rechargé.',
+			'selector_preview' => array(
+				'http_error' => 'Échec lors du chargement du contenu du site web.',
+				'no_entries' => 'Il n\'y a pas d\'articles dans ce flux. Vous devez avoir au moins un article pour générer une prévisualisation.',
+				'no_feed' => 'Erreur interne (le flux n\'a pas pu être trouvé).',
+				'no_result' => 'Le sélecteur n\'a produit aucune concordance. Dans ces circonstances, le texte original du flux sera affiché.',
+				'selector_empty' => 'Le sélecteur est vide. Vous devez en définir un pour générer une prévisualisation.',
+			),
 			'updated' => 'Le flux a été mis à jour',
 		),
 		'purge_completed' => 'Purge effectuée (%d articles supprimés).',
@@ -101,16 +117,16 @@ return array(
 	),
 	'user' => array(
 		'created' => array(
-			'_' => 'L’utilisateur %s a été créé.',
 			'error' => 'L’utilisateur %s ne peut pas être créé.',
+			'_' => 'L’utilisateur %s a été créé.',
 		),
 		'deleted' => array(
-			'_' => 'L’utilisateur %s a été supprimé.',
 			'error' => 'L’utilisateur %s ne peut pas être supprimé.',
+			'_' => 'L’utilisateur %s a été supprimé.',
 		),
 		'updated' => array(
-			'_' => 'L’utilisateur %s a été mis à jour',
 			'error' => 'L’utilisateur %s n’a pas été mis à jour',
+			'_' => 'L’utilisateur %s a été mis à jour',
 		),
 	),
 );

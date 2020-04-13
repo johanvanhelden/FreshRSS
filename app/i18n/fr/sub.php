@@ -3,7 +3,7 @@
 return array(
 	'api' => array(
 		'documentation' => 'Copier l’URL suivante dans l’outil qui utilisera l’API.',
-		'title' => 'API',
+		'title' => 'API',	// TODO - Translation
 	),
 	'bookmarklet' => array(
 		'documentation' => 'Glisser ce bouton dans la barre des favoris ou cliquer droit dessus et choisir "Enregistrer ce lien". Ensuite, cliquer sur le bouton "S’abonner" sur les pages auxquelles vous voulez vous abonner.',
@@ -11,7 +11,6 @@ return array(
 		'title' => 'Bookmarklet',
 	),
 	'category' => array(
-		'_' => 'Catégorie',
 		'add' => 'Ajouter une catégorie',
 		'archiving' => 'Archivage',
 		'empty' => 'Catégorie vide',
@@ -20,6 +19,7 @@ return array(
 		'position' => 'Position d’affichage',
 		'position_help' => 'Pour contrôler l’ordre de tri des catégories',
 		'title' => 'Titre',
+		'_' => 'Catégorie',
 	),
 	'feed' => array(
 		'add' => 'Ajouter un flux RSS',
@@ -39,22 +39,32 @@ return array(
 		'empty' => 'Ce flux est vide. Veuillez vérifier qu’il est toujours maintenu.',
 		'error' => 'Ce flux a rencontré un problème. Veuillez vérifier qu’il est toujours accessible puis actualisez-le.',
 		'filteractions' => array(
-			'_' => 'Filtres d’action',
 			'help' => 'Écrivez une recherche par ligne.',
+			'_' => 'Filtres d’action',
 		),
 		'information' => 'Informations',
 		'keep_min' => 'Nombre minimum d’articles à conserver',
+		'maintenance' => array(
+			'clear_cache' => 'Vider le cache',
+			'clear_cache_help' => 'Supprime le cache de ce flux.',
+			'reload_articles' => 'Recharger les articles',
+			'reload_articles_help' => 'Recharge les articles et récupère le contenu complet si un sélecteur est défini.',
+			'title' => 'Maintenance',
+		),
 		'moved_category_deleted' => 'Lors de la suppression d’une catégorie, ses flux seront automatiquement classés dans <em>%s</em>.',
 		'mute' => 'muet',
 		'no_selected' => 'Aucun flux sélectionné.',
 		'number_entries' => '%d articles',
 		'priority' => array(
-			'_' => 'Visibilité',
 			'archived' => 'Ne pas afficher (archivé)',
 			'main_stream' => 'Afficher dans le flux principal',
 			'normal' => 'Afficher dans sa catégorie',
+			'_' => 'Visibilité',
 		),
-		'websub' => 'Notification instantanée par WebSub',
+		'selector_preview' => array(
+			'show_raw' => 'Afficher le code source',
+			'show_rendered' => 'Afficher le contenu',
+		),
 		'show' => array(
 			'all' => 'Montrer tous les flux',
 			'error' => 'Montrer seulement les flux en erreur',
@@ -72,6 +82,7 @@ return array(
 		'url' => 'URL du flux',
 		'validator' => 'Vérifier la validité du flux',
 		'website' => 'URL du site',
+		'websub' => 'Notification instantanée par WebSub',
 	),
 	'firefox' => array(
 		'documentation' => 'Suivre les étapes décrites <a href="https://developer.mozilla.org/en-US/Firefox/Releases/2/Adding_feed_readers_to_Firefox#Adding_a_new_feed_reader_manually">ici</a> pour ajouter FreshRSS à la liste des lecteurs de flux dans Firefox.',
@@ -80,9 +91,9 @@ return array(
 	),
 	'import_export' => array(
 		'export' => 'Exporter',
+		'export_labelled' => 'Exporter les articles étiquetés',
 		'export_opml' => 'Exporter la liste des flux (OPML)',
 		'export_starred' => 'Exporter les favoris',
-		'export_labelled' => 'Exporter les articles étiquetés',
 		'feed_list' => 'Liste des articles de %s',
 		'file_to_import' => 'Fichier à importer<br />(OPML, JSON ou ZIP)',
 		'file_to_import_no_zip' => 'Fichier à importer<br />(OPML ou JSON)',
@@ -97,8 +108,8 @@ return array(
 		'subscription_tools' => 'Outils d’abonnement',
 	),
 	'title' => array(
-		'_' => 'Gestion des abonnements',
 		'feed_management' => 'Gestion des flux RSS',
 		'subscription_tools' => 'Outils d’abonnement',
+		'_' => 'Gestion des abonnements',
 	),
 );

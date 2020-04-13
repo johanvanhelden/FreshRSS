@@ -103,6 +103,10 @@ class FreshRSS extends Minz_FrontController {
 					$theme_id = $theme['id'];
 					$filename = $file;
 				}
+				if (_t('gen.dir') === 'rtl') {
+					$filename = substr($filename, 0, -4);
+					$filename = $filename . '.rtl.css';
+				}
 				$filetime = @filemtime(PUBLIC_PATH . '/themes/' . $theme_id . '/' . $filename);
 				$url = '/themes/' . $theme_id . '/' . $filename . '?' . $filetime;
 				Minz_View::prependStyle(Minz_Url::display($url));
@@ -124,23 +128,6 @@ class FreshRSS extends Minz_FrontController {
 	}
 
 	public static function preLayout() {
-		switch (Minz_Request::controllerName()) {
-			case 'index':
-				$urlToAuthorize = array_filter(array_map(function ($a) {
-					if (isset($a['method']) && $a['method'] === 'POST') {
-						return $a['url'];
-					}
-				}, FreshRSS_Context::$user_conf->sharing));
-				$connectSrc = count($urlToAuthorize) ? sprintf("; connect-src 'self' %s", implode(' ', $urlToAuthorize)) : '';
-				header(sprintf("Content-Security-Policy: default-src 'self'; frame-src *; img-src * data:; media-src *%s", $connectSrc));
-				break;
-			case 'stats':
-				header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'");
-				break;
-			default:
-				header("Content-Security-Policy: default-src 'self'");
-				break;
-		}
 		header("X-Content-Type-Options: nosniff");
 
 		FreshRSS_Share::load(join_path(APP_PATH, 'shares.php'));
@@ -155,6 +142,7 @@ class FreshRSS extends Minz_FrontController {
 			Minz_Request::is('user', 'profile') ||
 			Minz_Request::is('user', 'delete') ||
 			Minz_Request::is('auth', 'logout') ||
+			Minz_Request::is('feed', 'actualize') ||
 			Minz_Request::is('javascript', 'nonce')
 		);
 		if ($email_not_verified && !$action_is_allowed) {

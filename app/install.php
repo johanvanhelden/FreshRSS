@@ -142,7 +142,7 @@ function saveStep2() {
 				'prefix' => $_SESSION['bd_prefix'],
 				'pdo_options' => [],
 			],
-			'pubsubhubbub_enabled' => server_is_public($base_url),
+			'pubsubhubbub_enabled' => Minz_Request::serverIsPublic($base_url),
 		];
 		if (!empty($_SESSION['title'])) {
 			$config_array['title'] = $_SESSION['title'];
@@ -221,9 +221,9 @@ function saveStep3() {
 				$_SESSION['default_user'],
 				'',	//TODO: Add e-mail
 				$password_plain,
-				'',
 				[
 					'language' => $_SESSION['language'],
+					'is_admin' => true,
 				]
 			);
 		} catch (Exception $e) {
@@ -680,7 +680,11 @@ case 5:
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html<?php
+if (_t('gen.dir') === 'rtl') {
+	echo ' dir="rtl" class="rtl"';
+}
+?>>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="initial-scale=1.0" />

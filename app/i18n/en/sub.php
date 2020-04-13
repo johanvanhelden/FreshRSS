@@ -11,7 +11,6 @@ return array(
 		'title' => 'Bookmarklet',
 	),
 	'category' => array(
-		'_' => 'Category',
 		'add' => 'Add a category',
 		'archiving' => 'Archiving',
 		'empty' => 'Empty category',
@@ -20,6 +19,7 @@ return array(
 		'position' => 'Display position',
 		'position_help' => 'To control category sort order',
 		'title' => 'Title',
+		'_' => 'Category',
 	),
 	'feed' => array(
 		'add' => 'Add a RSS feed',
@@ -34,27 +34,37 @@ return array(
 		),
 		'clear_cache' => 'Always clear cache',
 		'css_help' => 'Retrieves truncated RSS feeds (caution, requires more time!)',
-		'css_path' => 'Articles CSS path on original website',
+		'css_path' => 'Article CSS selector on original website',
 		'description' => 'Description',
 		'empty' => 'This feed is empty. Please verify that it is still maintained.',
 		'error' => 'This feed has encountered a problem. Please verify that it is always reachable then update it.',
 		'filteractions' => array(
-			'_' => 'Filter actions',
 			'help' => 'Write one search filter per line.',
+			'_' => 'Filter actions',
 		),
 		'information' => 'Information',
 		'keep_min' => 'Minimum number of articles to keep',
+		'maintenance' => array(
+			'clear_cache' => 'Clear cache',
+			'clear_cache_help' => 'Clear the cache for this feed.',
+			'reload_articles' => 'Reload articles',
+			'reload_articles_help' => 'Reload articles and fetch complete content if a selector is defined.',
+			'title' => 'Maintenance',
+		),
 		'moved_category_deleted' => 'When you delete a category, its feeds are automatically classified under <em>%s</em>.',
 		'mute' => 'mute',
 		'no_selected' => 'No feed selected.',
 		'number_entries' => '%d articles',
 		'priority' => array(
-			'_' => 'Visibility',
 			'archived' => 'Do not show (archived)',
 			'main_stream' => 'Show in main stream',
 			'normal' => 'Show in its category',
+			'_' => 'Visibility',
 		),
-		'websub' => 'Instant notification with WebSub',
+		'selector_preview' => array(
+			'show_raw' => 'Show source code',
+			'show_rendered' => 'Show content',
+		),
 		'show' => array(
 			'all' => 'Show all feeds',
 			'error' => 'Show only feeds with error',
@@ -72,6 +82,7 @@ return array(
 		'url' => 'Feed URL',
 		'validator' => 'Check the validity of the feed',
 		'website' => 'Website URL',
+		'websub' => 'Instant notification with WebSub',
 	),
 	'firefox' => array(
 		'documentation' => 'Follow the steps described <a href="https://developer.mozilla.org/en-US/Firefox/Releases/2/Adding_feed_readers_to_Firefox#Adding_a_new_feed_reader_manually">here</a> to add FreshRSS to Firefox feed reader list.',
@@ -80,9 +91,9 @@ return array(
 	),
 	'import_export' => array(
 		'export' => 'Export',
+		'export_labelled' => 'Export your labelled articles',
 		'export_opml' => 'Export list of feeds (OPML)',
 		'export_starred' => 'Export your favourites',
-		'export_labelled' => 'Export your labelled articles',
 		'feed_list' => 'List of %s articles',
 		'file_to_import' => 'File to import<br />(OPML, JSON or ZIP)',
 		'file_to_import_no_zip' => 'File to import<br />(OPML or JSON)',
@@ -97,8 +108,8 @@ return array(
 		'subscription_tools' => 'Subscription tools',
 	),
 	'title' => array(
-		'_' => 'Subscriptions management',
 		'feed_management' => 'RSS feeds management',
 		'subscription_tools' => 'Subscription tools',
+		'_' => 'Subscriptions management',
 	),
 );

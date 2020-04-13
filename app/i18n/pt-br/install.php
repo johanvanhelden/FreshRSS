@@ -17,20 +17,19 @@ return array(
 		'type' => 'Método de autenticação',
 	),
 	'bdd' => array(
-		'_' => 'Banco de dados',
 		'conf' => array(
-			'_' => 'Configuração do banco de dados',
 			'ko' => 'Verifique as informações do seu banco de dados.',
 			'ok' => 'Configurações do banco de dados foram salvas.',
+			'_' => 'Configuração do banco de dados',
 		),
 		'host' => 'Host',
 		'password' => 'Senha do banco de dados',
 		'prefix' => 'Prefixo da tabela',
 		'type' => 'Tipo do banco de dados',
 		'username' => 'Usuário do banco de dados',
+		'_' => 'Banco de dados',
 	),
 	'check' => array(
-		'_' => 'Verificações',
 		'already_installed' => 'Verificamos que o FreshRSS já está instalado!',
 		'cache' => array(
 			'nok' => 'Verifique as permissões no diretório <em>./data/cache</em>. O servidor HTTP deve ter direitos para escrever dentro desta pasta.',
@@ -61,16 +60,16 @@ return array(
 			'ok' => 'Você tem a biblioteca fileinfo.',
 		),
 		'http_referer' => array(
-			'nok' => 'Por favor verifique se você não está alterando seu HTTP REFERER.',
-			'ok' => 'Seu HTTP REFERER é conhecido e corresponde ao seu servidor.',
+			'nok' => 'Por favor verifique se você não está alterando o cabeçalho HTTP REFERER.',
+			'ok' => 'O cabeçalho HTTP REFERER é conhecido e corresponde ao seu servidor.',
 		),
 		'json' => array(
 			'nok' => 'Não foi possível encontrar JSON (php-json).',
 			'ok' => 'Você tem a extensão JSON.',
 		),
 		'mbstring' => array(
-			'nok' => 'Cannot find the recommended library mbstring for Unicode.',	//TODO - Translation
-			'ok' => 'You have the recommended library mbstring for Unicode.',	//TODO - Translation
+			'nok' => 'Não foi possível encontrar a biblioteca recomendada para o Unicode (mbstring).',
+			'ok' => 'Você tem a biblioteca recomendada para o Unicode (mbstring).',
 		),
 		'minz' => array(
 			'nok' => 'Não foi possível encontrar o framework Minz.',
@@ -96,28 +95,29 @@ return array(
 			'nok' => 'Não foi possível encontrar a biblioteca necessária para parse o XML.',
 			'ok' => 'Você tem a biblioteca necessária para parse o XML.',
 		),
+		'_' => 'Verificações',
 	),
 	'conf' => array(
-		'_' => 'Configurações gerais',
 		'ok' => 'Configurações gerais foram salvas.',
+		'_' => 'Configurações gerais',
 	),
 	'congratulations' => 'Parabéns!',
-	'default_user' => 'Usuário do usuário padrão <small>(máximo de 16 caracteres alphanumericos)</small>',
+	'default_user' => 'Usuário do usuário padrão <small>(máximo de 16 caracteres alfanuméricos)</small>',
 	'delete_articles_after' => 'Remover artigos depois',
 	'fix_errors_before' => 'Por favor solucione os erros antes de ir para o próximo passo.',
-	'javascript_is_better' => 'FreshRSS é mais agradável com o JavaScript ativo',
+	'javascript_is_better' => 'O FreshRSS é mais agradável com o JavaScript ativo',
 	'js' => array(
 		'confirm_reinstall' => 'Você irá perder suas configurações anteriores ao reinstalar o FreshRSS. Você está certo que deseja continuar?',
 	),
 	'language' => array(
+		'choose' => 'Escolha o idioma para o FreshRSS',
+		'defined' => 'O idioma foi definido.',
 		'_' => 'Idioma',
-		'choose' => 'Escolhar o idioma para o FreshRSS',
-		'defined' => 'Idioma foi definido.',
 	),
 	'not_deleted' => 'Algo deu errado; você deve deletar o arquivo <em>%s</em> manualmente.',
 	'ok' => 'O processo de instalação foi um sucesso.',
 	'step' => 'passo %d',
 	'steps' => 'Passos',
-	'title' => 'Instalação · FreshRSS',
 	'this_is_the_end' => 'Este é o final',
+	'title' => 'Instalação · FreshRSS',
 );

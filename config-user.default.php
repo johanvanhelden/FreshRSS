@@ -4,6 +4,7 @@
 # `./data/config-user.custom.php` file instead, containing the keys you want to
 # override.
 return array (
+	'is_admin' => false,
 	'language' => 'en',
 	'archiving' => [
 		'keep_period' => 'P3M',
@@ -23,11 +24,11 @@ return array (
 	'feverKey' => '',
 	'posts_per_page' => 20,
 	'since_hours_posts_per_rss' => 168,
-	'min_posts_per_rss' => 2,
 	'max_posts_per_rss' => 400,
 	'view_mode' => 'normal',
 	'default_view' => 'adaptive',
 	'default_state' => FreshRSS_Entry::STATE_NOT_READ,
+	'show_fav_unread' => false,
 	'auto_load_more' => true,
 	'display_posts' => false,
 	'display_categories' => false,
@@ -75,6 +76,7 @@ return array (
 		'reading_view' => '3',
 		'rss_view' => '4',
 	),
+	'show_favicons' => true,
 	'topline_read' => true,
 	'topline_favorite' => true,
 	'topline_display_authors' => false,

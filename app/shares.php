@@ -8,10 +8,12 @@
  * For each share there is different configuration options. Here is the description
  * of those options:
  *   - url is a mandatory option. It is a string representing the share URL. It
- *     supports 3 different placeholders for custom data. The ~URL~ placeholder
+ *     supports 4 different placeholders for custom data. The ~URL~ placeholder
  *     represents the URL of the system used to share, it is configured by the
  *     user. The ~LINK~ placeholder represents the link of the shared article.
- *     The ~TITLE~ placeholder represents the title of the shared article.
+ *     The ~TITLE~ placeholder represents the title of the shared article. The
+ *     ~ID~ placeholder represents the id of the shared article (only useful
+ *     for internal use)
  *   - transform is an array of transformation to apply on links and titles
  *   - help is a URL to a help page
  *   - form is the type of form to display during configuration. It's either
@@ -37,20 +39,14 @@ return array(
 	),
 	'wallabag' => array(
 		'url' => '~URL~?action=add&amp;url=~LINK~',
-		'transform' => array(
-			'link' => array('base64_encode'),
-			'title' => array(),
-		),
+		'transform' => array('rawurlencode'),
 		'help' => 'http://www.wallabag.org/',
 		'form' => 'advanced',
 		'method' => 'GET',
 	),
 	'wallabagv2' => array(
 		'url' => '~URL~/bookmarklet?url=~LINK~',
-		'transform' => array(
-			'link' => array('rawurlencode'),
-			'title' => array(),
-		),
+		'transform' => array('rawurlencode'),
 		'help' => 'http://www.wallabag.org/',
 		'form' => 'advanced',
 		'method' => 'GET',

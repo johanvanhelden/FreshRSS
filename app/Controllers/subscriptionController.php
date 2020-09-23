@@ -93,7 +93,7 @@ class FreshRSS_subscription_Controller extends Minz_ActionController {
 
 		if (Minz_Request::isPost()) {
 			$user = trim(Minz_Request::param('http_user_feed' . $id, ''));
-			$pass = Minz_Request::param('http_pass_feed' . $id, '');
+			$pass = trim(Minz_Request::param('http_pass_feed' . $id, ''));
 
 			$httpAuth = '';
 			if ($user != '' && $pass != '') {	//TODO: Sanitize
@@ -240,5 +240,12 @@ class FreshRSS_subscription_Controller extends Minz_ActionController {
 	 */
 	public function bookmarkletAction() {
 		Minz_View::prependTitle(_t('sub.title.subscription_tools') . ' . ');
+	}
+
+	/**
+	 * This action displays the page to add a new feed
+	 */
+	public function addAction() {
+		Minz_View::prependTitle(_t('sub.title.add') . ' . ');
 	}
 }

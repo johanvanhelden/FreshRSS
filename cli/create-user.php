@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 $isUpdate = false;
 require(__DIR__ . '/_update-or-create-user.php');
@@ -26,6 +26,14 @@ $ok = FreshRSS_user_Controller::createUser(
 
 if (!$ok) {
 	fail('FreshRSS could not create user!');
+}
+
+if (!empty($options['api_password'])) {
+	$username = cliInitUser($username);
+	$error = FreshRSS_api_Controller::updatePassword($options['api_password']);
+	if ($error) {
+		fail($error);
+	}
 }
 
 invalidateHttpCache(FreshRSS_Context::$system_conf->default_user);

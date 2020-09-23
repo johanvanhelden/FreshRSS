@@ -1,6 +1,7 @@
 <?php
 
 return array(
+	'add' => 'La creacion de flux e categoria es desplaçada <a href=\'%s\'>aquí</a>. I avètz tanben accès del menú a man esquèrra e de l’icòna ✚ sus la pagina principala.',
 	'api' => array(
 		'documentation' => 'Copiatz l’URL seguenta per l’utilizaire dins d’una aisina extèrna.',
 		'title' => 'API',
@@ -11,15 +12,14 @@ return array(
 		'title' => 'Bookmarklet',
 	),
 	'category' => array(
+		'_' => 'Categoria',
 		'add' => 'Ajustar una categoria',
 		'archiving' => 'Archivar',
 		'empty' => 'Categoria voida',
 		'information' => 'Informacions',
-		'new' => 'Nòva categoria',
 		'position' => 'Mostrar la posicion',
 		'position_help' => 'Per contrarotlar l’òrdre de tria de la categoria',
 		'title' => 'Títol',
-		'_' => 'Categoria',
 	),
 	'feed' => array(
 		'add' => 'Ajustar un flux RSS',
@@ -39,8 +39,8 @@ return array(
 		'empty' => 'Aqueste flux es void. Assegurats-vos qu’es totjorn mantengut.',
 		'error' => 'Aqueste flux a rescontrat un problèma. Volgatz verificar que siá totjorn accessible puèi actualizatz-lo.',
 		'filteractions' => array(
-			'help' => 'Escrivètz una recèrca per linha.',
 			'_' => 'Filtre d’accion',
+			'help' => 'Escrivètz una recèrca per linha.',
 		),
 		'information' => 'Informacions',
 		'keep_min' => 'Nombre minimum d’articles de servar',
@@ -56,10 +56,10 @@ return array(
 		'no_selected' => 'Cap de flux pas seleccionat.',
 		'number_entries' => '%d articles',
 		'priority' => array(
+			'_' => 'Visibilitat',
 			'archived' => 'Mostrar pas (archivat)',
 			'main_stream' => 'Mostar al flux màger',
 			'normal' => 'Mostar dins sa categoria',
-			'_' => 'Visibilitat',
 		),
 		'selector_preview' => array(
 			'show_raw' => 'Veire lo còdi font',
@@ -102,14 +102,28 @@ return array(
 		'title' => 'Importar / Exportar',
 	),
 	'menu' => array(
+		'add' => 'Ajustar un flux o una categoria',
+		'add_feed' => 'Ajustar un flux',
 		'bookmark' => 'Sabonar (marcapagina FreshRSS)',
 		'import_export' => 'Importar / Exportar',
 		'subscription_management' => 'Gestion dels abonaments',
 		'subscription_tools' => 'Aisinas d’abonament',
+		'tag_management' => 'Gestion de las etiquetas',
+	),
+	'tag' => array(
+		'name' => 'Nom',
+		'new_name' => 'Nom novèl',
+		'old_name' => 'Nom ancian',
 	),
 	'title' => array(
-		'feed_management' => 'Gestion dels fluxes RSS',
-		'subscription_tools' => 'Aisinas d’abonament',
 		'_' => 'Gestion dels abonaments',
+		'add' => 'Apondon de flux o categoria',
+		'add_category' => 'Ajustar una categoria',
+		'add_feed' => 'Ajustar un flux',
+		'add_tag' => 'Ajustar una etiqueta',
+		'delete_tag' => 'Suprimir una etiqueta',
+		'feed_management' => 'Gestion dels fluxes RSS',
+		'rename_tag' => 'Rennomenar una etiqueta',
+		'subscription_tools' => 'Aisinas d’abonament',
 	),
 );

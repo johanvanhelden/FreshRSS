@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 require(__DIR__ . '/_cli.php');
 
@@ -108,6 +108,10 @@ echo '• Remember to create the default user: ', $config['default_user'] , "\n"
 	"\t", './cli/create-user.php --user ', $config['default_user'], " --password 'password' --more-options\n";
 
 accessRights();
+
+if (!setupMigrations()) {
+	fail('FreshRSS access right problem while creating migrations version file!');
+}
 
 if (!deleteInstall()) {
 	fail('FreshRSS access right problem while deleting install file!');

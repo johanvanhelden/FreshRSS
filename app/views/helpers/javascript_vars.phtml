@@ -41,6 +41,7 @@ echo htmlspecialchars(json_encode(array(
 		'global_view' => @$s['global_view'],
 		'reading_view' => @$s['reading_view'],
 		'rss_view' => @$s['rss_view'],
+		'toggle_media' => @$s['toggle_media'],
 	),
 	'urls' => array(
 		'index' => _url('index', 'index'),
@@ -54,6 +55,7 @@ echo htmlspecialchars(json_encode(array(
 		'notif_body_articles' => _t('gen.js.feedback.body_new_articles'),
 		'notif_request_failed' => _t('gen.js.feedback.request_failed'),
 		'category_empty' => _t('gen.js.category_empty'),
+		'language' => FreshRSS_Context::$user_conf->language,
 	),
 	'icons' => array(
 		'read' => rawurlencode(_i('read')),

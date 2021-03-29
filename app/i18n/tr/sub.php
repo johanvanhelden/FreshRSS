@@ -33,6 +33,14 @@ return array(
 			'username' => 'HTTP kullanıcı adı',
 		),
 		'clear_cache' => 'Always clear cache',	// TODO - Translation
+		'content_action' => array(
+			'_' => 'Content action when fetching the article content',	// TODO - Translation
+			'append' => 'Add after existing content',	// TODO - Translation
+			'prepend' => 'Add before existing content',	// TODO - Translation
+			'replace' => 'Replace existing content',	// TODO - Translation
+		),
+		'css_cookie' => 'Use Cookies when fetching the article content',	// TODO - Translation
+		'css_cookie_help' => 'Example: <kbd>foo=bar; gdpr_consent=true; cookie=value</kbd>',	// TODO - Translation
 		'css_help' => 'Dikkat, daha çok zaman gerekir!',
 		'css_path' => 'Makaleleri kendi CSS görünümü ile göster',
 		'description' => 'Tanım',
@@ -61,6 +69,8 @@ return array(
 			'main_stream' => 'Ana akışda göster',
 			'normal' => 'Show in its category',	// TODO - Translation
 		),
+		'proxy' => 'Set a proxy for fetching this feed',	// TODO - Translation
+		'proxy_help' => 'Select a protocol (e.g: SOCKS5) and enter the proxy address (e.g: <kbd>127.0.0.1:1080</kbd>)',	// TODO - Translation
 		'selector_preview' => array(
 			'show_raw' => 'Show source code',	// TODO - Translation
 			'show_rendered' => 'Show content',	// TODO - Translation
@@ -80,6 +90,8 @@ return array(
 		'title_add' => 'RSS akışı ekle',
 		'ttl' => 'Şu kadar süreden fazla otomatik yenileme yapma',
 		'url' => 'Akış URL',
+		'useragent' => 'Set the user agent for fetching this feed',	// TODO - Translation
+		'useragent_help' => 'Example: <kbd>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)</kbd>',	// TODO - Translation
 		'validator' => 'Akış geçerliliğini kontrol edin',
 		'website' => 'Site URL',
 		'websub' => 'WebSub ile anlık bildirim',
@@ -106,9 +118,9 @@ return array(
 		'add_feed' => 'Add a feed',	// TODO - Translation
 		'bookmark' => 'Abonelik (FreshRSS yer imleri)',
 		'import_export' => 'İçe / dışa aktar',
+		'label_management' => 'Label management',	// TODO - Translation
 		'subscription_management' => 'Abonelik yönetimi',
 		'subscription_tools' => 'Subscription tools',	// TODO - Translation
-		'tag_management' => 'Tag management',	// TODO - Translation
 	),
 	'tag' => array(
 		'name' => 'Name',	// TODO - Translation
@@ -120,10 +132,10 @@ return array(
 		'add' => 'Add a feed or category',	// TODO - Translation
 		'add_category' => 'Add a category',	// TODO - Translation
 		'add_feed' => 'Add a feed',	// TODO - Translation
-		'add_tag' => 'Add a tag',	// TODO - Translation
-		'delete_tag' => 'Delete a tag',	// TODO - Translation
+		'add_label' => 'Add a label',	// TODO - Translation
+		'delete_label' => 'Delete a label',	// TODO - Translation
 		'feed_management' => 'RSS akış yönetimi',
-		'rename_tag' => 'Rename a tag',	// TODO - Translation
+		'rename_label' => 'Rename a label',	// TODO - Translation
 		'subscription_tools' => 'Subscription tools',	// TODO - Translation
 	),
 );

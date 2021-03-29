@@ -1,6 +1,6 @@
 <?php
-if (version_compare(PHP_VERSION, '5.6.0', '<')) {
-	die('FreshRSS error: FreshRSS requires PHP 5.6.0+!');
+if (version_compare(PHP_VERSION, FRESHRSS_MIN_PHP_VERSION, '<')) {
+	die(sprintf('FreshRSS error: FreshRSS requires PHP %s+!', FRESHRSS_MIN_PHP_VERSION));
 }
 
 if (!function_exists('mb_strcut')) {
@@ -124,7 +124,7 @@ function escapeToUnicodeAlternative($text, $extended = true) {
 
 function format_number($n, $precision = 0) {
 	// number_format does not seem to be Unicode-compatible
-	return str_replace(' ', ' ',  //Espace fine insécable
+	return str_replace(' ', ' ',	//Espace fine insécable
 		number_format($n, $precision, '.', ' ')
 	);
 }
@@ -169,18 +169,18 @@ function html_only_entity_decode($text) {
 }
 
 function customSimplePie($attributes = array()) {
-	$system_conf = Minz_Configuration::get('system');
-	$limits = $system_conf->limits;
+	$limits = FreshRSS_Context::$system_conf->limits;
 	$simplePie = new SimplePie();
 	$simplePie->set_useragent(FRESHRSS_USERAGENT);
-	$simplePie->set_syslog($system_conf->simplepie_syslog_enabled);
+	$simplePie->set_syslog(FreshRSS_Context::$system_conf->simplepie_syslog_enabled);
+	$simplePie->set_cache_name_function('sha1');
 	$simplePie->set_cache_location(CACHE_PATH);
 	$simplePie->set_cache_duration($limits['cache_duration']);
 
 	$feed_timeout = empty($attributes['timeout']) ? 0 : intval($attributes['timeout']);
 	$simplePie->set_timeout($feed_timeout > 0 ? $feed_timeout : $limits['timeout']);
 
-	$curl_options = $system_conf->curl_options;
+	$curl_options = FreshRSS_Context::$system_conf->curl_options;
 	if (isset($attributes['ssl_verify'])) {
 		$curl_options[CURLOPT_SSL_VERIFYHOST] = $attributes['ssl_verify'] ? 2 : 0;
 		$curl_options[CURLOPT_SSL_VERIFYPEER] = $attributes['ssl_verify'] ? true : false;
@@ -188,8 +188,14 @@ function customSimplePie($attributes = array()) {
 			$curl_options[CURLOPT_SSL_CIPHER_LIST] = 'DEFAULT@SECLEVEL=1';
 		}
 	}
+	if (!empty($attributes['curl_params']) && is_array($attributes['curl_params'])) {
+		foreach ($attributes['curl_params'] as $co => $v) {
+			$curl_options[$co] = $v;
+		}
+	}
 	$simplePie->set_curl_options($curl_options);
 
+	$simplePie->strip_comments(true);
 	$simplePie->strip_htmltags(array(
 		'base', 'blink', 'body', 'doctype', 'embed',
 		'font', 'form', 'frame', 'frameset', 'html',
@@ -241,16 +247,25 @@ function customSimplePie($attributes = array()) {
 	return $simplePie;
 }
 
-function sanitizeHTML($data, $base = '') {
-	if (!is_string($data)) {
+function sanitizeHTML($data, $base = '', $maxLength = false) {
+	if (!is_string($data) || ($maxLength !== false && $maxLength <= 0)) {
 		return '';
+	}
+	if ($maxLength !== false) {
+		$data = mb_strcut($data, 0, $maxLength, 'UTF-8');
 	}
 	static $simplePie = null;
 	if ($simplePie == null) {
 		$simplePie = customSimplePie();
 		$simplePie->init();
 	}
-	return html_only_entity_decode($simplePie->sanitize->sanitize($data, SIMPLEPIE_CONSTRUCT_HTML, $base));
+	$result = html_only_entity_decode($simplePie->sanitize->sanitize($data, SIMPLEPIE_CONSTRUCT_HTML, $base));
+	if ($maxLength !== false && strlen($result) > $maxLength) {
+		//Sanitizing has made the result too long so try again shorter
+		$data = mb_strcut($result, 0, (2 * $maxLength) - strlen($result) - 2, 'UTF-8');
+		return sanitizeHTML($data, $base, $maxLength);
+	}
+	return $result;
 }
 
 /**
@@ -321,8 +336,7 @@ function listUsers() {
  * @return true if number of users >= max registrations, false else.
  */
 function max_registrations_reached() {
-	$system_conf = Minz_Configuration::get('system');
-	$limit_registrations = $system_conf->limits['max_registrations'];
+	$limit_registrations = FreshRSS_Context::$system_conf->limits['max_registrations'];
 	$number_accounts = count(listUsers());
 
 	return $limit_registrations > 0 && $number_accounts >= $limit_registrations;
@@ -345,8 +359,8 @@ function get_user_configuration($username) {
 	$namespace = 'user_' . $username;
 	try {
 		Minz_Configuration::register($namespace,
-		                             join_path(USERS_PATH, $username, 'config.php'),
-		                             join_path(FRESHRSS_PATH, 'config-user.default.php'));
+			USERS_PATH . '/' . $username . '/config.php',
+			FRESHRSS_PATH . '/config-user.default.php');
 	} catch (Minz_ConfigurationNamespaceException $e) {
 		// namespace already exists, do nothing.
 		Minz_Log::warning($e->getMessage(), USERS_PATH . '/_/log.txt');
@@ -380,23 +394,6 @@ function cryptAvailable() {
 	return false;
 }
 
-function is_referer_from_same_domain() {
-	if (empty($_SERVER['HTTP_REFERER'])) {
-		return true;	//Accept empty referer while waiting for good support of meta referrer same-origin policy in browsers
-	}
-	$host = parse_url(((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://') .
-		(empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']));
-	$referer = parse_url($_SERVER['HTTP_REFERER']);
-	if (empty($host['host']) || empty($referer['host']) || $host['host'] !== $referer['host']) {
-		return false;
-	}
-	//TODO: check 'scheme', taking into account the case of a proxy
-	if ((isset($host['port']) ? $host['port'] : 0) !== (isset($referer['port']) ? $referer['port'] : 0)) {
-		return false;
-	}
-	return true;
-}
-
 
 /**
  * Check PHP and its extensions are well-installed.
@@ -408,8 +405,7 @@ function check_install_php() {
 	$pdo_pgsql = extension_loaded('pdo_pgsql');
 	$pdo_sqlite = extension_loaded('pdo_sqlite');
 	return array(
-		'php' => version_compare(PHP_VERSION, '5.5.0') >= 0,
-		'minz' => file_exists(LIB_PATH . '/Minz'),
+		'php' => version_compare(PHP_VERSION, FRESHRSS_MIN_PHP_VERSION) >= 0,
 		'curl' => extension_loaded('curl'),
 		'pdo' => $pdo_mysql || $pdo_sqlite || $pdo_pgsql,
 		'pcre' => extension_loaded('pcre'),
@@ -538,30 +534,43 @@ const SHORTCUT_KEYS = [
 			'End', 'Enter', 'Escape', 'Home', 'Insert', 'PageDown', 'PageUp', 'Space', 'Tab',
 		];
 
-function validateShortcutList($shortcuts) {
-	$legacy = array(
-			'down' => 'ArrowDown', 'left' => 'ArrowLeft', 'page_down' => 'PageDown', 'page_up' => 'PageUp',
-			'right' => 'ArrowRight', 'up' => 'ArrowUp',
-		);
-	$upper = null;
-	$shortcuts_ok = array();
+function getNonStandardShortcuts($shortcuts) {
+	$standard = strtolower(implode(' ', SHORTCUT_KEYS));
 
-	foreach ($shortcuts as $key => $value) {
-		if ('' === $value) {
-			$shortcuts_ok[$key] = $value;
-		} elseif (in_array($value, SHORTCUT_KEYS)) {
-			$shortcuts_ok[$key] = $value;
-		} elseif (isset($legacy[$value])) {
-			$shortcuts_ok[$key] = $legacy[$value];
-		} else {	//Case-insensitive search
-			if ($upper === null) {
-				$upper = array_map('strtoupper', SHORTCUT_KEYS);
-			}
-			$i = array_search(strtoupper($value), $upper);
-			if ($i !== false) {
-				$shortcuts_ok[$key] = SHORTCUT_KEYS[$i];
-			}
+	$nonStandard = array_filter($shortcuts, function ($shortcut) use ($standard) {
+		if (false !== strpos($shortcut, ' ')) {
+			return true;
 		}
+		return !preg_match("/${shortcut}/i", $standard);
+	});
+
+	return $nonStandard;
+}
+
+function errorMessage($errorTitle, $error = '') {
+	// Prevent empty <h2> tags by checking if error isn't empty first
+	if ('' !== $error) {
+		$error = htmlspecialchars($error, ENT_NOQUOTES, 'UTF-8');
+		$error = "<h2>{$error}</h2>";
 	}
-	return $shortcuts_ok;
+	$errorTitle = htmlspecialchars($errorTitle, ENT_NOQUOTES, 'UTF-8');
+	return <<<MSG
+	<h1>{$errorTitle}</h1>
+	{$error}
+	<h2>Common problems</h2>
+	<p>A typical problem leading to this message is wrong file permissions in the <code>./FreshRSS/data/</code> folder
+	so make sure the Web server can write there and in sub-directories.</p>
+	<h2>Common locations for additional logs</h2>
+	<p><strong>N.B.:</strong> Adapt names and paths according to your local setup.</p>
+	<ul>
+	<li>If using Docker: <code>docker logs -f freshrss</code></li>
+	<li>To check Web server logs on a Linux system using systemd: <code>journalctl -xeu apache2</code>
+	and if you are using php-fpm: <code>journalctl -xeu php-fpm</code></li>
+	<li>Otherwise, Web server logs are typically located in <code>/var/log/apache2/</code> or similar</li>
+	<li>System logs may also contain relevant information in <code>/var/log/syslog</code>, or if using systemd: <code>sudo journalctl -xe</code></li>
+	</ul>
+	<p>More logs can be generated by enabling <code>'environment' => 'development',</code> in <code>./FreshRSS/data/config.php</code></p>
+	<p>Running the feed update script (with the same user and PHP version as your Web server) might provide other hints, e.g.:
+		<code>sudo -u www-data /usr/bin/php ./FreshRSS/app/actualize_script.php</code></p>
+MSG;
 }

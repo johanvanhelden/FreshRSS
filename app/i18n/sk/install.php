@@ -33,7 +33,7 @@ return array(
 		'_' => 'Kontrola',
 		'already_installed' => 'Zistilo sa, že FreshRSS je už nainštalovaný!',
 		'cache' => array(
-			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>./data/cache</em>. HTTP server musí mať právo doň zapisovať.',
+			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
 			'ok' => 'Oprávnenia prístupu do priečinku vyrovnávacej pamäte sú OK.',
 		),
 		'ctype' => array(
@@ -45,7 +45,7 @@ return array(
 			'ok' => 'Našla sa knižnica cURL.',
 		),
 		'data' => array(
-			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>./data</em>. HTTP server musí mať právo doň zapisovať.',
+			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
 			'ok' => 'Oprávnenia prístupu do priečinku údajov sú OK.',
 		),
 		'dom' => array(
@@ -53,16 +53,12 @@ return array(
 			'ok' => 'Našla sa požadovaná knižnica na prehliadanie DOM.',
 		),
 		'favicons' => array(
-			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>./data/favicons</em>. HTTP server musí mať právo doň zapisovať.',
+			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
 			'ok' => 'Oprávnenia prístupu do priečinku ikôn obľúbených sú OK.',
 		),
 		'fileinfo' => array(
 			'nok' => 'Nepodarilo sa nájsť knižniuc PHP fileinfo (balík fileinfo).',
 			'ok' => 'Našla sa knižnica fileinfo.',
-		),
-		'http_referer' => array(
-			'nok' => 'Prosím, skontrolujte, či ste nezmenili váš HTTP REFERER.',
-			'ok' => 'Váš HTTP REFERER je OK.',
 		),
 		'json' => array(
 			'nok' => 'Nepodarilo sa nájsť požadovanú knižnicu na spracovanie formátu JSON.',
@@ -71,10 +67,6 @@ return array(
 		'mbstring' => array(
 			'nok' => 'Nepodarilo sa nájsť požadovanú knižnicu mbstring pre Unicode.',
 			'ok' => 'Našla sa požadovaná knižnica mbstring pre Unicode.',
-		),
-		'minz' => array(
-			'nok' => 'Nepodarilo sa nájsť framework Minz.',
-			'ok' => 'Našiel sa framework Minz.',
 		),
 		'pcre' => array(
 			'nok' => 'Nepodarilo sa nájsť požadovanú knižnicu pre regulárne výrazy (php-pcre).',
@@ -88,8 +80,13 @@ return array(
 			'nok' => 'Vaša verzia PHP je %s, ale FreshRSS vyžaduje minimálne verziu %s.',
 			'ok' => 'Vaša verzia PHP %s je kompatibilná s FreshRSS.',
 		),
+		'tmp' => array(
+			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
+			'ok' => 'Permissions on the temp directory are good.',	// TODO - Translation
+		),
+		'unknown_process_username' => 'unknown',	// TODO - Translation
 		'users' => array(
-			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>./data/users</em>. HTTP server musí mať právo doň zapisovať.',
+			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
 			'ok' => 'Oprávnenia prístupu do priečinku používateľov sú OK.',
 		),
 		'xml' => array(
@@ -114,8 +111,11 @@ return array(
 		'choose' => 'Vyberte jazyk pre FreshRSS',
 		'defined' => 'Jazyk bol nastavený.',
 	),
-	'not_deleted' => 'Niečo sa nepodarilo. Musíte ručne zmazať súbor <em>%s</em>.',
+	'missing_applied_migrations' => 'Something went wrong; you should create an empty file <em>%s</em> manually.',	// TODO - Translation
 	'ok' => 'Inštalácia bola úspešná.',
+	'session' => array(
+		'nok' => 'The web server seems to be incorrectly configured for cookies required for PHP sessions!',	// TODO - Translation
+	),
 	'step' => 'krok %d',
 	'steps' => 'Kroky',
 	'this_is_the_end' => 'Toto je koniec',

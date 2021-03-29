@@ -33,7 +33,7 @@ return array(
 		'_' => 'Vérifications',
 		'already_installed' => 'FreshRSS semble avoir déjà été installé !',
 		'cache' => array(
-			'nok' => 'Veuillez vérifier les droits sur le répertoire <em>./data/cache</em>. Le serveur HTTP doit être capable d’écrire dedans',
+			'nok' => 'Veuillez vérifier les droits de l’utilisateur <em>%2$s</em> sur le répertoire <em>%1$s</em>. Le serveur HTTP doit être capable d’écrire dedans.',
 			'ok' => 'Les droits sur le répertoire de cache sont bons.',
 		),
 		'ctype' => array(
@@ -45,7 +45,7 @@ return array(
 			'ok' => 'Vous disposez de cURL.',
 		),
 		'data' => array(
-			'nok' => 'Veuillez vérifier les droits sur le répertoire <em>./data</em>. Le serveur HTTP doit être capable d’écrire dedans',
+			'nok' => 'Veuillez vérifier les droits de l’utilisateur <em>%2$s</em> sur le répertoire <em>%1$s</em>. Le serveur HTTP doit être capable d’écrire dedans.',
 			'ok' => 'Les droits sur le répertoire de data sont bons.',
 		),
 		'dom' => array(
@@ -53,16 +53,12 @@ return array(
 			'ok' => 'Vous disposez de la librairie pour parcourir le DOM.',
 		),
 		'favicons' => array(
-			'nok' => 'Veuillez vérifier les droits sur le répertoire <em>./data/favicons</em>. Le serveur HTTP doit être capable d’écrire dedans',
+			'nok' => 'Veuillez vérifier les droits de l’utilisateur <em>%2$s</em> sur le répertoire <em>%1$s</em>. Le serveur HTTP doit être capable d’écrire dedans.',
 			'ok' => 'Les droits sur le répertoire des favicons sont bons.',
 		),
 		'fileinfo' => array(
 			'nok' => 'Vous ne disposez pas de PHP fileinfo (paquet fileinfo).',
 			'ok' => 'Vous disposez de fileinfo.',
-		),
-		'http_referer' => array(
-			'nok' => 'Veuillez vérifier que vous ne modifiez pas votre HTTP REFERER.',
-			'ok' => 'Le HTTP REFERER est connu et semble correspondre à votre serveur.',
 		),
 		'json' => array(
 			'nok' => 'Vous ne disposez pas de l’extension recommendée JSON (paquet php-json).',
@@ -71,10 +67,6 @@ return array(
 		'mbstring' => array(
 			'nok' => 'Impossible de trouver la librairie recommandée mbstring pour Unicode.',
 			'ok' => 'Vouz disposez de la librairie recommandée mbstring pour Unicode.',
-		),
-		'minz' => array(
-			'nok' => 'Vous ne disposez pas de la librairie Minz.',
-			'ok' => 'Vous disposez du framework Minz',
 		),
 		'pcre' => array(
 			'nok' => 'Impossible de trouver une librairie pour les expressions régulières (php-pcre).',
@@ -88,8 +80,13 @@ return array(
 			'nok' => 'Votre version de PHP est la %s mais FreshRSS requiert au moins la version %s.',
 			'ok' => 'Votre version de PHP est la %s, qui est compatible avec FreshRSS.',
 		),
+		'tmp' => array(
+			'nok' => 'Veuillez vérifier les droits de l’utilisateur <em>%2$s</em> sur le répertoire <em>%1$s</em>. Le serveur HTTP doit être capable d’écrire dedans.',
+			'ok' => 'Les droits sur le répertoire temporaire sont bons.',
+		),
+		'unknown_process_username' => 'inconnu',
 		'users' => array(
-			'nok' => 'Veuillez vérifier les droits sur le répertoire <em>./data/users</em>. Le serveur HTTP doit être capable d’écrire dedans',
+			'nok' => 'Veuillez vérifier les droits de l’utilisateur <em>%2$s</em> sur le répertoire <em>%1$s</em>. Le serveur HTTP doit être capable d’écrire dedans.',
 			'ok' => 'Les droits sur le répertoire des utilisateurs sont bons.',
 		),
 		'xml' => array(
@@ -114,8 +111,11 @@ return array(
 		'choose' => 'Choisissez la langue pour FreshRSS',
 		'defined' => 'La langue a bien été définie.',
 	),
-	'not_deleted' => 'Quelque chose s’est mal passé, vous devez supprimer le fichier <em>%s</em> à la main.',
+	'missing_applied_migrations' => 'Quelque chose s’est mal passé, vous devriez créer le fichier <em>%s</em> à la main.',
 	'ok' => 'L’installation s’est bien passée.',
+	'session' => array(
+		'nok' => 'Le serveur Web semble mal configué pour les cookies nécessaires aux sessions PHP!',
+	),
 	'step' => 'étape %d',
 	'steps' => 'Étapes',
 	'this_is_the_end' => 'This is the end',

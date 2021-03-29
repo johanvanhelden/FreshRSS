@@ -3,7 +3,7 @@
 /**
  * The extension base class.
  */
-class Minz_Extension {
+abstract class Minz_Extension {
 	private $name;
 	private $entrypoint;
 	private $path;
@@ -11,6 +11,8 @@ class Minz_Extension {
 	private $description;
 	private $version;
 	private $type;
+	private $config_key = 'extensions';
+	private $user_configuration;
 
 	public static $authorized_types = array(
 		'system',
@@ -31,11 +33,9 @@ class Minz_Extension {
 	 * - version: a version for the current extension.
 	 * - type: "system" or "user" (default).
 	 *
-	 * It must not be redefined by child classes.
-	 *
 	 * @param $meta_info contains information about the extension.
 	 */
-	public function __construct($meta_info) {
+	final public function __construct($meta_info) {
 		$this->name = $meta_info['name'];
 		$this->entrypoint = $meta_info['entrypoint'];
 		$this->path = $meta_info['path'];
@@ -50,8 +50,6 @@ class Minz_Extension {
 	/**
 	 * Used when installing an extension (e.g. update the database scheme).
 	 *
-	 * It must be redefined by child classes.
-	 *
 	 * @return true if the extension has been installed or a string explaining
 	 *         the problem.
 	 */
@@ -63,8 +61,6 @@ class Minz_Extension {
 	 * Used when uninstalling an extension (e.g. revert the database scheme to
 	 * cancel changes from install).
 	 *
-	 * It must be redefined by child classes.
-	 *
 	 * @return true if the extension has been uninstalled or a string explaining
 	 *         the problem.
 	 */
@@ -75,10 +71,8 @@ class Minz_Extension {
 	/**
 	 * Call at the initialization of the extension (i.e. when the extension is
 	 * enabled by the extension manager).
-	 *
-	 * It must be redefined by child classes.
 	 */
-	public function init() {}
+	abstract public function init();
 
 	/**
 	 * Set the current extension to enable.
@@ -115,8 +109,6 @@ class Minz_Extension {
 
 	/**
 	 * Handle the configure action.
-	 *
-	 * It must be redefined by child classes.
 	 */
 	public function handleConfigureAction() {}
 
@@ -156,19 +148,22 @@ class Minz_Extension {
 	 *
 	 * @param $filename name of the file to serve.
 	 * @param $type the type (js or css) of the file to serve.
+	 * @param $isStatic indicates if the file is a static file or a user file. Default is static.
 	 * @return the url corresponding to the file.
 	 */
-	public function getFileUrl($filename, $type) {
-		$dir = substr(strrchr($this->path, '/'), 1);
-		$file_name_url = urlencode($dir . '/static/' . $filename);
+	public function getFileUrl($filename, $type, $isStatic = true) {
+		if ($isStatic) {
+			$dir = basename($this->path);
+			$file_name_url = urlencode("{$dir}/static/{$filename}");
+			$mtime = @filemtime("{$this->path}/static/{$filename}");
+		} else {
+			$username = Minz_Session::param('currentUser');
+			$path = USERS_PATH . "/{$username}/{$this->config_key}/{$this->getName()}/{$filename}";
+			$file_name_url = urlencode("{$username}/{$this->config_key}/{$this->getName()}/{$filename}");
+			$mtime = @filemtime($path);
+		}
 
-		$absolute_path = $this->path . '/static/' . $filename;
-		$mtime = @filemtime($absolute_path);
-
-		$url = '/ext.php?f=' . $file_name_url .
-		       '&amp;t=' . $type .
-		       '&amp;' . $mtime;
-		return Minz_Url::display($url, 'php');
+		return Minz_Url::display("/ext.php?f={$file_name_url}&amp;t={$type}&amp;{$mtime}", 'php');
 	}
 
 	/**
@@ -204,5 +199,116 @@ class Minz_Extension {
 	 */
 	public function registerHook($hook_name, $hook_function) {
 		Minz_ExtensionManager::addHook($hook_name, $hook_function, $this);
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function isUserConfigurationEnabled() {
+		if (!class_exists('FreshRSS_Context', false)) {
+			return false;
+		}
+		if (null === FreshRSS_Context::$user_conf) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function isExtensionConfigured() {
+		if (!FreshRSS_Context::$user_conf->hasParam($this->config_key)) {
+			return false;
+		}
+
+		$extensions = FreshRSS_Context::$user_conf->{$this->config_key};
+		return array_key_exists($this->getName(), $extensions);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getUserConfiguration() {
+		if (!$this->isUserConfigurationEnabled()) {
+			return [];
+		}
+		if (!$this->isExtensionConfigured()) {
+			return [];
+		}
+
+		return FreshRSS_Context::$user_conf->{$this->config_key}[$this->getName()];
+	}
+
+	/**
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	public function getUserConfigurationValue(string $key, $default = null) {
+		if (!is_array($this->user_configuration)) {
+			$this->user_configuration = $this->getUserConfiguration();
+		}
+
+		if (array_key_exists($key, $this->user_configuration)) {
+			return $this->user_configuration[$key];
+		}
+		return $default;
+	}
+
+	public function setUserConfiguration(array $configuration) {
+		if (!$this->isUserConfigurationEnabled()) {
+			return;
+		}
+		if (FreshRSS_Context::$user_conf->hasParam($this->config_key)) {
+			$extensions = FreshRSS_Context::$user_conf->{$this->config_key};
+		} else {
+			$extensions = [];
+		}
+		$extensions[$this->getName()] = $configuration;
+
+		FreshRSS_Context::$user_conf->{$this->config_key} = $extensions;
+		FreshRSS_Context::$user_conf->save();
+
+		$this->user_configuration = $configuration;
+	}
+
+	public function removeUserConfiguration() {
+		if (!$this->isUserConfigurationEnabled()) {
+			return;
+		}
+		if (!$this->isExtensionConfigured()) {
+			return;
+		}
+
+		$extensions = FreshRSS_Context::$user_conf->{$this->config_key};
+		unset($extensions[$this->getName()]);
+		if (empty($extensions)) {
+			$extensions = null;
+		}
+
+		FreshRSS_Context::$user_conf->{$this->config_key} = $extensions;
+		FreshRSS_Context::$user_conf->save();
+
+		$this->user_configuration = null;
+	}
+
+	public function saveFile(string $filename, string $content) {
+		$username = Minz_Session::param('currentUser');
+		$path = USERS_PATH . "/{$username}/{$this->config_key}/{$this->getName()}";
+
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
+
+		file_put_contents("{$path}/{$filename}", $content);
+	}
+
+	public function removeFile(string $filename) {
+		$username = Minz_Session::param('currentUser');
+		$path = USERS_PATH . "/{$username}/{$this->config_key}/{$this->getName()}/{$filename}";
+
+		if (file_exists($path)) {
+			unlink($path);
+		}
 	}
 }

@@ -33,7 +33,7 @@ return array(
 		'_' => 'Controles',
 		'already_installed' => 'We hebben geconstateerd dat FreshRSS al is geïnstallerd!',
 		'cache' => array(
-			'nok' => 'Controleer permissies van de <em>./data/cache</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven',
+			'nok' => 'Controleer permissies van de <em>%s</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven.',
 			'ok' => 'Permissies van de cache map zijn goed.',
 		),
 		'ctype' => array(
@@ -45,7 +45,7 @@ return array(
 			'ok' => 'U hebt de cURL uitbreiding.',
 		),
 		'data' => array(
-			'nok' => 'Controleer permissies van de <em>./data</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven',
+			'nok' => 'Controleer permissies van de <em>%s</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven.',
 			'ok' => 'Permissies van de data map zijn goed.',
 		),
 		'dom' => array(
@@ -53,16 +53,12 @@ return array(
 			'ok' => 'U hebt de benodigde bibliotheek om te bladeren in de DOM.',
 		),
 		'favicons' => array(
-			'nok' => 'Controleer permissies van de <em>./data/favicons</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven',
+			'nok' => 'Controleer permissies van de <em>%s</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven.',
 			'ok' => 'Permissies van de favicons map zijn goed.',
 		),
 		'fileinfo' => array(
 			'nok' => 'U mist PHP fileinfo (fileinfo package).',
 			'ok' => 'U hebt de fileinfo uitbreiding.',
-		),
-		'http_referer' => array(
-			'nok' => 'Controleer a.u.b. dat u niet uw HTTP REFERER wijzigd.',
-			'ok' => 'Uw HTTP REFERER is bekend en komt overeen met uw server.',
 		),
 		'json' => array(
 			'nok' => 'U mist een benodigede bibliotheek om JSON te gebruiken.',
@@ -71,10 +67,6 @@ return array(
 		'mbstring' => array(
 			'nok' => 'De voor Unicode aanbevolen bibliotheek mbstring kan niet worden gevonden.',
 			'ok' => 'De voor Unicode aanbevolen bibliotheek mbstring is gevonden.',
-		),
-		'minz' => array(
-			'nok' => 'U mist het Minz framework.',
-			'ok' => 'U hebt het Minz framework.',
 		),
 		'pcre' => array(
 			'nok' => 'U mist een benodigde bibliotheek voor regular expressions (php-pcre).',
@@ -88,8 +80,13 @@ return array(
 			'nok' => 'Uw PHP versie is %s maar FreshRSS benodigd tenminste versie %s.',
 			'ok' => 'Uw PHP versie is %s, welke compatibel is met FreshRSS.',
 		),
+		'tmp' => array(
+			'nok' => 'Controleer permissies van de <em>%s</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven.',
+			'ok' => 'Permissies van de temp-map zijn goed.',
+		),
+		'unknown_process_username' => 'onbekend',
 		'users' => array(
-			'nok' => 'Controleer permissies van de <em>./data/users</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven',
+			'nok' => 'Controleer permissies van de <em>%s</em> map. HTTP server moet rechten hebben om er in te kunnen schrijven.',
 			'ok' => 'Permissies van de users map zijn goed.',
 		),
 		'xml' => array(
@@ -114,8 +111,11 @@ return array(
 		'choose' => 'Kies een taal voor FreshRSS',
 		'defined' => 'Taal is bepaald.',
 	),
-	'not_deleted' => 'Er ging iets fout! U moet het bestand <em>%s</em> handmatig verwijderen.',
+	'missing_applied_migrations' => 'Something went wrong; you should create an empty file <em>%s</em> manually.',	// TODO - Translation
 	'ok' => 'De installatieprocedure is geslaagd.',
+	'session' => array(
+		'nok' => 'De webserver lijkt niet goed te zijn geconfigureerd voor de cookies die voor PHP-sessies nodig zijn!',
+	),
 	'step' => 'stap %d',
 	'steps' => 'Stappen',
 	'this_is_the_end' => 'Dit is het einde',

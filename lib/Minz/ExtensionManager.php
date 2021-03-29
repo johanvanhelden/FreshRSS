@@ -15,51 +15,63 @@ class Minz_ExtensionManager {
 
 	// List of available hooks. Please keep this list sorted.
 	private static $hook_list = array(
-		'check_url_before_add' => array(  // function($url) -> Url | null
+		'check_url_before_add' => array(	// function($url) -> Url | null
 			'list' => array(),
 			'signature' => 'OneToOne',
 		),
-		'entry_before_display' => array(  // function($entry) -> Entry | null
+		'entry_before_display' => array(	// function($entry) -> Entry | null
 			'list' => array(),
 			'signature' => 'OneToOne',
 		),
-		'entry_before_insert' => array(  // function($entry) -> Entry | null
+		'entry_before_insert' => array(	// function($entry) -> Entry | null
 			'list' => array(),
 			'signature' => 'OneToOne',
 		),
-		'feed_before_actualize' => array(  // function($feed) -> Feed | null
+		'feed_before_actualize' => array(	// function($feed) -> Feed | null
 			'list' => array(),
 			'signature' => 'OneToOne',
 		),
-		'feed_before_insert' => array(  // function($feed) -> Feed | null
+		'feed_before_insert' => array(	// function($feed) -> Feed | null
 			'list' => array(),
 			'signature' => 'OneToOne',
 		),
-		'freshrss_init' => array(  // function() -> none
+		'freshrss_init' => array(	// function() -> none
 			'list' => array(),
 			'signature' => 'NoneToNone',
 		),
-		'menu_admin_entry' => array(  // function() -> string
-			'list' => array(),
-			'signature' => 'NoneToString',
-		),
-		'menu_configuration_entry' => array(  // function() -> string
-			'list' => array(),
-			'signature' => 'NoneToString',
-		),
-		'menu_other_entry' => array(  // function() -> string
-			'list' => array(),
-			'signature' => 'NoneToString',
-		),
-		'nav_reading_modes' => array(  // function($readingModes = array) -> array | null
-			'list' => array(),
-			'signature' => 'OneToOne',
-		),
-		'post_update' => array(  // function(none) -> none
+		'freshrss_user_maintenance' => array(	// function() -> none
 			'list' => array(),
 			'signature' => 'NoneToNone',
 		),
-		'simplepie_before_init' => array(  // function($simplePie, $feed) -> none
+		'js_vars' => array(	// function($vars = array) -> array | null
+			'list' => array(),
+			'signature' => 'OneToOne',
+		),
+		'menu_admin_entry' => array(	// function() -> string
+			'list' => array(),
+			'signature' => 'NoneToString',
+		),
+		'menu_configuration_entry' => array(	// function() -> string
+			'list' => array(),
+			'signature' => 'NoneToString',
+		),
+		'menu_other_entry' => array(	// function() -> string
+			'list' => array(),
+			'signature' => 'NoneToString',
+		),
+		'nav_menu' => array(	// function() -> string
+			'list' => array(),
+			'signature' => 'NoneToString',
+		),
+		'nav_reading_modes' => array(	// function($readingModes = array) -> array | null
+			'list' => array(),
+			'signature' => 'OneToOne',
+		),
+		'post_update' => array(	// function(none) -> none
+			'list' => array(),
+			'signature' => 'NoneToNone',
+		),
+		'simplepie_before_init' => array(	// function($simplePie, $feed) -> none
 			'list' => array(),
 			'signature' => 'PassArguments',
 		),
@@ -132,9 +144,7 @@ class Minz_ExtensionManager {
 	 */
 	public static function isValidMetadata($meta) {
 		$valid_chars = array('_');
-		return !(empty($meta['name']) ||
-		         empty($meta['entrypoint']) ||
-		         !ctype_alnum(str_replace($valid_chars, '', $meta['entrypoint'])));
+		return !(empty($meta['name']) || empty($meta['entrypoint']) || !ctype_alnum(str_replace($valid_chars, '', $meta['entrypoint'])));
 	}
 
 	/**
@@ -151,8 +161,7 @@ class Minz_ExtensionManager {
 
 		// Test if the given extension class exists.
 		if (!class_exists($ext_class_name)) {
-			Minz_Log::warning('`' . $ext_class_name .
-			                  '` cannot be found in `' . $entry_point_filename . '`');
+			Minz_Log::warning("`{$ext_class_name}` cannot be found in `{$entry_point_filename}`");
 			return null;
 		}
 
@@ -162,14 +171,13 @@ class Minz_ExtensionManager {
 			$extension = new $ext_class_name($info);
 		} catch (Exception $e) {
 			// We cannot load the extension? Invalid!
-			Minz_Log::warning('Invalid extension `' . $ext_class_name . '`: ' . $e->getMessage());
+			Minz_Log::warning("Invalid extension `{$ext_class_name}`: " . $e->getMessage());
 			return null;
 		}
 
 		// Test if class is correct.
 		if (!($extension instanceof Minz_Extension)) {
-			Minz_Log::warning('`' . $ext_class_name .
-			                  '` is not an instance of `Minz_Extension`');
+			Minz_Log::warning("`{$ext_class_name}` is not an instance of `Minz_Extension`");
 			return null;
 		}
 
@@ -180,7 +188,7 @@ class Minz_ExtensionManager {
 	 * Add the extension to the list of the known extensions ($ext_list).
 	 *
 	 * If the extension is present in $ext_auto_enabled and if its type is "system",
-	 * it will be enabled in the same time.
+	 * it will be enabled at the same time.
 	 *
 	 * @param Minz_Extension $ext a valid extension.
 	 */
@@ -208,6 +216,10 @@ class Minz_ExtensionManager {
 		if (isset(self::$ext_list[$ext_name])) {
 			$ext = self::$ext_list[$ext_name];
 			self::$ext_list_enabled[$ext_name] = $ext;
+
+			if (method_exists($ext, 'autoload')) {
+				spl_autoload_register([$ext, 'autoload']);
+			}
 			$ext->enable();
 			$ext->init();
 		}

@@ -24,7 +24,6 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 				Minz_Error::error(403);
 			}
 		}
-		$this->updateTTL();
 	}
 
 	/**
@@ -90,7 +89,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 			'name' => $title != '' ? $title : $feed->name(),
 			'website' => $feed->website(),
 			'description' => $feed->description(),
-			'lastUpdate' => time(),
+			'lastUpdate' => 0,
 			'httpAuth' => $feed->httpAuth(),
 			'attributes' => $feed->attributes(),
 		);
@@ -103,7 +102,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 		$feed->_id($id);
 
 		// Ok, feed has been added in database. Now we have to refresh entries.
-		self::actualizeFeed($id, $url, false, null, true);
+		self::actualizeFeed($id, $url, false, null);
 
 		return $feed;
 	}
@@ -150,8 +149,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 		$limits = FreshRSS_Context::$system_conf->limits;
 		$this->view->feeds = $feedDAO->listFeeds();
 		if (count($this->view->feeds) >= $limits['max_feeds']) {
-			Minz_Request::bad(_t('feedback.sub.feed.over_max', $limits['max_feeds']),
-			                  $url_redirect);
+			Minz_Request::bad(_t('feedback.sub.feed.over_max', $limits['max_feeds']), $url_redirect);
 		}
 
 		if (Minz_Request::isPost()) {
@@ -166,9 +164,22 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 				$http_auth = $user . ':' . $pass;
 			}
 
+			$useragent = Minz_Request::param('curl_params_useragent', '');
+			$proxy_address = Minz_Request::param('curl_params', '');
+			$proxy_type = Minz_Request::param('proxy_type', '');
+			$opts = [];
+			if ($proxy_address !== '' && $proxy_type !== '' && in_array($proxy_type, [0, 2, 4, 5, 6, 7])) {
+				$opts[CURLOPT_PROXY] = $proxy_address;
+				$opts[CURLOPT_PROXYTYPE] = intval($proxy_type);
+			}
+			if ($useragent !== '') {
+				$opts[CURLOPT_USERAGENT] = $useragent;
+			}
+
 			$attributes = array(
 				'ssl_verify' => null,
 				'timeout' => null,
+				'curl_params' => empty($opts) ? null : $opts,
 			);
 			if (FreshRSS_Auth::hasAccess('admin')) {
 				$attributes['ssl_verify'] = Minz_Request::paramTernary('ssl_verify');
@@ -256,7 +267,7 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 		}
 	}
 
-	public static function actualizeFeed($feed_id, $feed_url, $force, $simplePiePush = null, $isNewFeed = false, $noCommit = false, $maxFeeds = 10) {
+	public static function actualizeFeed($feed_id, $feed_url, $force, $simplePiePush = null, $noCommit = false, $maxFeeds = 10) {
 		@set_time_limit(300);
 
 		$feedDAO = FreshRSS_Factory::createFeedDao();
@@ -325,6 +336,8 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 				continue;
 			}
 
+			$isNewFeed = $feed->lastUpdate() <= 0;
+
 			try {
 				if ($simplePiePush) {
 					$simplePie = $simplePiePush;	//Used by WebSub
@@ -336,6 +349,11 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 			} catch (FreshRSS_Feed_Exception $e) {
 				Minz_Log::warning($e->getMessage());
 				$feedDAO->updateLastUpdate($feed->id(), true);
+				if ($e->getCode() === 410) {
+					// HTTP 410 Gone
+					Minz_Log::warning('Muting gone feed: ' . $feed->url(false));
+					$feedDAO->mute($feed->id(), true);
+				}
 				$feed->unlock();
 				continue;
 			}
@@ -364,9 +382,9 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 						} else {	//This entry already exists but has been updated
 							//Minz_Log::debug('Entry with GUID `' . $entry->guid() . '` updated in feed ' . $feed->url(false) .
 								//', old hash ' . $existingHash . ', new hash ' . $entry->hash());
-							$mark_updated_article_unread = $feed->attributes('mark_updated_article_unread') !== null ? (
-									$feed->attributes('mark_updated_article_unread')
-								) : FreshRSS_Context::$user_conf->mark_updated_article_unread;
+							$mark_updated_article_unread = $feed->attributes('mark_updated_article_unread') !== null ?
+								$feed->attributes('mark_updated_article_unread') :
+								FreshRSS_Context::$user_conf->mark_updated_article_unread;
 							$needFeedCacheRefresh = $mark_updated_article_unread;
 							$entry->_isRead($mark_updated_article_unread ? false : null);	//Change is_read according to policy.
 
@@ -375,6 +393,9 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 								// An extension has returned a null value, there is nothing to insert.
 								continue;
 							}
+
+							// If the entry has changed, there is a good chance for the full content to have changed as well.
+							$entry->loadCompleteContent(true);
 
 							if (!$entryDAO->inTransaction()) {
 								$entryDAO->beginTransaction();
@@ -469,7 +490,13 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 				}
 			}
 			if (!empty($feedProperties)) {
-				$feedDAO->updateFeed($feed->id(), $feedProperties);
+				$ok = $feedDAO->updateFeed($feed->id(), $feedProperties);
+				if (!$ok && $isNewFeed) {
+					//Cancel adding new feed in case of database error at first actualize
+					$feedDAO->deleteFeed($feed->id());
+					$feed->unlock();
+					break;
+				}
 			}
 
 			$feed->faviconPrepare();
@@ -537,18 +564,14 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 			$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
 			$databaseDAO->minorDbMaintenance();
 		} else {
-			list($updated_feeds, $feed, $nb_new_articles) = self::actualizeFeed($id, $url, $force, null, false, $noCommit, $maxFeeds);
+			list($updated_feeds, $feed, $nb_new_articles) = self::actualizeFeed($id, $url, $force, null, $noCommit, $maxFeeds);
 		}
 
 		if (Minz_Request::param('ajax')) {
 			// Most of the time, ajax request is for only one feed. But since
 			// there are several parallel requests, we should return that there
 			// are several updated feeds.
-			$notif = array(
-				'type' => 'good',
-				'content' => _t('feedback.sub.feed.actualizeds')
-			);
-			Minz_Session::_param('notification', $notif);
+			Minz_Request::setGoodNotification(_t('feedback.sub.feed.actualizeds'));
 			// No layout in ajax request.
 			$this->view->_layout(false);
 		} else {
@@ -725,18 +748,28 @@ class FreshRSS_feed_Controller extends Minz_ActionController {
 		}
 
 		//Re-fetch articles as if the feed was new.
+		$feedDAO->updateFeed($feed->id(), [ 'lastUpdate' => 0 ]);
 		self::actualizeFeed($feed_id, null, false, null, true);
 
 		//Extract all feed entries from database, load complete content and store them back in database.
 		$entries = $entryDAO->listWhere('f', $feed_id, FreshRSS_Entry::STATE_ALL, 'DESC', 0);
+		//TODO: Parameter to limit the number of articles to reload
 
-		//We need another DB connection in parallel
+		//We need another DB connection in parallel for unbuffered streaming
 		Minz_ModelPdo::$usesSharedPdo = false;
-		$entryDAO2 = FreshRSS_Factory::createEntryDao();
+		if (FreshRSS_Context::$system_conf->db['type'] === 'mysql') {
+			// Second parallel connection for unbuffered streaming: MySQL
+			$entryDAO2 = FreshRSS_Factory::createEntryDao();
+		} else {
+			// Single connection for buffered queries (in memory): SQLite, PostgreSQL
+			//TODO: Consider an unbuffered query for PostgreSQL
+			$entryDAO2 = $entryDAO;
+		}
 
 		foreach ($entries as $entry) {
-			$entry->loadCompleteContent(true);
-			$entryDAO2->updateEntry($entry->toArray());
+			if ($entry->loadCompleteContent(true)) {
+				$entryDAO2->updateEntry($entry->toArray());
+			}
 		}
 
 		Minz_ModelPdo::$usesSharedPdo = true;

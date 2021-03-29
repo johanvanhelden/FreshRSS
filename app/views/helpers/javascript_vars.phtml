@@ -1,12 +1,14 @@
 <?php
 $mark = FreshRSS_Context::$user_conf->mark_when;
-$s = validateShortcutList(FreshRSS_Context::$user_conf->shortcuts);
+$s = FreshRSS_Context::$user_conf->shortcuts;
+$extData = Minz_ExtensionManager::callHook('js_vars', []);
 echo htmlspecialchars(json_encode(array(
 	'context' => array(
 		'anonymous' => !FreshRSS_Auth::hasAccess(),
 		'auto_remove_article' => !!FreshRSS_Context::isAutoRemoveAvailable(),
 		'hide_posts' => !(FreshRSS_Context::$user_conf->display_posts || Minz_Request::actionName() === 'reader'),
 		'display_order' => Minz_Request::param('order', FreshRSS_Context::$user_conf->sort_order),
+		'display_categories' => FreshRSS_Context::$user_conf->display_categories,
 		'auto_mark_article' => !!$mark['article'],
 		'auto_mark_site' => !!$mark['site'],
 		'auto_mark_scroll' => !!$mark['scroll'],
@@ -61,4 +63,5 @@ echo htmlspecialchars(json_encode(array(
 		'read' => rawurlencode(_i('read')),
 		'unread' => rawurlencode(_i('unread')),
 	),
+	'extensions' => $extData,
 ), JSON_UNESCAPED_UNICODE), ENT_NOQUOTES, 'UTF-8');

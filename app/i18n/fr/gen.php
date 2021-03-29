@@ -138,6 +138,7 @@ return array(
 		'kr' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
+		'pl' => 'Polski',
 		'pt-br' => 'Português (Brasil)',
 		'ru' => 'Русский',
 		'sk' => 'Slovenčina',
@@ -184,6 +185,7 @@ return array(
 	'share' => array(
 		'Known' => 'Sites basés sur Known',
 		'blogotext' => 'Blogotext',
+		'clipboard' => 'Presse-papier',
 		'diaspora' => 'Diaspora*',
 		'email' => 'Courriel',
 		'facebook' => 'Facebook',
@@ -194,7 +196,7 @@ return array(
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
 		'pinboard' => 'Pinboard',	// TODO - Translation
-		'pocket' => 'Pocket',	// TODO - Translation
+		'pocket' => 'Pocket',
 		'print' => 'Imprimer',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',

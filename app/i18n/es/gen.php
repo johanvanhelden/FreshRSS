@@ -72,8 +72,8 @@ return array(
 		'december' => 'diciembre',
 		'feb' => 'feb',
 		'february' => 'febrero',
-		'format_date' => '%s j\\<\\s\\u\\p\\>S\\<\\/\\s\\u\\p\\> Y',	// TODO - Translation
-		'format_date_hour' => '%s j\\<\\s\\u\\p\\>S\\<\\/\\s\\u\\p\\> Y \\a\\t H\\:i',	// TODO - Translation
+		'format_date' => 'j %s Y',
+		'format_date_hour' => 'j %s Y \\a\\t H\\:i',
 		'fri' => 'Vie',
 		'jan' => 'ene',
 		'january' => 'ene',
@@ -138,6 +138,7 @@ return array(
 		'kr' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
+		'pl' => 'Polski',
 		'pt-br' => 'Português (Brasil)',
 		'ru' => 'Русский',
 		'sk' => 'Slovenčina',
@@ -184,6 +185,7 @@ return array(
 	'share' => array(
 		'Known' => 'Known based sites',	// TODO - Translation
 		'blogotext' => 'Blogotext',	// TODO - Translation
+		'clipboard' => 'Clipboard',	// TODO - Translation
 		'diaspora' => 'Diaspora*',	// TODO - Translation
 		'email' => 'Email',	// TODO - Translation
 		'facebook' => 'Facebook',	// TODO - Translation

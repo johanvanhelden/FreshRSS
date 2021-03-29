@@ -75,12 +75,19 @@ class SimplePie_Locator
 		$this->force_fsockopen = $force_fsockopen;
 		$this->curl_options = $curl_options;
 
-		if (class_exists('DOMDocument'))
+		if (class_exists('DOMDocument') && $this->file->body != '')
 		{
 			$this->dom = new DOMDocument();
 
 			set_error_handler(array('SimplePie_Misc', 'silence_errors'));
-			$this->dom->loadHTML($this->file->body);
+			try
+			{
+				$this->dom->loadHTML($this->file->body);
+			}
+			catch (Throwable $ex)
+			{
+				$this->dom = null;
+			}
 			restore_error_handler();
 		}
 		else
@@ -94,7 +101,7 @@ class SimplePie_Locator
 		$this->registry = $registry;
 	}
 
-	public function find($type = SIMPLEPIE_LOCATOR_ALL, &$working)
+	public function find($type = SIMPLEPIE_LOCATOR_ALL, &$working = null)
 	{
 		if ($this->is_feed($this->file))
 		{

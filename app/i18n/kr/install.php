@@ -33,7 +33,7 @@ return array(
 		'_' => '설치 요구사항 확인',
 		'already_installed' => 'FreshRSS가 이미 설치되어 있는 것을 감지했습니다!',
 		'cache' => array(
-			'nok' => '<em>./data/cache</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
+			'nok' => '<em>%s</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
 			'ok' => 'cache 디렉토리의 권한이 올바르게 설정되었습니다.',
 		),
 		'ctype' => array(
@@ -45,7 +45,7 @@ return array(
 			'ok' => 'cURL 라이브러리가 설치되어 있습니다.',
 		),
 		'data' => array(
-			'nok' => '<em>./data</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
+			'nok' => '<em>%s</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
 			'ok' => 'data 디렉토리의 권한이 올바르게 설정되었습니다.',
 		),
 		'dom' => array(
@@ -53,16 +53,12 @@ return array(
 			'ok' => 'DOM을 다룰 수 있는 라이브러리가 설치되어 있습니다.',
 		),
 		'favicons' => array(
-			'nok' => '<em>./data/favicons</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
+			'nok' => '<em>%s</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
 			'ok' => 'favicons 디렉토리의 권한이 올바르게 설정되어 있습니다.',
 		),
 		'fileinfo' => array(
 			'nok' => 'fileinfo 라이브러리를 찾을 수 없습니다 (fileinfo 패키지).',
 			'ok' => 'fileinfo 라이브러리가 설치되어 있습니다.',
-		),
-		'http_referer' => array(
-			'nok' => 'HTTP REFERER가 변경되지 않았는지 확인해주세요.',
-			'ok' => 'HTTP REFERER가 서버와 일치하는 것을 확인했습니다.',
 		),
 		'json' => array(
 			'nok' => 'JSON 확장 기능을 찾을 수 없습니다 (php-json 패키지).',
@@ -71,10 +67,6 @@ return array(
 		'mbstring' => array(
 			'nok' => '유니코드 지원을 위한 mbstring 라이브러리를 찾을 수 없습니다.',
 			'ok' => '유니코드 지원을 위한 mbstring 라이브러리가 설치되어 있습니다.',
-		),
-		'minz' => array(
-			'nok' => 'Minz 프레임워크를 찾을 수 없습니다.',
-			'ok' => 'Minz 프레임워크가 설치되어 있습니다.',
 		),
 		'pcre' => array(
 			'nok' => '정규표현식을 위한 라이브러리를 찾을 수 없습니다 (php-pcre).',
@@ -88,8 +80,13 @@ return array(
 			'nok' => 'PHP 버전은 %s 이지만, FreshRSS에는 최소 %s의 버전이 필요합니다.',
 			'ok' => 'PHP 버전은 %s 이고, FreshRSS와 호환가능 합니다.',
 		),
+		'tmp' => array(
+			'nok' => '<em>%s</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다.',
+			'ok' => 'Permissions on the temp directory are good.',	// TODO - Translation
+		),
+		'unknown_process_username' => 'unknown',	// TODO - Translation
 		'users' => array(
-			'nok' => '<em>./data/users</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다',
+			'nok' => '<em>%s</em> 디렉토리의 권한을 확인하세요. HTTP 서버가 쓰기 권한을 가지고 있어야 합니다.',
 			'ok' => 'users 디렉토리의 권한이 올바르게 설정되어 있습니다.',
 		),
 		'xml' => array(
@@ -114,8 +111,11 @@ return array(
 		'choose' => 'FreshRSS에서 사용할 언어를 고르세요',
 		'defined' => '언어가 설정되었습니다.',
 	),
-	'not_deleted' => '무언가 잘못되었습니다; <em>%s</em> 파일을 직접 삭제해주세요.',
+	'missing_applied_migrations' => 'Something went wrong; you should create an empty file <em>%s</em> manually.',	// TODO - Translation
 	'ok' => '설치 과정이 성공적으로 끝났습니다.',
+	'session' => array(
+		'nok' => 'The web server seems to be incorrectly configured for cookies required for PHP sessions!',	// TODO - Translation
+	),
 	'step' => '단계 %d',
 	'steps' => '단계',
 	'this_is_the_end' => '마침',

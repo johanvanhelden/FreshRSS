@@ -43,6 +43,10 @@ class FreshRSS_Share {
 			$share_options['type'] = $share_type;
 			self::register($share_options);
 		}
+
+		uasort(self::$list_sharing, function ($a, $b) {
+			return strcasecmp($a->name(), $b->name());
+		});
 	}
 
 	/**
@@ -93,8 +97,7 @@ class FreshRSS_Share {
 	 * @param $help_url is an optional url to give help on this option.
 	 * @param $method defines the sharing method (GET or POST)
 	 */
-	private function __construct($type, $url_transform, $transform,
-	                             $form_type, $help_url, $method, $field) {
+	private function __construct($type, $url_transform, $transform, $form_type, $help_url, $method, $field) {
 		$this->type = $type;
 		$this->name = _t('gen.share.' . $type);
 		$this->url_transform = $url_transform;

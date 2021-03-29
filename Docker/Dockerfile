@@ -35,7 +35,7 @@ LABEL \
 	org.opencontainers.image.version="$FRESHRSS_VERSION"
 
 RUN a2dismod -f alias autoindex negotiation status && \
-	a2enmod deflate expires headers mime setenvif && \
+	a2enmod deflate expires headers mime remoteip setenvif && \
 	a2disconf '*' && \
 	a2dissite '*' && \
 	a2ensite 'FreshRSS*'
@@ -51,6 +51,7 @@ ENV COPY_LOG_TO_SYSLOG On
 ENV COPY_SYSLOG_TO_STDERR On
 ENV CRON_MIN ''
 ENV FRESHRSS_ENV ''
+ENV LISTEN ''
 
 ENTRYPOINT ["./Docker/entrypoint.sh"]
 

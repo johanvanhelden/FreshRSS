@@ -138,6 +138,7 @@ return array(
 		'kr' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
+		'pl' => 'Polski',
 		'pt-br' => 'Português (Brasil)',
 		'ru' => 'Русский',
 		'sk' => 'Slovenčina',
@@ -184,6 +185,7 @@ return array(
 	'share' => array(
 		'Known' => 'Sites basats sus Known',
 		'blogotext' => 'Blogotext',
+		'clipboard' => 'Quicha-papiers.',
 		'diaspora' => 'Diaspora*',
 		'email' => 'Corrièl',
 		'facebook' => 'Facebook',

@@ -109,6 +109,11 @@ return array(
 		),
 		'purge_completed' => 'Purga realizada (%s articles suprimits)',
 	),
+	'tag' => array(
+		'created' => 'L’etiqueta « %s » es estada creada.',
+		'name_exists' => 'Lo nom de l’etiqueta existís ja.',
+		'renamed' => 'L’etiqueta « %s » es estada renomenada en « %s ».',
+	),
 	'update' => array(
 		'can_apply' => 'FreshRSS es per èsser mes a jorn en <strong>version %s</strong>.',
 		'error' => 'La mesa a jorn a conegut un problèma : %s',

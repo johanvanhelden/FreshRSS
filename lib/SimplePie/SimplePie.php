@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.5.4
+ * @version 1.5.6
  * @copyright 2004-2017 Ryan Parman, Sam Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Sam Sneddon
@@ -50,7 +50,7 @@ define('SIMPLEPIE_NAME', 'SimplePie');
 /**
  * SimplePie Version
  */
-define('SIMPLEPIE_VERSION', '1.5.4');
+define('SIMPLEPIE_VERSION', '1.5.6');
 
 /**
  * SimplePie Build
@@ -431,6 +431,13 @@ class SimplePie
 	public $error;
 
 	/**
+	 * @var int HTTP status code
+	 * @see SimplePie::status_code()
+	 * @access private
+	 */
+	public $status_code;
+
+	/**
 	 * @var object Instance of SimplePie_Sanitize (or other class)
 	 * @see SimplePie::set_sanitize_class()
 	 * @access private
@@ -718,7 +725,7 @@ class SimplePie
 	 */
 	public function __destruct()
 	{
-		if ((version_compare(PHP_VERSION, '5.6', '<') || !gc_enabled()) && !ini_get('zend.ze1_compatibility_mode'))
+		if (!gc_enabled())
 		{
 			if (!empty($this->data['items']))
 			{
@@ -918,6 +925,37 @@ class SimplePie
 	public function set_cache_location($location = './cache')
 	{
 		$this->cache_location = (string) $location;
+	}
+
+	/**
+	 * Return the filename (i.e. hash, without path and without extension) of the file to cache a given URL.
+	 */
+	public function get_cache_filename($url)
+	{
+		// Append custom parameters to the URL to avoid cache pollution in case of multiple calls with different parameters.
+		$url .= $this->force_feed ? '#force_feed' : '';
+		$options = array();
+		if ($this->timeout != 10)
+		{
+			$options[CURLOPT_TIMEOUT] = $this->timeout;
+		}
+		if ($this->useragent !== SIMPLEPIE_USERAGENT)
+		{
+			$options[CURLOPT_USERAGENT] = $this->useragent;
+		}
+		if (!empty($this->curl_options))
+		{
+			foreach ($this->curl_options as $k => $v)
+			{
+				$options[$k] = $v;
+			}
+		}
+		if (!empty($options))
+		{
+			ksort($options);
+			$url .= '#' . urlencode(var_export($options, true));
+		}
+		return call_user_func($this->cache_name_function, $url);
 	}
 
 	/**
@@ -1322,12 +1360,24 @@ class SimplePie
 
 	function cleanMd5($rss)
 	{
-		return md5(preg_replace(array(
-			'#<(lastBuildDate|pubDate|updated|feedDate|dc:date|slash:comments)>[^<]+</\\1>#',
-			'#<(media:starRating|media:statistics) [^/<>]+/>#',
-			'#<!--.+?-->#s',
-			), '', $rss));
-		
+		//Process by chunks not to use too much memory
+		if (($stream = fopen('php://temp', 'r+')) &&
+			fwrite($stream, $rss) &&
+			rewind($stream))
+		{
+			$ctx = hash_init('md5');
+			while ($stream_data = fread($stream, 1048576))
+			{
+				hash_update($ctx, preg_replace([
+					'#<(lastBuildDate|pubDate|updated|feedDate|dc:date|slash:comments)>[^<]+</\\1>#',
+					'#<(media:starRating|media:statistics) [^/<>]+/>#',
+					'#<!--.+?-->#s',
+				], '', $stream_data));
+			}
+			fclose($stream);
+			return hash_final($ctx);
+		}
+		return '';
 	}
 
 	/**
@@ -1417,14 +1467,14 @@ class SimplePie
 			// Decide whether to enable caching
 			if ($this->cache && $parsed_feed_url['scheme'] !== '')
 			{
-				$url = $this->feed_url . ($this->force_feed ? '#force_feed' : '');
-				$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, call_user_func($this->cache_name_function, $url), 'spc'));
+				$filename = $this->get_cache_filename($this->feed_url);
+				$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, $filename, 'spc'));
 			}
 
 			// Fetch the data via SimplePie_File into $this->raw_data
 			if (($fetched = $this->fetch_data($cache)) === true)
 			{
-				return $this->data['mtime'];
+				return empty($this->data['mtime']) ? false : $this->data['mtime'];
 			}
 			elseif ($fetched === false) {
 				return false;
@@ -1509,7 +1559,7 @@ class SimplePie
 				$parser = $this->registry->create('Parser');
 
 				// If it's parsed fine
-				if ($parser->parse($utf8_data, empty($encoding) ? '' : 'UTF-8'))	//FreshRSS
+				if ($parser->parse($utf8_data, empty($encoding) ? '' : 'UTF-8', $this->permanent_url))	//FreshRSS
 				{
 					$this->data = $parser->get_data();
 					if (!($this->get_type() & ~SIMPLEPIE_TYPE_NONE))
@@ -1634,6 +1684,7 @@ class SimplePie
 					}
 
 					$file = $this->registry->create('File', array($this->feed_url, $this->timeout, 5, $headers, $this->useragent, $this->force_fsockopen, $this->curl_options, $this->syslog_enabled));
+					$this->status_code = $file->status_code;
 
 					if ($file->success)
 					{
@@ -1690,6 +1741,8 @@ class SimplePie
 				$file = $this->registry->create('File', array($this->feed_url, $this->timeout, 5, $headers, $this->useragent, $this->force_fsockopen, $this->curl_options, $this->syslog_enabled));
 			}
 		}
+		$this->status_code = $file->status_code;
+
 		// If the file connection has an error, set SimplePie::error to that and quit
 		if (!$file->success && !($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300)))
 		{
@@ -1797,6 +1850,16 @@ class SimplePie
 	public function error()
 	{
 		return $this->error;
+	}
+
+	/**
+	 * Get the last HTTP status code
+	 *
+	 * @return int Status code
+	 */
+	public function status_code()
+	{
+		return $this->status_code;
 	}
 
 	/**

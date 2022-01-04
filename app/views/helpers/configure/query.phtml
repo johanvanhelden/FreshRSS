@@ -1,5 +1,6 @@
+<?php /** @var FreshRSS_View $this */ ?>
 <div class="post">
-	<h1><?= $this->query->getName() ?></h1>
+	<h2><?= $this->query->getName() ?></h2>
 
 	<div>
 		<a href="<?= $this->query->getUrl() ?>"><?= _i('link') ?> <?= _t('gen.action.filter') ?></a>

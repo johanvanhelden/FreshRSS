@@ -14,6 +14,10 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 		return preg_match('/^' . self::USERNAME_PATTERN . '$/', $username) === 1;
 	}
 
+	public static function userExists($username) {
+		return @file_exists(USERS_PATH . '/' . $username . '/config.php');
+	}
+
 	public static function updateUser($user, $email, $passwordPlain, $userConfigUpdated = array()) {
 		$userConfig = get_user_configuration($user);
 		if ($userConfig === null) {
@@ -91,9 +95,9 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			$this->view->disable_aside = true;
 		}
 
-		Minz_View::prependTitle(_t('conf.profile.title') . ' · ');
+		FreshRSS_View::prependTitle(_t('conf.profile.title') . ' · ');
 
-		Minz_View::appendScript(Minz_Url::display('/scripts/bcrypt.min.js?' . @filemtime(PUBLIC_PATH . '/scripts/bcrypt.min.js')));
+		FreshRSS_View::appendScript(Minz_Url::display('/scripts/bcrypt.min.js?' . @filemtime(PUBLIC_PATH . '/scripts/bcrypt.min.js')));
 
 		if (Minz_Request::isPost()) {
 			$system_conf = FreshRSS_Context::$system_conf;
@@ -169,7 +173,7 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			Minz_Error::error(403);
 		}
 
-		Minz_View::prependTitle(_t('admin.user.title') . ' · ');
+		FreshRSS_View::prependTitle(_t('admin.user.title') . ' · ');
 
 		if (Minz_Request::isPost()) {
 			$action = Minz_Request::param('action');
@@ -223,6 +227,7 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 
 		$ok = self::checkUsername($new_user_name);
 		$homeDir = join_path(DATA_PATH, 'users', $new_user_name);
+		$configPath = '';
 
 		if ($ok) {
 			$languages = Minz_Translate::availableLanguages();
@@ -287,25 +292,29 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			$new_user_name = Minz_Request::param('new_user_name');
 			$email = Minz_Request::param('new_user_email', '');
 			$passwordPlain = Minz_Request::param('new_user_passwordPlain', '', true);
+			$badRedirectUrl = [
+				'c' => Minz_Request::param('originController', 'auth'),
+				'a' => Minz_Request::param('originAction', 'register'),
+			];
 
 			if (!self::checkUsername($new_user_name)) {
 				Minz_Request::bad(
 					_t('user.username.invalid'),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
 			if (FreshRSS_UserDAO::exists($new_user_name)) {
 				Minz_Request::bad(
 					_t('user.username.taken', $new_user_name),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
 			if (!FreshRSS_password_Util::check($passwordPlain)) {
 				Minz_Request::bad(
 					_t('user.password.invalid'),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
@@ -315,21 +324,21 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			if ($system_conf->force_email_validation && empty($email)) {
 				Minz_Request::bad(
 					_t('user.email.feedback.required'),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
 			if (!empty($email) && !validateEmailAddress($email)) {
 				Minz_Request::bad(
 					_t('user.email.feedback.invalid'),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
 			if ($tos_enabled && !$accept_tos) {
 				Minz_Request::bad(
 					_t('user.tos.feedback.invalid'),
-					array('c' => 'auth', 'a' => 'register')
+					$badRedirectUrl
 				);
 			}
 
@@ -410,7 +419,7 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 			Minz_Error::error(404);
 		}
 
-		Minz_View::prependTitle(_t('user.email.validation.title') . ' · ');
+		FreshRSS_View::prependTitle(_t('user.email.validation.title') . ' · ');
 		$this->view->_layout('simple');
 
 		$username = Minz_Request::param('username');
@@ -421,11 +430,11 @@ class FreshRSS_user_Controller extends Minz_ActionController {
 		} elseif (FreshRSS_Auth::hasAccess()) {
 			$user_config = FreshRSS_Context::$user_conf;
 		} else {
-			Minz_Error::error(403);
+			return Minz_Error::error(403);
 		}
 
 		if (!FreshRSS_UserDAO::exists($username) || $user_config === null) {
-			Minz_Error::error(404);
+			return Minz_Error::error(404);
 		}
 
 		if ($user_config->email_validation_token === '') {

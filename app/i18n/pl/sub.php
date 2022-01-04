@@ -1,7 +1,6 @@
 <?php
 
 return array(
-	'add' => 'Dodawanie nowych kanałów i kategorii zostało przeniesione <a href=\'%s\'>tutaj</a>. Jest również dostępne w menu po lewej stronie, a także za pomocą ikony ✚ dostępnej na głównej stronie.',
 	'api' => array(
 		'documentation' => 'Skopiuj następujący URL, by wykorzystać go w zewnętrznym narzędziu.',
 		'title' => 'API',
@@ -13,7 +12,7 @@ return array(
 	),
 	'category' => array(
 		'_' => 'Kategoria',
-		'add' => 'Dodaj kategorię',
+		'add' => 'Dodaj kategoria',
 		'archiving' => 'Archiwizacja',
 		'empty' => 'Pusta kategoria',
 		'information' => 'Informacje',
@@ -28,19 +27,19 @@ return array(
 		'auth' => array(
 			'configuration' => 'Uwierzytelnianie',
 			'help' => 'Pozwala na dostęp do kanałów chronionych hasłem HTTP',
-			'http' => 'HTTP Authentication',	// TODO - Translation
+			'http' => 'Uwierzytelnienie HTTP',
 			'password' => 'Hasło HTTP',
 			'username' => 'Użytkownik HTTP',
 		),
 		'clear_cache' => 'Zawsze czyść pamięć podręczną',
 		'content_action' => array(
-			'_' => 'Content action when fetching the article content',	// TODO - Translation
-			'append' => 'Add after existing content',	// TODO - Translation
-			'prepend' => 'Add before existing content',	// TODO - Translation
-			'replace' => 'Replace existing content',	// TODO - Translation
+			'_' => 'Sposób zachowania zawartości pobranej z pierwotnej strony',
+			'append' => 'Umieść za treścią z kanału',
+			'prepend' => 'Umieść przed treścią z kanału',
+			'replace' => 'Zastąp treść z kanału',
 		),
-		'css_cookie' => 'Use Cookies when fetching the article content',	// TODO - Translation
-		'css_cookie_help' => 'Example: <kbd>foo=bar; gdpr_consent=true; cookie=value</kbd>',	// TODO - Translation
+		'css_cookie' => 'Użyj plików cookie podczas pobierania wiadomości',
+		'css_cookie_help' => 'Przykład: <kbd>foo=bar; gdpr_consent=true; cookie=value</kbd>',
 		'css_help' => 'Pozwala na ograniczenie zawartości kanałów (uwaga, wymaga więcej czasu!)',
 		'css_path' => 'Selektor CSS dla wiadomości na pierwotnej stronie',
 		'description' => 'Opis',
@@ -61,7 +60,7 @@ return array(
 		),
 		'moved_category_deleted' => 'Po usunięciu kategorii znajdujące się w niej kanały zostaną automatycznie przeniesione do <em>%s</em>.',
 		'mute' => 'wycisz',
-		'no_selected' => 'No feed selected.',	// TODO - Translation
+		'no_selected' => 'Brak kanałów.',
 		'number_entries' => '%d wiadomości',
 		'priority' => array(
 			'_' => 'Widoczność',
@@ -69,8 +68,8 @@ return array(
 			'main_stream' => 'Pokaż w kanale głównym',
 			'normal' => 'Pokaż w kategorii kanału',
 		),
-		'proxy' => 'Set a proxy for fetching this feed',	// TODO - Translation
-		'proxy_help' => 'Select a protocol (e.g: SOCKS5) and enter the proxy address (e.g: <kbd>127.0.0.1:1080</kbd>)',	// TODO - Translation
+		'proxy' => 'Użyj mechanizmu proxy podczas pobierania kanału',
+		'proxy_help' => 'Wybierz protokół (np. SOCKS5) i podaj adres serwera proxy (np. <kbd>127.0.0.1:1080</kbd>)',
 		'selector_preview' => array(
 			'show_raw' => 'Pokaż źródło',
 			'show_rendered' => 'Pokaż zawartość',
@@ -90,35 +89,33 @@ return array(
 		'title_add' => 'Dodaj kanał',
 		'ttl' => 'Nie odświeżaj automatycznie częściej niż',
 		'url' => 'Adres kanału',
-		'useragent' => 'Set the user agent for fetching this feed',	// TODO - Translation
-		'useragent_help' => 'Example: <kbd>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)</kbd>',	// TODO - Translation
+		'useragent' => 'Ciąg user agent używany podczas pobierania kanału',
+		'useragent_help' => 'Przykład: <kbd>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)</kbd>',
 		'validator' => 'Sprawdź poprawność kanału',
 		'website' => 'Adres strony',
-		'websub' => 'Instant notification with WebSub',	// TODO - Translation
-	),
-	'firefox' => array(
-		'documentation' => 'Wykonaj kroki opisane <a href="https://developer.mozilla.org/en-US/Firefox/Releases/2/Adding_feed_readers_to_Firefox#Adding_a_new_feed_reader_manually">tutaj</a>, by dodać FreshRSS do listy czytników kanałów w przeglądarce Firefox.',
-		'obsolete_63' => 'Możliwość dodawania własnych serwisów subskrypcji kanałów, które nie są osobnymi programami, została usunięta w Firefoksie 63.',
-		'title' => 'Czytnik kanałów w Firefoksie',
+		'websub' => 'Natychmiastowe powiadomienia protokołu WebSub',
 	),
 	'import_export' => array(
 		'export' => 'Eksport',
 		'export_labelled' => 'Eksportuj wiadomości z etykietami',
 		'export_opml' => 'Eksportuj listę kanałów (format OPML)',
 		'export_starred' => 'Eksportuj ulubione wiadomości',
-		'feed_list' => 'List of %s articles',	// TODO - Translation
+		'feed_list' => 'Lista wiadomości z kanału %s',
 		'file_to_import' => 'Plik do zaimportowania<br />(formaty OPML, JSON lub ZIP)',
 		'file_to_import_no_zip' => 'Plik do zaimportowania<br />(OPML lub JSON)',
 		'import' => 'Import',
-		'starred_list' => 'List of favourite articles',	// TODO - Translation
+		'starred_list' => 'Lista ulubionych wiadomości',
 		'title' => 'Import / eksport',
 	),
 	'menu' => array(
 		'add' => 'Dodaj kanał lub kategorię',
-		'add_feed' => 'Dodaj kanał',
-		'bookmark' => 'Subscribe (FreshRSS bookmark)',	// TODO - Translation
 		'import_export' => 'Import / eksport',
 		'label_management' => 'Zarządzanie etykietami',
+		'stats' => array(
+			'idle' => 'Bezczynne kanały',
+			'main' => 'Główne statystyki',
+			'repartition' => 'Podział wiadomości',
+		),
 		'subscription_management' => 'Zarządzanie subskrypcjami',
 		'subscription_tools' => 'Narzędzia subskrypcji',
 	),
@@ -134,7 +131,7 @@ return array(
 		'add_feed' => 'Dodaj kanał',
 		'add_label' => 'Dodaj etykietę',
 		'delete_label' => 'Usuń etykietę',
-		'feed_management' => 'RSS feeds management',	// TODO - Translation
+		'feed_management' => 'Zarządzanie kanałami RSS',
 		'rename_label' => 'Zmień nazwę etykiety',
 		'subscription_tools' => 'Narzędzia subskrypcji',
 	),

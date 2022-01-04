@@ -103,7 +103,7 @@ class Minz_Migrator
 
 		if (!$migrator->upToDate()) {
 			// still not up to date? It means last migration failed.
-			return 'A migration failed to be applied, please see previous logs';
+			return trim('A migration failed to be applied, please see previous logs.' . "\n" . implode("\n", $results));
 		}
 
 		return true;
@@ -192,7 +192,7 @@ class Minz_Migrator
 	/**
 	 * Set the applied versions of the application.
 	 *
-	 * @param string[] $applied_versions
+	 * @param array<string> $versions
 	 *
 	 * @throws DomainException if there is no migrations corresponding to a version
 	 */

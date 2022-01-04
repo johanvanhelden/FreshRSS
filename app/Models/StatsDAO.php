@@ -57,9 +57,8 @@ SQL;
 
 	/**
 	 * Calculates entry count per day on a 30 days period.
-	 * Returns the result as a JSON object.
 	 *
-	 * @return JSON object
+	 * @return array
 	 */
 	public function calculateEntryCount() {
 		$count = $this->initEntryCountArray();
@@ -99,7 +98,7 @@ SQL;
 	 * Calculates the number of article per hour of the day per feed
 	 *
 	 * @param integer $feed id
-	 * @return string
+	 * @return array
 	 */
 	public function calculateEntryRepartitionPerFeedPerHour($feed = null) {
 		return $this->calculateEntryRepartitionPerFeedPerPeriod('%H', $feed);
@@ -109,7 +108,7 @@ SQL;
 	 * Calculates the number of article per day of week per feed
 	 *
 	 * @param integer $feed id
-	 * @return string
+	 * @return array
 	 */
 	public function calculateEntryRepartitionPerFeedPerDayOfWeek($feed = null) {
 		return $this->calculateEntryRepartitionPerFeedPerPeriod('%w', $feed);
@@ -119,18 +118,22 @@ SQL;
 	 * Calculates the number of article per month per feed
 	 *
 	 * @param integer $feed
-	 * @return string
+	 * @return array
 	 */
 	public function calculateEntryRepartitionPerFeedPerMonth($feed = null) {
-		return $this->calculateEntryRepartitionPerFeedPerPeriod('%m', $feed);
+		$monthRepartition = $this->calculateEntryRepartitionPerFeedPerPeriod('%m', $feed);
+		// cut out the 0th month (Jan=1, Dec=12)
+		\array_splice($monthRepartition, 0, 1);
+		return $monthRepartition;
 	}
+
 
 	/**
 	 * Calculates the number of article per period per feed
 	 *
 	 * @param string $period format string to use for grouping
 	 * @param integer $feed id
-	 * @return string
+	 * @return array
 	 */
 	protected function calculateEntryRepartitionPerFeedPerPeriod($period, $feed = null) {
 		$restrict = '';
@@ -149,7 +152,21 @@ SQL;
 		$stm = $this->pdo->query($sql);
 		$res = $stm->fetchAll(PDO::FETCH_NAMED);
 
-		$repartition = array();
+		switch ($period) {
+			case '%H':
+				$periodMax = 24;
+				break;
+			case '%w':
+				$periodMax = 7;
+				break;
+			case '%m':
+				$periodMax = 12;
+				break;
+			default:
+			$periodMax = 30;
+		}
+
+		$repartition = array_fill(0, $periodMax, 0);
 		foreach ($res as $value) {
 			$repartition[(int) $value['period']] = (int) $value['count'];
 		}
@@ -238,9 +255,7 @@ SQL;
 
 	/**
 	 * Calculates feed count per category.
-	 * Returns the result as a JSON object.
-	 *
-	 * @return JSON object
+	 * @return array
 	 */
 	public function calculateFeedByCategory() {
 		$sql = <<<SQL
@@ -259,9 +274,7 @@ SQL;
 
 	/**
 	 * Calculates entry count per category.
-	 * Returns the result as a JSON string.
-	 *
-	 * @return JSON object
+	 * @return array
 	 */
 	public function calculateEntryByCategory() {
 		$sql = <<<SQL
@@ -364,7 +377,7 @@ SQL;
 	 * Translates array content
 	 *
 	 * @param array $data
-	 * @return JSON object
+	 * @return array
 	 */
 	private function convertToTranslatedJson($data = array()) {
 		$translated = array_map(function($a) {

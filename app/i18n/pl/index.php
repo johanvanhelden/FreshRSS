@@ -13,7 +13,6 @@ return array(
 		'project_website' => 'Strona projektu',
 		'title' => 'O serwisie',
 		'version' => 'Wersja',
-		'website' => 'Strona domowa',
 	),
 	'feed' => array(
 		'add' => 'Dodaj więcej kanałów.',
@@ -33,7 +32,7 @@ return array(
 		'about' => 'O serwisie FreshRSS',
 		'before_one_day' => 'Starsze niż dzień',
 		'before_one_week' => 'Starsze niż tydzień',
-		'bookmark_query' => 'Bookmark current query',	// TODO - Translation
+		'bookmark_query' => 'Zapisz bieżące zapytanie',
 		'favorites' => 'Ulubione (%s)',
 		'global_view' => 'Widok globalny',
 		'main_stream' => 'Kanał główny',
@@ -49,7 +48,7 @@ return array(
 		'read' => 'Pokaż przeczytane',
 		'reader_view' => 'Widok czytania',
 		'rss_view' => 'Kanał RSS',
-		'search_short' => 'Search',	// TODO - Translation
+		'search_short' => 'Szukaj',
 		'starred' => 'Pokaż ulubione',
 		'stats' => 'Statystyki',
 		'subscription' => 'Zarządzanie subskrypcjami',

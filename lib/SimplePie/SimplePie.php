@@ -33,7 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.5.6
+ * @version 1.5.8
  * @copyright 2004-2017 Ryan Parman, Sam Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Sam Sneddon
@@ -50,7 +50,7 @@ define('SIMPLEPIE_NAME', 'SimplePie');
 /**
  * SimplePie Version
  */
-define('SIMPLEPIE_VERSION', '1.5.6');
+define('SIMPLEPIE_VERSION', '1.5.8');
 
 /**
  * SimplePie Build
@@ -929,6 +929,8 @@ class SimplePie
 
 	/**
 	 * Return the filename (i.e. hash, without path and without extension) of the file to cache a given URL.
+	 * @param string $url The URL of the feed to be cached.
+	 * @return string A filename (i.e. hash, without path and without extension).
 	 */
 	public function get_cache_filename($url)
 	{
@@ -1308,9 +1310,9 @@ class SimplePie
 	}
 
 	/**
-	 * Set the list of domains for which force HTTPS.
+	 * Set the list of domains for which to force HTTPS.
 	 * @see SimplePie_Sanitize::set_https_domains()
-	 * FreshRSS
+	 * @param array List of HTTPS domains. Example array('biz', 'example.com', 'example.org', 'www.example.net').
 	 */
 	public function set_https_domains($domains = array())
 	{
@@ -1387,7 +1389,7 @@ class SimplePie
 	 * configuration options get processed, feeds are fetched, cached, and
 	 * parsed, and all of that other good stuff.
 	 *
-	 * @return positive integer with modification time if using cache, boolean true if otherwise successful, false otherwise
+	 * @return boolean|integer positive integer with modification time if using cache, boolean true if otherwise successful, false otherwise
 	 */
 	public function init()
 	{
@@ -1622,7 +1624,7 @@ class SimplePie
 	 * Fetch the data via SimplePie_File
 	 *
 	 * If the data is already cached, attempt to fetch it from there instead
-	 * @param SimplePie_Cache|false $cache Cache handler, or false to not load from the cache
+	 * @param SimplePie_Cache_Base|false $cache Cache handler, or false to not load from the cache
 	 * @return array|true Returns true if the data was loaded from the cache, or an array of HTTP headers and sniffed type
 	 */
 	protected function fetch_data(&$cache)
@@ -1843,7 +1845,7 @@ class SimplePie
 	}
 
 	/**
-	 * Get the error message for the occured error
+	 * Get the error message for the occurred error
 	 *
 	 * @return string|array Error message, or array of messages for multifeeds
 	 */
@@ -2705,13 +2707,19 @@ class SimplePie
 			}
 		}
 
-		if (isset($this->data['headers']['link']) &&
-		    preg_match('/<([^>]+)>; rel='.preg_quote($rel).'/',
-		               $this->data['headers']['link'], $match))
+		if (isset($this->data['headers']['link']))
 		{
-			return array($match[1]);
+			$link_headers = $this->data['headers']['link'];
+			if (is_string($link_headers)) {
+				$link_headers = array($link_headers);
+			}
+			$matches = preg_filter('/<([^>]+)>; rel='.preg_quote($rel).'/', '$1', $link_headers);
+			if (!empty($matches)) {
+				return $matches;
+			}
 		}
-		else if (isset($this->data['links'][$rel]))
+
+		if (isset($this->data['links'][$rel]))
 		{
 			return $this->data['links'][$rel];
 		}

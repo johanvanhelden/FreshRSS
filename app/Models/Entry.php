@@ -59,13 +59,19 @@ class FreshRSS_Entry extends Minz_Model {
 	public function content() {
 		return $this->content;
 	}
-	public function enclosures() {
+
+	public function enclosures($searchBodyImages = false) {
 		$results = [];
 		try {
-			if (strpos($this->content, '<p class="enclosure-content') !== false) {
+			$searchEnclosures = strpos($this->content, '<p class="enclosure-content') !== false;
+			$searchBodyImages &= (stripos($this->content, '<img') !== false);
+			$xpath = null;
+			if ($searchEnclosures || $searchBodyImages) {
 				$dom = new DOMDocument();
-				$dom->loadHTML($this->content, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING);
+				$dom->loadHTML('<?xml version="1.0" encoding="UTF-8" ?>' . $this->content, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING);
 				$xpath = new DOMXpath($dom);
+			}
+			if ($searchEnclosures) {
 				$enclosures = $xpath->query('//div[@class="enclosure"]/p[@class="enclosure-content"]/*[@src]');
 				foreach ($enclosures as $enclosure) {
 					$results[] = [
@@ -75,10 +81,34 @@ class FreshRSS_Entry extends Minz_Model {
 					];
 				}
 			}
+			if ($searchBodyImages) {
+				$images = $xpath->query('//img');
+				foreach ($images as $img) {
+					$src = $img->getAttribute('src');
+					if ($src == null) {
+						$src = $img->getAttribute('data-src');
+					}
+					if ($src != null) {
+						$results[] = [
+							'url' => $src,
+							'alt' => $img->getAttribute('alt'),
+						];
+					}
+				}
+			}
 			return $results;
 		} catch (Exception $ex) {
 			return $results;
 		}
+	}
+
+	public function thumbnail() {
+		foreach ($this->enclosures(true) as $enclosure) {
+			if (!empty($enclosure['url']) && empty($enclosure['type'])) {
+				return $enclosure;
+			}
+		}
+		return null;
 	}
 
 	public function link() {
@@ -230,27 +260,35 @@ class FreshRSS_Entry extends Minz_Model {
 		}
 		foreach ($booleanSearch->searches() as $filter) {
 			$ok = true;
-			if ($ok && $filter->getMinPubdate()) {
-				$ok &= $this->date >= $filter->getMinPubdate();
-			}
-			if ($ok && $filter->getMaxPubdate()) {
-				$ok &= $this->date <= $filter->getMaxPubdate();
-			}
 			if ($ok && $filter->getMinDate()) {
 				$ok &= strnatcmp($this->id, $filter->getMinDate() . '000000') >= 0;
+			}
+			if ($ok && $filter->getNotMinDate()) {
+				$ok &= strnatcmp($this->id, $filter->getNotMinDate() . '000000') < 0;
 			}
 			if ($ok && $filter->getMaxDate()) {
 				$ok &= strnatcmp($this->id, $filter->getMaxDate() . '000000') <= 0;
 			}
-			if ($ok && $filter->getInurl()) {
-				foreach ($filter->getInurl() as $url) {
-					$ok &= stripos($this->link, $url) !== false;
-				}
+			if ($ok && $filter->getNotMaxDate()) {
+				$ok &= strnatcmp($this->id, $filter->getNotMaxDate() . '000000') > 0;
 			}
-			if ($ok && $filter->getNotInurl()) {
-				foreach ($filter->getNotInurl() as $url) {
-					$ok &= stripos($this->link, $url) === false;
-				}
+			if ($ok && $filter->getMinPubdate()) {
+				$ok &= $this->date >= $filter->getMinPubdate();
+			}
+			if ($ok && $filter->getNotMinPubdate()) {
+				$ok &= $this->date < $filter->getNotMinPubdate();
+			}
+			if ($ok && $filter->getMaxPubdate()) {
+				$ok &= $this->date <= $filter->getMaxPubdate();
+			}
+			if ($ok && $filter->getNotMaxPubdate()) {
+				$ok &= $this->date > $filter->getNotMaxPubdate();
+			}
+			if ($ok && $filter->getFeedIds()) {
+				$ok &= in_array($this->feedId, $filter->getFeedIds());
+			}
+			if ($ok && $filter->getNotFeedIds()) {
+				$ok &= !in_array($this->feedId, $filter->getFeedIds());
 			}
 			if ($ok && $filter->getAuthor()) {
 				foreach ($filter->getAuthor() as $author) {
@@ -294,6 +332,16 @@ class FreshRSS_Entry extends Minz_Model {
 					$ok &= !$found;
 				}
 			}
+			if ($ok && $filter->getInurl()) {
+				foreach ($filter->getInurl() as $url) {
+					$ok &= stripos($this->link, $url) !== false;
+				}
+			}
+			if ($ok && $filter->getNotInurl()) {
+				foreach ($filter->getNotInurl() as $url) {
+					$ok &= stripos($this->link, $url) === false;
+				}
+			}
 			if ($ok && $filter->getSearch()) {
 				foreach ($filter->getSearch() as $needle) {
 					$ok &= (stripos($this->title, $needle) !== false || stripos($this->content, $needle) !== false);
@@ -311,10 +359,14 @@ class FreshRSS_Entry extends Minz_Model {
 		return false;
 	}
 
-	public function applyFilterActions() {
+	public function applyFilterActions($titlesAsRead = []) {
 		if ($this->feed != null) {
 			if ($this->feed->attributes('read_upon_reception') ||
 				($this->feed->attributes('read_upon_reception') === null && FreshRSS_Context::$user_conf->mark_when['reception'])) {
+				$this->_isRead(true);
+			}
+			if (isset($titlesAsRead[$this->title()])) {
+				Minz_Log::debug('Mark title as read: ' . $this->title());
 				$this->_isRead(true);
 			}
 			foreach ($this->feed->filterActions() as $filterAction) {
@@ -325,7 +377,7 @@ class FreshRSS_Entry extends Minz_Model {
 								$this->_isRead(true);
 								break;
 							case 'star':
-								$this->_is_favorite(true);
+								$this->_isFavorite(true);
 								break;
 							case 'label':
 								//TODO: Implement more actions

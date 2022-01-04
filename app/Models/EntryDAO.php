@@ -32,7 +32,7 @@ class FreshRSS_EntryDAO extends Minz_ModelPdo implements FreshRSS_Searchable {
 		try {
 			require(APP_PATH . '/SQL/install.sql.' . $this->pdo->dbType() . '.php');
 			Minz_Log::warning('SQL CREATE TABLE entrytmp...');
-			$ok = $this->pdo->exec($SQL_CREATE_TABLE_ENTRYTMP . $SQL_CREATE_INDEX_ENTRY_1) !== false;
+			$ok = $this->pdo->exec($GLOBALS['SQL_CREATE_TABLE_ENTRYTMP'] . $GLOBALS['SQL_CREATE_INDEX_ENTRY_1']) !== false;
 		} catch (Exception $ex) {
 			Minz_Log::error(__method__ . ' error: ' . $ex->getMessage());
 		}
@@ -262,6 +262,15 @@ SQL;
 			return 0;
 		}
 		FreshRSS_UserDAO::touch();
+		if (count($ids) > FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER) {
+			// Split a query with too many variables parameters
+			$affected = 0;
+			$idsChunks = array_chunk($ids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER);
+			foreach ($idsChunks as $idsChunk) {
+				$affected += $this->markFavorite($idsChunk, $is_favorite);
+			}
+			return $affected;
+		}
 		$sql = 'UPDATE `_entry` '
 			. 'SET is_favorite=? '
 			. 'WHERE id IN (' . str_repeat('?,', count($ids) - 1). '?)';
@@ -342,6 +351,14 @@ SQL;
 				$affected = 0;
 				foreach ($ids as $id) {
 					$affected += $this->markRead($id, $is_read);
+				}
+				return $affected;
+			} elseif (count($ids) > FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER) {
+				// Split a query with too many variables parameters
+				$affected = 0;
+				$idsChunks = array_chunk($ids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER);
+				foreach ($idsChunks as $idsChunk) {
+					$affected += $this->markRead($idsChunk, $is_read);
 				}
 				return $affected;
 			}
@@ -529,7 +546,7 @@ SQL;
 	 * @param integer $idMax max article ID
 	 * @return integer affected rows
 	 */
-	public function markReadTag($id = '', $idMax = 0, $filters = null, $state = 0, $is_read = true) {
+	public function markReadTag($id = 0, $idMax = 0, $filters = null, $state = 0, $is_read = true) {
 		FreshRSS_UserDAO::touch();
 		if ($idMax == 0) {
 			$idMax = time() . '000000';
@@ -539,10 +556,10 @@ SQL;
 		$sql = 'UPDATE `_entry` e INNER JOIN `_entrytag` et ON et.id_entry = e.id '
 			 . 'SET e.is_read = ? '
 			 . 'WHERE '
-			 . ($id == '' ? '' : 'et.id_tag = ? AND ')
+			 . ($id == 0 ? '' : 'et.id_tag = ? AND ')
 			 . 'e.is_read <> ? AND e.id <= ?';
 		$values = array($is_read ? 1 : 0);
-		if ($id != '') {
+		if ($id != 0) {
 			$values[] = $id;
 		}
 		$values[] = $is_read ? 1 : 0;
@@ -715,23 +732,27 @@ SQL;
 				}
 				$sub_search = '';
 
-				if ($filter->getFeedIds()) {
-					$sub_search .= 'AND ' . $alias . 'id_feed IN (';
-					foreach ($filter->getFeedIds() as $feed_id) {
-						$sub_search .= '?,';
-						$values[] = $feed_id;
+				if ($filter->getEntryIds()) {
+					foreach ($filter->getEntryIds() as $entry_ids) {
+						$sub_search .= 'AND ' . $alias . 'id IN (';
+						foreach ($entry_ids as $entry_id) {
+							$sub_search .= '?,';
+							$values[] = $entry_id;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ') ';
 					}
-					$sub_search = rtrim($sub_search, ',');
-					$sub_search .= ') ';
 				}
-				if ($filter->getNotFeedIds()) {
-					$sub_search .= 'AND ' . $alias . 'id_feed NOT IN (';
-					foreach ($filter->getNotFeedIds() as $feed_id) {
-						$sub_search .= '?,';
-						$values[] = $feed_id;
+				if ($filter->getNotEntryIds()) {
+					foreach ($filter->getNotEntryIds() as $entry_ids) {
+						$sub_search .= 'AND ' . $alias . 'id NOT IN (';
+						foreach ($entry_ids as $entry_id) {
+							$sub_search .= '?,';
+							$values[] = $entry_id;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ') ';
 					}
-					$sub_search = rtrim($sub_search, ',');
-					$sub_search .= ') ';
 				}
 
 				if ($filter->getMinDate()) {
@@ -781,6 +802,83 @@ SQL;
 						$values[] = $filter->getNotMaxPubdate();
 					}
 					$sub_search .= ') ';
+				}
+
+				if ($filter->getFeedIds()) {
+					foreach ($filter->getFeedIds() as $feed_ids) {
+						$sub_search .= 'AND ' . $alias . 'id_feed IN (';
+						foreach ($feed_ids as $feed_id) {
+							$sub_search .= '?,';
+							$values[] = $feed_id;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ') ';
+					}
+				}
+				if ($filter->getNotFeedIds()) {
+					foreach ($filter->getNotFeedIds() as $feed_ids) {
+						$sub_search .= 'AND ' . $alias . 'id_feed NOT IN (';
+						foreach ($feed_ids as $feed_id) {
+							$sub_search .= '?,';
+							$values[] = $feed_id;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ') ';
+					}
+				}
+
+				if ($filter->getLabelIds()) {
+					foreach ($filter->getLabelIds() as $label_ids) {
+						if ($label_ids === '*') {
+							$sub_search .= 'AND EXISTS (SELECT et.id_tag FROM `_entrytag` et WHERE et.id_entry = ' . $alias . 'id) ';
+						} else {
+							$sub_search .= 'AND ' . $alias . 'id IN (SELECT et.id_entry FROM `_entrytag` et WHERE et.id_tag IN (';
+							foreach ($label_ids as $label_id) {
+								$sub_search .= '?,';
+								$values[] = $label_id;
+							}
+							$sub_search = rtrim($sub_search, ',');
+							$sub_search .= ')) ';
+						}
+					}
+				}
+				if ($filter->getNotLabelIds()) {
+					foreach ($filter->getNotLabelIds() as $label_ids) {
+						if ($label_ids === '*') {
+							$sub_search .= 'AND NOT EXISTS (SELECT et.id_tag FROM `_entrytag` et WHERE et.id_entry = ' . $alias . 'id) ';
+						} else {
+							$sub_search .= 'AND ' . $alias . 'id NOT IN (SELECT et.id_entry FROM `_entrytag` et WHERE et.id_tag IN (';
+							foreach ($label_ids as $label_id) {
+								$sub_search .= '?,';
+								$values[] = $label_id;
+							}
+							$sub_search = rtrim($sub_search, ',');
+							$sub_search .= ')) ';
+						}
+					}
+				}
+
+				if ($filter->getLabelNames()) {
+					foreach ($filter->getLabelNames() as $label_names) {
+						$sub_search .= 'AND ' . $alias . 'id IN (SELECT et.id_entry FROM `_entrytag` et, `_tag` t WHERE et.id_tag = t.id AND t.name IN (';
+						foreach ($label_names as $label_name) {
+							$sub_search .= '?,';
+							$values[] = $label_name;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ')) ';
+					}
+				}
+				if ($filter->getNotLabelNames()) {
+					foreach ($filter->getNotLabelNames() as $label_names) {
+						$sub_search .= 'AND ' . $alias . 'id NOT IN (SELECT et.id_entry FROM `_entrytag` et, `_tag` t WHERE et.id_tag = t.id AND t.name IN (';
+						foreach ($label_names as $label_name) {
+							$sub_search .= '?,';
+							$values[] = $label_name;
+						}
+						$sub_search = rtrim($sub_search, ',');
+						$sub_search .= ')) ';
+					}
 				}
 
 				if ($filter->getAuthor()) {
@@ -896,14 +994,14 @@ SQL;
 			$where .= 'e.id_feed=? ';
 			$values[] = intval($id);
 			break;
-		case 't':	//Tag
+		case 't':	//Tag (label)
 			$where .= 'et.id_tag=? ';
 			$values[] = intval($id);
 			break;
-		case 'T':	//Any tag
+		case 'T':	//Any tag (label)
 			$where .= '1=1 ';
 			break;
-		case 'ST':	//Starred or tagged
+		case 'ST':	//Starred or tagged (label)
 			$where .= 'e.is_favorite=1 OR EXISTS (SELECT et2.id_tag FROM `_entrytag` et2 WHERE et2.id_entry = e.id) ';
 			break;
 		default:
@@ -962,6 +1060,15 @@ SQL;
 	public function listByIds($ids, $order = 'DESC') {
 		if (count($ids) < 1) {
 			yield false;
+		} elseif (count($ids) > FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER) {
+			// Split a query with too many variables parameters
+			$idsChunks = array_chunk($ids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER);
+			foreach ($idsChunks as $idsChunk) {
+				foreach ($this->listByIds($idsChunk, $order) as $entry) {
+					yield $entry;
+				}
+			}
+			return;
 		}
 
 		$sql = 'SELECT id, guid, title, author, '
@@ -994,7 +1101,7 @@ SQL;
 			return $result;
 		} elseif (count($guids) > FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER) {
 			// Split a query with too many variables parameters
-			$guidsChunks = array_chunk($guids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER, true);
+			$guidsChunks = array_chunk($guids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER);
 			foreach ($guidsChunks as $guidsChunk) {
 				$result += $this->listHashForFeedGuids($id_feed, $guidsChunk);
 			}
@@ -1026,6 +1133,14 @@ SQL;
 	public function updateLastSeen($id_feed, $guids, $mtime = 0) {
 		if (count($guids) < 1) {
 			return 0;
+		} elseif (count($guids) > FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER) {
+			// Split a query with too many variables parameters
+			$affected = 0;
+			$guidsChunks = array_chunk($guids, FreshRSS_DatabaseDAO::MAX_VARIABLE_NUMBER);
+			foreach ($guidsChunks as $guidsChunk) {
+				$affected += $this->updateLastSeen($id_feed, $guidsChunk, $mtime);
+			}
+			return $affected;
 		}
 		$sql = 'UPDATE `_entry` SET `lastSeen`=? WHERE id_feed=? AND guid IN (' . str_repeat('?,', count($guids) - 1). '?)';
 		$stm = $this->pdo->prepare($sql);

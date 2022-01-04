@@ -2,7 +2,7 @@
 
 return array(
 	'action' => array(
-		'actualize' => '获取',
+		'actualize' => '更新提要',
 		'add' => '添加',
 		'back' => '← 返回',
 		'back_to_rss_feeds' => '← 返回订阅源',
@@ -17,7 +17,6 @@ return array(
 		'import' => '导入',
 		'load_default_shortcuts' => '重置快捷键',
 		'manage' => '管理',
-		'mark_favorite' => '标记收藏',
 		'mark_read' => '标记已读',
 		'promote' => '设为管理员',
 		'purge' => '清理',
@@ -43,10 +42,8 @@ return array(
 			'ask' => '创建新用户？',
 			'title' => '用户创建',
 		),
-		'reset' => '密码重置',
 		'username' => array(
 			'_' => '用户名',
-			'admin' => '管理员用户名',
 			'format' => '<small>最多 16 个数字或字母</small>',
 		),
 	),
@@ -135,7 +132,8 @@ return array(
 		'fr' => 'Français',
 		'he' => 'עברית',
 		'it' => 'Italiano',
-		'kr' => '한국어',
+		'ja' => '日本語',
+		'ko' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
 		'pl' => 'Polski',
@@ -147,6 +145,7 @@ return array(
 	),
 	'menu' => array(
 		'about' => '关于',
+		'account' => '账户',
 		'admin' => '管理',
 		'archiving' => '归档',
 		'authentication' => '认证',
@@ -198,6 +197,7 @@ return array(
 		'pinboard' => 'Pinboard',
 		'pocket' => 'Pocket',
 		'print' => '打印',
+		'raindrop' => 'Raindrop.io',
 		'shaarli' => 'Shaarli',
 		'twitter' => '推特',
 		'wallabag' => 'Wallabag v1',

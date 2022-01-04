@@ -1,12 +1,13 @@
-/bin
-/node_modules
-package*.json
-constants.local.php
+/bin/
+/node_modules/
+/vendor/
+/constants.local.php
 
 # Temp files
 *~
 *.bak
 *.backup
+*.cache
 \#*
 .\#*
 *\#

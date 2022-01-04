@@ -183,9 +183,6 @@ input.extend {
 .form-group .group-controls .control {
 	line-height: 2em;
 }
-.form-group table {
-	margin: 10px 220px 0 0;
-}
 .form-group.form-actions {
 	margin: 15px 0 25px;
 	padding: 5px 0;
@@ -397,8 +394,8 @@ form th {
 	color: #303136;
 	border-radius: 2px 2px 0 0;
 }
-.box .box-title img {
-	margin-left: 0.75rem;
+.box .box-title .configure {
+	margin-left: 4px;
 }
 .box .box-title:hover .configure {
 	background: url("icons/cog.svg") no-repeat 4px 4px;
@@ -407,7 +404,6 @@ form th {
 	width: 1.75rem;
 	height: 1.75rem;
 	border-radius: 2px;
-	visibility: visible;
 	margin-left: 0.5rem;
 }
 .box .box-title:hover .configure .icon {
@@ -417,9 +413,6 @@ form th {
 }
 .box .box-title:hover .configure:hover {
 	background: url("icons/cog-white.svg") no-repeat 4px 4px #36c;
-}
-.box .box-title .configure {
-	visibility: hidden;
 }
 .box .box-title form input {
 	width: 85%;
@@ -437,8 +430,11 @@ form th {
 .box .box-title form .dropdown a.dropdown-toggle img {
 	display: none;
 }
+.box .box-content {
+	padding-right: 30px;
+}
 .box .box-content .item {
-	padding: 0.5rem 0.75rem;
+	padding: 0.5rem 0;
 	color: #303136;
 	font-size: 1rem;
 	border-bottom: 1px solid #eff0f2;
@@ -454,7 +450,6 @@ form th {
 	width: 1.75rem;
 	height: 1.75rem;
 	border-radius: 2px;
-	visibility: hidden;
 	margin-left: 0.5rem;
 }
 .box .box-content .item .configure .icon {
@@ -464,9 +459,6 @@ form th {
 }
 .box .box-content .item .configure:hover {
 	background: url("icons/cog-white.svg") no-repeat 4px 4px #36c;
-}
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 .box .box-content .item:last-child {
 	border-bottom: none;
@@ -752,8 +744,12 @@ form th {
 }
 
 /*=== Aside main page (categories) */
+.aside_feed .tree-folder-title > .title:not([data-unread="0"]) {
+	width: calc(100% - 35px - 35px);
+}
+
 .aside_feed .tree-folder-title > .title:not([data-unread="0"])::after {
-	margin: -0.5rem 0 0 1rem;
+	margin: -0.25rem 0 0 1rem;
 	padding: 0 0.75rem;
 	background: rgba(0, 0, 0, 0.25);
 	border-radius: 12px;
@@ -819,14 +815,11 @@ form th {
 	width: 280px;
 	font-weight: 400;
 }
-.header .item.title h1 a {
-	text-decoration: none;
-	color: #fff;
-	font-size: 1rem;
-	text-transform: uppercase;
-	letter-spacing: 1px;
+.header .logo {
+	margin: 11px 0 5px;
+	filter: grayscale(100%) brightness(100);
 }
-.header .item.title h1 a img {
+.header .item.title a img {
 	margin-left: 0.5rem;
 }
 .header .item.search input {
@@ -1488,11 +1481,6 @@ form th {
 		text-align: right;
 	}
 
-	.box .box-title .configure,
-.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		-webkit-transition: all 0.2s ease-in-out;
 		-moz-transition: all 0.2s ease-in-out;
@@ -1508,8 +1496,9 @@ form th {
 	}
 
 	.aside .toggle_aside,
-#panel .close,
-#close-slider.active {
+	#panel .close,
+	#close-slider.active,
+	.dropdown-menu .toggle_aside {
 		background: #25c;
 		display: block;
 		width: 100%;
@@ -1521,11 +1510,11 @@ form th {
 	.header {
 		padding: 0.5rem;
 	}
-	.header .item.title {
-		display: none;
-	}
 	.header .item.search {
 		display: block;
+	}
+	.header .item.search form {
+		display: inherit;
 	}
 	.header .item.search .stick {
 		display: flex;
@@ -1540,9 +1529,6 @@ form th {
 	.header .item.search .btn {
 		min-height: 49px;
 		padding: 0.5rem 2rem;
-	}
-	.header .item.configure {
-		display: none;
 	}
 
 	.post {

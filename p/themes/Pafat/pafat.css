@@ -112,10 +112,6 @@ form th {
 
 }
 
-.form-group table {
-	margin: 10px 0 0 220px;
-}
-
 /*=== Buttons */
 .stick {
 	vertical-align: middle;
@@ -485,24 +481,18 @@ a.btn {
 	border-radius: 5px 5px 0 0;
 }
 
+.box .box-title .configure {
+	margin-right: 4px;
+}
+
 .box .box-content {
+	padding-left: 30px;
 	max-height: 260px;
 }
 
 .box .box-content .item {
-	padding: 0 10px;
 	font-size: 0.9rem;
 	line-height: 2.5em;
-}
-
-.box .box-title .configure,
-.box .box-content .item .configure {
-	visibility: hidden;
-}
-
-.box .box-title:hover .configure,
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 
 /*=== Tree */
@@ -563,7 +553,6 @@ a.btn {
 /*=== Header */
 .header {
 	background: #41444f;
-	height: 85px;
 }
 
 .header > .item {
@@ -577,11 +566,12 @@ a.btn {
 	width: 230px;
 }
 
-.header > .item.title h1 {
+.header > .item.title .logo {
 	margin: 0.5em 0;
+	filter: grayscale(100%) brightness(2.5);
 }
 
-.header > .item.title h1 a, a.signin {
+a.signin {
 	text-decoration: none;
 	color: #c5c6ca;
 }
@@ -1134,11 +1124,6 @@ a.btn {
 		text-align: left;
 	}
 
-	.box .box-title .configure,
-	.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		transition: width 200ms linear;
 	}
@@ -1148,7 +1133,8 @@ a.btn {
 	}
 
 	.aside .toggle_aside,
-	#panel .close {
+	#panel .close,
+	.dropdown-menu .toggle_aside {
 		background: #f6f6f6;
 		display: block;
 		width: 100%;
@@ -1183,6 +1169,7 @@ a.btn {
 	.nav_menu .search input {
 		max-width: 97%;
 		width: 90px;
+		line-height: 2;
 	}
 
 	.nav_menu .search input:focus {

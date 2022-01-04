@@ -3,8 +3,8 @@
 class FreshRSS_ConfigurationSetter {
 	/**
 	 * Return if the given key is supported by this setter.
-	 * @param $key the key to test.
-	 * @return true if the key is supported, false else.
+	 * @param string $key the key to test.
+	 * @return boolean true if the key is supported, false otherwise.
 	 */
 	public function support($key) {
 		$name_setter = '_' . $key;
@@ -13,9 +13,9 @@ class FreshRSS_ConfigurationSetter {
 
 	/**
 	 * Set the given key in data with the current value.
-	 * @param $data an array containing the list of all configuration data.
-	 * @param $key the key to update.
-	 * @param $value the value to set.
+	 * @param array $data an array containing the list of all configuration data.
+	 * @param string $key the key to update.
+	 * @param mixed $value the value to set.
 	 */
 	public function handle(&$data, $key, $value) {
 		$name_setter = '_' . $key;
@@ -25,8 +25,8 @@ class FreshRSS_ConfigurationSetter {
 	/**
 	 * A helper to set boolean values.
 	 *
-	 * @param $value the tested value.
-	 * @return true if value is true and different from no, false else.
+	 * @param mixed $value the tested value.
+	 * @return boolean true if value is true and different from no, false else.
 	 */
 	private function handleBool($value) {
 		return ((bool)$value) && $value !== 'no';
@@ -205,12 +205,6 @@ class FreshRSS_ConfigurationSetter {
 		$data['lazyload'] = $this->handleBool($value);
 	}
 
-	private function _mark_when(&$data, $values) {
-		foreach ($values as $key => $value) {
-			$data['mark_when'][$key] = $this->handleBool($value);
-		}
-	}
-
 	private function _onread_jump_next(&$data, $value) {
 		$data['onread_jump_next'] = $this->handleBool($value);
 	}
@@ -253,6 +247,16 @@ class FreshRSS_ConfigurationSetter {
 	}
 	private function _topline_read(&$data, $value) {
 		$data['topline_read'] = $this->handleBool($value);
+	}
+	private function _topline_thumbnail(&$data, $value) {
+		$value = strtolower($value);
+		if (!in_array($value, array('none', 'portrait', 'square', 'landscape'))) {
+			$value = 'none';
+		}
+		$data['topline_thumbnail'] = $value;
+	}
+	private function _topline_summary(&$data, $value) {
+		$data['topline_summary'] = $this->handleBool($value);
 	}
 	private function _topline_display_authors(&$data, $value) {
 		$data['topline_display_authors'] = $this->handleBool($value);

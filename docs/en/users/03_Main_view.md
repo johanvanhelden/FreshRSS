@@ -2,21 +2,21 @@ FreshRSS has three primary viewing modes: Normal, Global, and Reader view.
 
 # Normal view
 
-Normal view will allow you to view articles in a compressed view. They can be separated by category or individual feed, or viewed in the "main stream" containing all feeds. Clicking a feed in the sidebar (mobile users will need to click the folder icon to open it) will open that feed's view. 
+Normal view will allow you to view articles in a compressed view. They can be separated by category or individual feed, or viewed in the "main stream" containing all feeds. Clicking a feed in the sidebar (mobile users will need to click the folder icon to open it) will open that feed's view.
 
 ## Article List
 
 By default, the normal view includes six items per article. From left to right:
-* **Read status:** An envalope icon to show if the article has been read or not. Closed envalopes are unread, open envalopes are read. Clicking on the icon will toggle the read status.
+* **Read status:** An envelope icon to show if the article has been read or not. Closed envelopes are unread, open envelopes are read. Clicking on the icon will toggle the read status.
 * **Favourite status:** A star icon to show if the article has been favourited or not. Filled stars are favourited, empty stars are not. Clicking on the icon will toggle the favourite status.
 * **Feed name:** The name of the feed that the article is from. Clicking the feed name will move to that feed's view in normal view.
-* **Article title:** The title of the article. Clicking will open the article for viewing within FreshRSS. 
+* **Article title:** The title of the article. Clicking will open the article for viewing within FreshRSS.
 * **Article date/time:** The time the article was posted.
 * **Link to original article:** A globe icon that can be clicked to go to the article on the original website.
 
 ## Normal View Sidebar
 
-Clicking the gear icon next to an individual feed will display additional options for that feed. 
+Clicking the gear icon next to an individual feed will display additional options for that feed.
 * **Filter:** Run the defined filter to mark articles as read
 * **Statistics:** View statistics about the feed
 * **See website:** Open the feed's website in another tab
@@ -26,7 +26,7 @@ Clicking the gear icon next to an individual feed will display additional option
 
 # Global view
 
-Global view allows quick views of feed's statuses at once. Feeds and categories are shown with the number of unread articles next to them. Clicking a feed's name will open it in a view similar to normal view. 
+Global view allows quick views of feed's statuses at once. Feeds and categories are shown with the number of unread articles next to them. Clicking a feed's name will open it in a view similar to normal view.
 
 # Reader view
 
@@ -54,27 +54,28 @@ Here is an example to trigger article update every hour.
 
 Special parameters to configure the script - all parameters can be combined:
 
-- Parameter "force"
-https://freshrss.example.net/i/?c=feed&a=actualize&force=1
+* Parameter "force"
+<https://freshrss.example.net/i/?c=feed&a=actualize&force=1>
 If *force* is set to 1 all feeds will be refreshed at once.
 
-- Parameter "ajax"
-https://freshrss.example.net/i/?c=feed&a=actualize&ajax=1
+* Parameter "ajax"
+<https://freshrss.example.net/i/?c=feed&a=actualize&ajax=1>
 Only a status site is returned and not a complete website. Example: "OK"
 
-- Parameter "maxFeeds"
-https://freshrss.example.net/i/?c=feed&a=actualize&maxFeeds=30
+* Parameter "maxFeeds"
+<https://freshrss.example.net/i/?c=feed&a=actualize&maxFeeds=30>
 If *maxFeeds* is set the configured amount of feeds is refreshed at once. The default setting is "10".
 
-- Parameter "token"
-https://freshrss.example.net/i/?c=feed&a=actualize&token=542345872345734
+* Parameter "token"
+<https://freshrss.example.net/i/?c=feed&a=actualize&token=542345872345734>
 Security parameter to prevent unauthorized refreshes. For detailed Documentation see "Form authentication".
 
 ### Online cron
 
 If you do not have access to the installation server scheduled task, you can still automate the update process.
 
-To do so, you need to create a scheduled task, which need to call a specific URL: https://freshrss.example.net/i/?c=feed&a=actualize (it could be different depending on your installation). Depending on your application authentication method, you need to adapt the scheduled task.
+To do so, you need to create a scheduled task, which need to call a specific URL:
+<https://freshrss.example.net/i/?c=feed&a=actualize> (it could be different depending on your installation). Depending on your application authentication method, you need to adapt the scheduled task.
 
 #### No authentication
 
@@ -139,6 +140,7 @@ This update occurs on the selected feed only. To trigger it, simply click on the
 # Filtering articles
 
 ## Purpose
+
 When the number of articles stored by FreshRSS inevitably grows larger, it's important to use efficient filters to display only a subset of the articles. There are several methods that filter with different criteria. Usually those methods can be combined.
 
 ## How-to filter
@@ -147,17 +149,17 @@ When the number of articles stored by FreshRSS inevitably grows larger, it's imp
 
 This is the easiest method. You only need to click on the category title in the side panel. There are two special categories at the top of the panel:
 
-  * *Main feed* displays only articles from feeds marked as available in that category
-  * *Favourites* displays only articles marked as favourites
+* *Main feed* displays only articles from feeds marked as available in that category
+* *Favourites* displays only articles marked as favourites
 
 ### By feed
 
 There are several methods to filter articles by feed:
 
-  * by clicking the feed title in the side panel
-  * by clicking the feed title in the article details
-  * by filtering in the feed options from the side panel
-  * by filtering in the feed configuration
+* by clicking the feed title in the side panel
+* by clicking the feed title in the article details
+* by filtering in the feed options from the side panel
+* by filtering in the feed configuration
 
 ![Feed filter](../img/users/feed.filter.1.png)
 
@@ -183,7 +185,7 @@ It is possible to filter articles by their content by inputting a string in the 
 
 You can use the search field to further refine results:
 
-* by feed ID: `f:123` or multiple feed IDs: `f:123,234,345`
+* by feed ID: `f:123` or multiple feed IDs (*or*): `f:123,234,345`
 * by author: `author:name` or `author:'composed name'`
 * by title: `intitle:keyword` or `intitle:'composed keyword'`
 * by URL: `inurl:keyword` or `inurl:'composed keyword'`
@@ -222,6 +224,10 @@ You can use the search field to further refine results:
 		* `date:PT90S/` (past ninety seconds)
 		* `date:P1DT1H/` (past one day and one hour)
 * by date of publication, using the same format: `pubdate:<date-interval>`
+* by custom label ID `L:12` or multiple label IDs: `L:12,13,14` or with any label: `L:*`
+* by custom label name `label:label`, `label:"my label"` or any label name from a list (*or*): `labels:"my label,my other label"`
+* by several label names (*and*): `label:"my label" label:"my other label"`
+* by entry (article) ID: `e:1639310674957894` or multiple entry IDs  (*or*): `e:1639310674957894,1639310674957893`
 
 Be careful not to enter a space between the operator and the search value.
 
@@ -233,6 +239,8 @@ For example, you can enter multiple instances of `f:`, `author:`, `intitle:`, `i
 
 Combining several search criteria implies a logical *and*, but the keyword ` OR `
 can be used to combine several search criteria with a logical *or* instead: `author:Dupont OR author:Dupond`
+
+When combining multiple negative operators (e.g. `!intitle:'thing1' AND !intitle:'thing2'`), you'll need to consider [De Morgan's laws](https://en.wikipedia.org/wiki/De_Morgan%27s_laws). See [this GitHub comment](https://github.com/FreshRSS/FreshRSS/issues/3236#issuecomment-891219460) for more details on the usage of `AND` vs `OR` when using combining multiple negative operators.
 
 ### By sorting by date
 

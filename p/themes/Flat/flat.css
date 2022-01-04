@@ -141,10 +141,6 @@ form th {
 	line-height: 2.0em;
 }
 
-.form-group table {
-	margin: 10px 0 0 220px;
-}
-
 /*=== Buttons */
 .stick {
 	vertical-align: middle;
@@ -494,19 +490,18 @@ a.btn {
 	border-radius: 5px 5px 0 0;
 }
 
+.box .box-title .configure {
+	margin-right: 4px;
+}
+
 .box .box-content {
+	padding-left: 30px;
 	max-height: 260px;
 }
 
 .box .box-content .item {
-	padding: 0 10px;
 	font-size: 0.9rem;
 	line-height: 2.5em;
-}
-
-.box .box-title .configure,
-.box .box-content .item .configure {
-	visibility: hidden;
 }
 
 .box .box-title .configure .icon,
@@ -514,11 +509,6 @@ a.btn {
 	vertical-align: middle;
 	background-color: #95a5a6;
 	border-radius: 3px;
-}
-
-.box .box-title:hover .configure,
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 
 /*=== Tree */
@@ -594,7 +584,6 @@ a.btn {
 /*=== Header */
 .header {
 	background: #ecf0f1;
-	height: 85px;
 }
 
 .header > .item {
@@ -1128,17 +1117,13 @@ a.btn {
 		text-align: left;
 	}
 
-	.box .box-title .configure,
-	.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		transition: width 200ms linear;
 	}
 
 	.aside .toggle_aside,
-	#panel .close {
+	#panel .close,
+	.dropdown-menu .toggle_aside {
 		background: #2c3e50;
 		display: block;
 		width: 100%;

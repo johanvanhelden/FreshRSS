@@ -2,7 +2,7 @@
 
 return array(
 	'action' => array(
-		'actualize' => 'Update',
+		'actualize' => 'Update feeds',
 		'add' => 'Add',
 		'back' => '← Go back',
 		'back_to_rss_feeds' => '← Go back to your RSS feeds',
@@ -17,7 +17,6 @@ return array(
 		'import' => 'Import',
 		'load_default_shortcuts' => 'Load default shortcuts',
 		'manage' => 'Manage',
-		'mark_favorite' => 'Mark as favourite',
 		'mark_read' => 'Mark as read',
 		'promote' => 'Promote',
 		'purge' => 'Purge',
@@ -43,10 +42,8 @@ return array(
 			'ask' => 'Create an account?',
 			'title' => 'Account creation',
 		),
-		'reset' => 'Authentication reset',
 		'username' => array(
 			'_' => 'Username',
-			'admin' => 'Administrator username',
 			'format' => '<small>Maximum 16 alphanumeric characters</small>',
 		),
 	),
@@ -135,7 +132,8 @@ return array(
 		'fr' => 'Français',
 		'he' => 'עברית',
 		'it' => 'Italiano',
-		'kr' => '한국어',
+		'ja' => '日本語',
+		'ko' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
 		'pl' => 'Polski',
@@ -147,6 +145,7 @@ return array(
 	),
 	'menu' => array(
 		'about' => 'About',
+		'account' => 'Account',
 		'admin' => 'Administration',
 		'archiving' => 'Archiving',
 		'authentication' => 'Authentication',
@@ -198,6 +197,7 @@ return array(
 		'pinboard' => 'Pinboard',
 		'pocket' => 'Pocket',
 		'print' => 'Print',
+		'raindrop' => 'Raindrop.io',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',
 		'wallabag' => 'wallabag v1',

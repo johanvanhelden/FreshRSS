@@ -111,10 +111,6 @@ form th {
 	padding: 8px 0;
 }
 
-.form-group table {
-	margin: 10px 220px 0 0;
-}
-
 /*=== Buttons */
 .stick {
 	vertical-align: middle;
@@ -527,25 +523,19 @@ a.btn,
 	border-radius: 5px 5px 0 0;
 }
 
+.box .box-title .configure {
+	margin-left: 4px;
+}
+
 .box .box-content {
+	padding-right: 30px;
 	min-height: 2.5em;
 	max-height: 260px;
 }
 
 .box .box-content .item {
-	padding: 0 10px;
 	font-size: 0.9rem;
 	line-height: 2.5em;
-}
-
-.box .box-title .configure,
-.box .box-content .item .configure {
-	visibility: hidden;
-}
-
-.box .box-title:hover .configure,
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 
 /*=== Tree */
@@ -622,15 +612,6 @@ a.btn,
 	width: 230px;
 }
 
-.header > .item.title h1 {
-	margin: 0;
-	font-size: 1em;
-}
-
-.header > .item.title h1 a {
-	text-decoration: none;
-}
-
 .header .item.configure .btn,
 .header .item.search .btn {
 	min-height: 18px;
@@ -639,7 +620,6 @@ a.btn,
 }
 
 .header > .item.title .logo {
-	width: 25px;
 	height: 25px;
 }
 
@@ -882,6 +862,43 @@ a.btn,
 	font-size: 0.8rem;
 }
 
+.flux .item.thumbnail {
+	padding: 5px;
+	height: 50px;
+}
+
+.flux .item.thumbnail.small {
+	height: 30px;
+}
+
+.flux .item.thumbnail.portrait {
+	width: 38px;
+}
+
+.flux .item.thumbnail.square {
+	width: 50px;
+}
+
+.flux .item.thumbnail.landscape {
+	width: 80px;
+}
+
+.flux .item.thumbnail.portrait.small {
+	width: 20px;
+}
+
+.flux .item.thumbnail.square.small {
+	width: 30px;
+}
+
+.flux .item.thumbnail.landscape.small {
+	width: 40px;
+}
+
+.flux .item.title .summary {
+	max-height: 1.5em;
+}
+
 .flux .website .favicon {
 	padding: 5px;
 }
@@ -1048,18 +1065,13 @@ a.btn,
 
 /*=== GLOBAL VIEW */
 /*================*/
-.box.category .box-title .title {
-	font-weight: normal;
-	text-decoration: none;
-	text-align: right;
-}
-
 .box.category:not([data-unread="0"]) .box-title {
 	background: #0084cc;
 }
 
-.box.category:not([data-unread="0"]) .box-title:active {
-	background: #3498db;
+.box.category .box-title .title {
+	display: block;
+	font-weight: normal;
 }
 
 .box.category:not([data-unread="0"]) .box-title .title {
@@ -1182,11 +1194,6 @@ a.btn,
 		text-align: right;
 	}
 
-	.box .box-title .configure,
-	.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		transition: width 200ms linear;
 	}
@@ -1196,7 +1203,8 @@ a.btn,
 	}
 
 	.aside .toggle_aside,
-	#panel .close {
+	#panel .close,
+	.dropdown-menu .toggle_aside {
 		background: #f6f6f6;
 		display: block;
 		width: 100%;

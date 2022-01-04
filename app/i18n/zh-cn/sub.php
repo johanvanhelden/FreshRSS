@@ -1,7 +1,6 @@
 <?php
 
 return array(
-	'add' => '订阅源和分类的创建已被移至 <a href=\'%s\'>here</a>。 也可从左侧菜单或主页的 ✚ 图标访问。',
 	'api' => array(
 		'documentation' => '复制以下地址，以供外部工具使用',
 		'title' => 'API',
@@ -69,7 +68,7 @@ return array(
 			'main_stream' => '在首页中显示',
 			'normal' => '在分类中显示',
 		),
-		'proxy' => '获取原文时的代理',
+		'proxy' => '获取订阅源时的代理',
 		'proxy_help' => '选择协议（例：SOCKS5）和代理地址（例：<kbd>127.0.0.1:1080</kbd>）',
 		'selector_preview' => array(
 			'show_raw' => '显示源码',
@@ -90,16 +89,11 @@ return array(
 		'title_add' => '添加订阅源',
 		'ttl' => '最小自动更新间隔',
 		'url' => '源地址',
-		'useragent' => 'Set the user agent for fetching this feed',	// TODO - Translation
-		'useragent_help' => 'Example: <kbd>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)</kbd>',	// TODO - Translation
+		'useragent' => '设置用于获取此源的 User Agent',
+		'useragent_help' => '例：<kbd>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)</kbd>',
 		'validator' => '检查订阅源有效性',
 		'website' => '网站地址',
 		'websub' => 'WebSub 即时通知',
-	),
-	'firefox' => array(
-		'documentation' => '按照 <a href="https://developer.mozilla.org/en-US/Firefox/Releases/2/Adding_feed_readers_to_Firefox#Adding_a_new_feed_reader_manually">这里</a> 描述的步骤可将 FreshRSS 添加到火狐阅读器列表',
-		'obsolete_63' => '从火狐63版本开始取消了添加自己非独立程序的订阅服务功能',
-		'title' => '火狐 RSS 阅读器',
 	),
 	'import_export' => array(
 		'export' => '导出',
@@ -115,10 +109,13 @@ return array(
 	),
 	'menu' => array(
 		'add' => '添加订阅源或分类',
-		'add_feed' => '添加订阅源',
-		'bookmark' => '订阅（FreshRSS 书签）',
 		'import_export' => '导入/导出',
 		'label_management' => '标签管理',
+		'stats' => array(
+			'idle' => '长期无更新订阅源',
+			'main' => '主要统计',
+			'repartition' => '文章分布',
+		),
 		'subscription_management' => '订阅管理',
 		'subscription_tools' => '订阅工具',
 	),

@@ -2,7 +2,7 @@
 
 return array(
 	'action' => array(
-		'actualize' => 'Actualizar',
+		'actualize' => 'Actualizar flux',
 		'add' => 'Ajustar',
 		'back' => '← Tornar',
 		'back_to_rss_feeds' => '← Tornar a vòstres fluxes RSS',
@@ -17,7 +17,6 @@ return array(
 		'import' => 'Importar',
 		'load_default_shortcuts' => 'Cargar los acorchis per defaut',
 		'manage' => 'Gerir',
-		'mark_favorite' => 'Ajustar als favorits',
 		'mark_read' => 'Marcar coma legit',
 		'promote' => 'Promòure',
 		'purge' => 'Purgar',
@@ -43,10 +42,8 @@ return array(
 			'ask' => 'Crear un compte?',
 			'title' => 'Creacion de compte',
 		),
-		'reset' => 'Reïnicializacion de l’autentificacion',
 		'username' => array(
 			'_' => 'Nom d’utilizaire',
-			'admin' => 'Nom d’utilizaire administrator',
 			'format' => '<small>16 caractèrs alfanumerics maximum</small>',
 		),
 	),
@@ -135,7 +132,8 @@ return array(
 		'fr' => 'Français',
 		'he' => 'עברית',
 		'it' => 'Italiano',
-		'kr' => '한국어',
+		'ja' => '日本語',
+		'ko' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
 		'pl' => 'Polski',
@@ -147,6 +145,7 @@ return array(
 	),
 	'menu' => array(
 		'about' => 'A prepaus',
+		'account' => 'Compte',
 		'admin' => 'Administracion',
 		'archiving' => 'Archivar',
 		'authentication' => 'Autentificacion',
@@ -198,6 +197,7 @@ return array(
 		'pinboard' => 'Pinboard',
 		'pocket' => 'Pocket',
 		'print' => 'Imprimir',
+		'raindrop' => 'Raindrop.io',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',
 		'wallabag' => 'wallabag v1',

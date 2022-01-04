@@ -18,11 +18,10 @@ if (COPY_SYSLOG_TO_STDERR) {
 /**
  * Build a directory path by concatenating a list of directory names.
  *
- * @param $path_parts a list of directory names
- * @return a string corresponding to the final pathname
+ * @param array<string> $path_parts a list of directory names
+ * @return string corresponding to the final pathname
  */
-function join_path() {
-	$path_parts = func_get_args();
+function join_path(...$path_parts) {
 	return join(DIRECTORY_SEPARATOR, $path_parts);
 }
 
@@ -165,7 +164,7 @@ function html_only_entity_decode($text) {
 			get_html_translation_table(HTML_SPECIALCHARS, ENT_NOQUOTES, 'UTF-8')	//Preserve XML entities
 		));
 	}
-	return strtr($text, $htmlEntitiesOnly);
+	return $text == '' ? '' : strtr($text, $htmlEntitiesOnly);
 }
 
 function customSimplePie($attributes = array()) {
@@ -285,7 +284,7 @@ function validateEmailAddress($email) {
 /**
  * Add support of image lazy loading
  * Move content from src attribute to data-original
- * @param content is the text we want to parse
+ * @param string $content is the text we want to parse
  */
 function lazyimg($content) {
 	return preg_replace(
@@ -333,7 +332,7 @@ function listUsers() {
  *
  * Note a max_regstrations of 0 means there is no limit.
  *
- * @return true if number of users >= max registrations, false else.
+ * @return boolean true if number of users >= max registrations, false else.
  */
 function max_registrations_reached() {
 	$limit_registrations = FreshRSS_Context::$system_conf->limits['max_registrations'];
@@ -349,8 +348,8 @@ function max_registrations_reached() {
  * Note this function has been created to generate temporary configuration
  * objects. If you need a long-time configuration, please don't use this function.
  *
- * @param $username the name of the user of which we want the configuration.
- * @return a Minz_Configuration object, null if the configuration cannot be loaded.
+ * @param string $username the name of the user of which we want the configuration.
+ * @return Minz_Configuration|null object, or null if the configuration cannot be loaded.
  */
 function get_user_configuration($username) {
 	if (!FreshRSS_user_Controller::checkUsername($username)) {
@@ -398,7 +397,7 @@ function cryptAvailable() {
 /**
  * Check PHP and its extensions are well-installed.
  *
- * @return array of tested values.
+ * @return array<string,bool> of tested values.
  */
 function check_install_php() {
 	$pdo_mysql = extension_loaded('pdo_mysql');
@@ -422,7 +421,7 @@ function check_install_php() {
 /**
  * Check different data files and directories exist.
  *
- * @return array of tested values.
+ * @return array<string,bool> of tested values.
  */
 function check_install_files() {
 	return array(
@@ -438,7 +437,7 @@ function check_install_files() {
 /**
  * Check database is well-installed.
  *
- * @return array of tested values.
+ * @return array<string,bool> of tested values.
  */
 function check_install_database() {
 	$status = array(
@@ -474,7 +473,7 @@ function check_install_database() {
  *
  * From http://php.net/rmdir#110489
  *
- * @param $dir the directory to remove
+ * @param string $dir the directory to remove
  */
 function recursive_unlink($dir) {
 	if (!is_dir($dir)) {
@@ -497,9 +496,9 @@ function recursive_unlink($dir) {
 
 /**
  * Remove queries where $get is appearing.
- * @param $get the get attribute which should be removed.
- * @param $queries an array of queries.
- * @return the same array whithout those where $get is appearing.
+ * @param string $get the get attribute which should be removed.
+ * @param array<string,string> $queries an array of queries.
+ * @return array<string,string> whithout queries where $get is appearing.
  */
 function remove_query_by_get($get, $queries) {
 	$final_queries = array();
@@ -538,30 +537,39 @@ function getNonStandardShortcuts($shortcuts) {
 	$standard = strtolower(implode(' ', SHORTCUT_KEYS));
 
 	$nonStandard = array_filter($shortcuts, function ($shortcut) use ($standard) {
-		if (false !== strpos($shortcut, ' ')) {
-			return true;
-		}
-		return !preg_match("/${shortcut}/i", $standard);
+		$shortcut = trim($shortcut);
+		return $shortcut !== '' & stripos($standard, $shortcut) === false;
 	});
 
 	return $nonStandard;
 }
 
 function errorMessage($errorTitle, $error = '') {
-	// Prevent empty <h2> tags by checking if error isn't empty first
-	if ('' !== $error) {
-		$error = htmlspecialchars($error, ENT_NOQUOTES, 'UTF-8');
-		$error = "<h2>{$error}</h2>";
-	}
 	$errorTitle = htmlspecialchars($errorTitle, ENT_NOQUOTES, 'UTF-8');
+
+	$message = '';
+	$details = '';
+	// Prevent empty tags by checking if error isn not empty first
+	if ($error) {
+		$error = htmlspecialchars($error, ENT_NOQUOTES, 'UTF-8');
+
+		// First line is the main message, other lines are the details
+		list($message, $details) = explode("\n", $error, 2);
+
+		$message = "<h2>{$message}</h2>";
+		$details = "<pre>{$details}</pre>";
+	}
+
 	return <<<MSG
 	<h1>{$errorTitle}</h1>
-	{$error}
-	<h2>Common problems</h2>
-	<p>A typical problem leading to this message is wrong file permissions in the <code>./FreshRSS/data/</code> folder
+	{$message}
+	{$details}
+	<h2>Check the logs</h2>
+	<p>FreshRSS logs are located in <code>./FreshRSS/data/users/*/log*.txt</code></p>
+	<p><em>N.B.:</em> A typical problem is wrong file permissions in the <code>./FreshRSS/data/</code> folder
 	so make sure the Web server can write there and in sub-directories.</p>
-	<h2>Common locations for additional logs</h2>
-	<p><strong>N.B.:</strong> Adapt names and paths according to your local setup.</p>
+	<h3>Common locations for additional logs</h3>
+	<p><em>N.B.:</em> Adapt names and paths according to your local setup.</p>
 	<ul>
 	<li>If using Docker: <code>docker logs -f freshrss</code></li>
 	<li>To check Web server logs on a Linux system using systemd: <code>journalctl -xeu apache2</code>

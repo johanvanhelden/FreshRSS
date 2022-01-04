@@ -13,7 +13,6 @@ return array(
 		'project_website' => 'Projekt-Website',
 		'title' => 'Über',
 		'version' => 'Version',
-		'website' => 'Website',
 	),
 	'feed' => array(
 		'add' => 'Sie können Feeds hinzufügen.',
@@ -58,7 +57,7 @@ return array(
 	),
 	'share' => 'Teilen',
 	'tag' => array(
-		'related' => 'Verwandte Tags',
+		'related' => 'Hashtags',
 	),
 	'tos' => array(
 		'title' => 'Nutzungsbedingungen',

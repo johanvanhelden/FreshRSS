@@ -1,5 +1,8 @@
-<div class="post content">
-	<a href="<?= _url('index', 'index') ?>"><?= _t('gen.action.back_to_rss_feeds') ?></a>
+<?php /** @var FreshRSS_View $this */ ?>
+<main class="post content">
+	<div class="link-back-wrapper">
+		<a class="link-back" href="<?= _url('index', 'index') ?>"><?= _t('gen.action.back_to_rss_feeds') ?></a>
+	</div>
 
 	<h1><?= _t('index.log') ?></h1>
 	<form method="post" action="<?= _url('index', 'logs') ?>"><p>
@@ -8,7 +11,10 @@
 		<button type="submit" class="btn"><?= _t('index.log.clear') ?></button>
 	</p></form>
 
-	<?php $items = $this->logsPaginator->items(); ?>
+	<?php
+		/** @var array<FreshRSS_Log> $items */
+		$items = $this->logsPaginator->items();
+	?>
 
 	<?php if (!empty($items)) { ?>
 	<div class="loglist">
@@ -25,4 +31,4 @@
 	<?php } else { ?>
 	<p class="alert alert-warn"><?= _t('index.log.empty') ?></p>
 	<?php } ?>
-</div>
+</main>

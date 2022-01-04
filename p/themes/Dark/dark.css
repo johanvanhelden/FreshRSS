@@ -123,10 +123,6 @@ form th {
 	padding: 5px 0;
 }
 
-.form-group table {
-	margin: 10px 0 0 220px;
-}
-
 /*=== Buttons */
 button.as-link[disabled] {
 	color: #445 !important;
@@ -485,6 +481,10 @@ a.btn {
 	border-radius: 5px;
 }
 
+.box .icon {
+	filter: brightness(100%);
+}
+
 .box .box-title {
 	margin: 0;
 	padding: 5px 10px;
@@ -493,24 +493,18 @@ a.btn {
 	border-radius: 5px 5px 0 0;
 }
 
+.box .box-title .configure {
+	margin-right: 4px;
+}
+
 .box .box-content {
+	padding-left: 30px;
 	max-height: 260px;
 }
 
 .box .box-content .item {
-	padding: 0 10px;
 	font-size: 0.9rem;
 	line-height: 2.5em;
-}
-
-.box .box-title .configure,
-.box .box-content .item .configure {
-	visibility: hidden;
-}
-
-.box .box-title:hover .configure,
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 
 /*=== Tree */
@@ -589,10 +583,6 @@ a.btn {
 /*=== STRUCTURE */
 /*===============*/
 /*=== Header */
-.header {
-	height: 85px;
-}
-
 .header > .item {
 	padding: 10px;
 	vertical-align: middle;
@@ -604,12 +594,8 @@ a.btn {
 	width: 230px;
 }
 
-.header > .item.title h1 {
-	margin: 0.5em 0;
-}
-
-.header > .item.title h1 a {
-	text-decoration: none;
+.header > .item.title .logo {
+	filter: grayscale(60%) brightness(1.1);
 }
 
 .header > .item.search input {
@@ -1140,17 +1126,13 @@ a.btn {
 		text-align: left;
 	}
 
-	.box .box-title .configure,
-	.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		transition: width 200ms linear;
 	}
 
 	.aside .toggle_aside,
-	#panel .close {
+	#panel .close,
+	.dropdown-menu .toggle_aside {
 		background: #111;
 		display: block;
 		width: 100%;

@@ -3,7 +3,6 @@
 return array(
 	'archiving' => array(
 		'_' => 'Archiwizacja',
-		'delete_after' => 'Remove articles after',	// TODO - Translation
 		'exception' => 'Wyjątki od oczyszczania',
 		'help' => 'Więcej opcji dostępne jest w ustawieniach konkretnych kanałów',
 		'keep_favourites' => 'Nigdy nie usuwaj ulubionych',
@@ -30,6 +29,7 @@ return array(
 			'publication_date' => 'Data publikacji',
 			'related_tags' => 'Tagi',
 			'sharing' => 'Podaj dalej',
+			'summary' => 'Skrót wiadomości',
 			'top_line' => 'Górny margines',
 		),
 		'language' => 'Język',
@@ -39,6 +39,14 @@ return array(
 		),
 		'show_nav_buttons' => 'Pokaż przyciski nawigacyjne',
 		'theme' => 'Motyw',
+		'theme_not_available' => 'Motyw “%s” nie jest już dostępny. Wybierz inny motyw.',
+		'thumbnail' => array(
+			'label' => 'Miniaturka',
+			'landscape' => 'Pejzaż',
+			'none' => 'Brak',
+			'portrait' => 'Portret',
+			'square' => 'Kwadrat',
+		),
 		'title' => 'Wyświetlanie',
 		'width' => array(
 			'content' => 'Rozmiar treści',
@@ -64,29 +72,25 @@ return array(
 	'query' => array(
 		'_' => 'Zapisane zapytania',
 		'deprecated' => 'To zapytanie nie jest już poprawne. Kategoria lub kanał do którego się odnosi już nie istnieje.',
-		'display' => 'Pokaż wyniki dla tego zapytania',
 		'filter' => array(
 			'_' => 'Zastosowane filtry:',
-			'categories' => 'Display by category',	// TODO - Translation
-			'feeds' => 'Display by feed',	// TODO - Translation
-			'order' => 'Sort by date',	// TODO - Translation
-			'search' => 'Expression',	// TODO - Translation
-			'state' => 'State',	// TODO - Translation
-			'tags' => 'Display by tag',	// TODO - Translation
-			'type' => 'Type',	// TODO - Translation
+			'categories' => 'Według kategorii',
+			'feeds' => 'Według kanału',
+			'order' => 'Sortowanie wg daty',
+			'search' => 'Wyrażenie',
+			'state' => 'Stan',
+			'tags' => 'Według tagu',
+			'type' => 'Rodzaj',
 		),
 		'get_all' => 'Wyświetlenie wszystkich wiadomości',
 		'get_category' => 'Wyświetlenie kategorii "%s"',
 		'get_favorite' => 'Wyświetlenie ulubionych wiadomości',
 		'get_feed' => 'Wyświetlenie kanału "%s"',
-		'get_tag' => 'Display "%s" label',	// TODO - Translation
-		'name' => 'Name',	// TODO - Translation
+		'name' => 'Nazwa',
 		'no_filter' => 'Brak filtrów',
-		'none' => 'Nie zapisałeś jeszcze żadnego zapytania.',
 		'number' => 'Zapytanie nr %d',
 		'order_asc' => 'Wyświetl najpierw najstarsze wiadomości',
 		'order_desc' => 'Wyświetl najpierw najnowsze wiadomości',
-		'remove' => 'Usuń zapisane zapytanie',
 		'search' => 'Szukaj "%s"',
 		'state_0' => 'Wyświetl wszystkie wiadomości',
 		'state_1' => 'Wyświetl przeczytane wiadomości',
@@ -124,9 +128,11 @@ return array(
 		'read' => array(
 			'article_open_on_website' => 'gdy wiadomość jest otworzona na pierwotnej stronie',
 			'article_viewed' => 'gdy wiadomość jest otworzona',
+			'keep_max_n_unread' => 'Maksymalna liczba nieprzeczytanych wiadomości',
 			'scroll' => 'podczas przewijania',
 			'upon_reception' => 'po otrzymaniu wiadomości',
 			'when' => 'Oznacz wiadomość jako przeczytaną…',
+			'when_same_title' => 'gdy identyczny tytuł już istnieje w <i>n</i> najnowszych wiadomościach',
 		),
 		'show' => array(
 			'_' => 'Wiadomości do wyświetlenia',
@@ -135,10 +141,10 @@ return array(
 			'all_articles' => 'Wszystkie wiadomości',
 			'all_categories' => 'Wszystkie',
 			'no_category' => 'Żadna',
-			'remember_categories' => 'Remember open categories',	// TODO - Translation
+			'remember_categories' => 'Pamiętaj otwarte kategorie',
 			'unread' => 'Tylko nieprzeczytane',
 		),
-		'show_fav_unread_help' => 'Applies also on labels',	// TODO - Translation
+		'show_fav_unread_help' => 'Stosuje się również do etykiet',
 		'sides_close_article' => 'Kliknięcie poza zawartością wiadomości zamyka widok wiadomości',
 		'sort' => array(
 			'_' => 'Porządek sortowania',
@@ -163,6 +169,7 @@ return array(
 		'facebook' => 'Facebook',
 		'more_information' => 'Więcej informacji',
 		'print' => 'Wydruk',
+		'raindrop' => 'Raindrop.io',
 		'remove' => 'Usuń sposób na podanie dalej wiadomości',
 		'shaarli' => 'Shaarli',
 		'share_name' => 'Wyświetlana nazwa serwisu',
@@ -191,12 +198,13 @@ return array(
 		'navigation_help' => 'Z wykorzystaniem modyfikatora <kbd>⇧ Shift</kbd> skróty nawigacyjne stosowane są dla kanałów.<br/>Z wykorzystaniem modyfikatora <kbd>Alt ⎇</kbd> skróty nawigacyjne stosowane są dla kategorii.',
 		'navigation_no_mod_help' => 'Pozostałe skróty nawigacyjne nie wspierają modyfikatorów.',
 		'next_article' => 'Otworzenie następnej wiadomości',
-		'non_standard' => 'Some keys (<kbd>%s</kbd>) may not work as shortcuts.',	// TODO - Translation
+		'next_unread_article' => 'Otwórz następną nieprzeczytaną wiadomość',
+		'non_standard' => 'Niektóre klawisze (<kbd>%s</kbd>) mogą nie działać jako skróty.',
 		'normal_view' => 'Przełączenie na widok normalny',
 		'other_action' => 'Inne akcje',
 		'previous_article' => 'Otworzenie poprzedniej wiadomości',
 		'reading_view' => 'Przełączenie na widok czytania',
-		'rss_view' => 'Otworzenie kanału RSS w nowej karcie',
+		'rss_view' => 'Otwórz jako kanał RSS',
 		'see_on_website' => 'Otwórz wiadomość na pierwotnej stronie',
 		'shift_for_all_read' => 'Użycie modyfikatora <kbd>Alt ⎇</kbd> powoduje zmianę wszystkich poprzednich wiadomości<br />Użycie modyfikatora <kbd>⇧ Shift</kbd> powoduje zmianę wszystkich wiadomości',
 		'skip_next_article' => 'Przejdź do następnej wiadomości bez otwierania',

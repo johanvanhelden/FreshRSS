@@ -2,7 +2,7 @@
 
 return array(
 	'action' => array(
-		'actualize' => 'Actualiser',
+		'actualize' => 'Actualiser flux',
 		'add' => 'Ajouter',
 		'back' => '← Retour',
 		'back_to_rss_feeds' => '← Retour à vos flux RSS',
@@ -17,7 +17,6 @@ return array(
 		'import' => 'Importer',
 		'load_default_shortcuts' => 'Utiliser les raccourcis par défaut',
 		'manage' => 'Gérer',
-		'mark_favorite' => 'Mettre en favori',
 		'mark_read' => 'Marquer comme lu',
 		'promote' => 'Promouvoir',
 		'purge' => 'Purger',
@@ -43,10 +42,8 @@ return array(
 			'ask' => 'Créer un compte ?',
 			'title' => 'Création de compte',
 		),
-		'reset' => 'Réinitialisation de l’authentification',
 		'username' => array(
 			'_' => 'Nom d’utilisateur',
-			'admin' => 'Nom d’utilisateur administrateur',
 			'format' => '<small>16 caractères alphanumériques maximum</small>',
 		),
 	),
@@ -135,7 +132,8 @@ return array(
 		'fr' => 'Français',
 		'he' => 'עברית',
 		'it' => 'Italiano',
-		'kr' => '한국어',
+		'ja' => '日本語',
+		'ko' => '한국어',
 		'nl' => 'Nederlands',
 		'oc' => 'Occitan',
 		'pl' => 'Polski',
@@ -147,6 +145,7 @@ return array(
 	),
 	'menu' => array(
 		'about' => 'À propos',
+		'account' => 'Compte',
 		'admin' => 'Administration',
 		'archiving' => 'Archivage',
 		'authentication' => 'Authentification',
@@ -195,9 +194,10 @@ return array(
 		'linkedin' => 'LinkedIn',
 		'mastodon' => 'Mastodon',
 		'movim' => 'Movim',
-		'pinboard' => 'Pinboard',	// TODO - Translation
+		'pinboard' => 'Pinboard',
 		'pocket' => 'Pocket',
 		'print' => 'Imprimer',
+		'raindrop' => 'Raindrop.io',
 		'shaarli' => 'Shaarli',
 		'twitter' => 'Twitter',
 		'wallabag' => 'wallabag v1',

@@ -1,8 +1,14 @@
-<?php $this->partial('aside_subscription'); ?>
+<?php
+	/** @var FreshRSS_View $this */
+	$this->partial('aside_subscription');
+?>
 
-<div class="post drop-section">
-	<a href="<?= _url('index', 'index') ?>"><?= _t('gen.action.back_to_rss_feeds') ?></a>
+<main class="post drop-section">
+	<div class="link-back-wrapper">
+		<a class="link-back" href="<?= _url('index', 'index') ?>"><?= _t('gen.action.back_to_rss_feeds') ?></a>
+	</div>
 
+	<h1><?= _t('sub.menu.add') ?></h1>
 	<h2><?= _t('sub.title.add_category') ?></h2>
 	<form action="<?= _url('category', 'create') ?>" method="post">
 		<input type="hidden" name="_csrf" value="<?= FreshRSS_Auth::csrfToken() ?>" />
@@ -22,6 +28,7 @@
 
 	<h2><?= _t('sub.title.add_feed') ?></h2>
 	<form id="add_rss" method="post" action="<?= _url('feed', 'add') ?>" autocomplete="off">
+
 		<input type="hidden" name="_csrf" value="<?= FreshRSS_Auth::csrfToken() ?>" />
 
 		<div class="form-group">
@@ -59,7 +66,10 @@
 			<div class="form-group">
 				<label class="group-name" for="http_pass"><?= _t('sub.feed.auth.password') ?></label>
 				<div class="group-controls">
-					<input id="http_pass" name="http_pass" type="text" value=" " autocomplete="new-password"/>
+					<div class="stick">
+						<input id="http_pass" name="http_pass" type="password" value="" autocomplete="new-password" />
+						<button type="button" class="btn toggle-password" data-toggle="http_pass"><?= _i('key') ?></button>
+					</div>
 				</div>
 			</div>
 
@@ -89,7 +99,6 @@
 				</div>
 			</div>
 
-			<?php if (FreshRSS_Auth::hasAccess('admin')) { ?>
 			<div class="form-group">
 				<label class="group-name" for="timeout"><?= _t('sub.feed.timeout') ?></label>
 				<div class="group-controls">
@@ -109,7 +118,6 @@
 					</label>
 				</div>
 			</div>
-			<?php } ?>
 		</details>
 
 		<div class="form-group form-actions">
@@ -118,4 +126,4 @@
 			</div>
 		</div>
 	</form>
-</div>
+</main>

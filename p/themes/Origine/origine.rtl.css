@@ -34,14 +34,12 @@ textarea {
 }
 
 input, select, textarea {
-	padding: 5px;
+	padding: 7px;
 	background: #fdfdfd;
 	color: #666;
 	border: 1px solid #bbb;
 	border-radius: 3px;
 	box-shadow: 0 2px 2px #eee inset;
-	min-height: 25px;
-	line-height: 25px;
 	vertical-align: middle;
 }
 
@@ -49,10 +47,11 @@ option {
 	padding: 0 .5em;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus, select:focus, textarea:focus, input[type="password"]:focus + .toggle-password {
 	color: #0062be;
 	border-color: #3bf;
 	box-shadow: 0 2px 2px #ddf inset;
+	outline: none;
 }
 
 input:invalid, select:invalid {
@@ -92,13 +91,14 @@ form th {
 /*===============*/
 /*=== Forms */
 .form-group.form-actions {
+	margin-bottom: 40px;
 	padding: 5px 0;
 	background: #f4f4f4;
 	border-top: 1px solid #ddd;
 }
 
 .form-group.form-actions .btn {
-	margin: 0 10px;
+	margin: 0 0 0 20px;
 }
 
 .form-group .group-name {
@@ -108,11 +108,22 @@ form th {
 
 .form-group .group-controls {
 	min-height: 25px;
-	padding: 5px 0;
+	padding: 10px 0;
 }
 
-.form-group table {
-	margin: 10px 220px 0 0;
+.form-group .group-controls label {
+	padding: 0;
+}
+
+.form-group .group-controls > input,
+.form-group .group-controls > select,
+.form-group .group-controls .stick {
+	margin: -5px 0;
+}
+
+.form-group .group-controls .stick .btn {
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 /*=== Buttons */
@@ -220,7 +231,7 @@ a.btn {
 
 .btn-attention {
 	background: #e95b57;
-	background: linear-gradient(to bottom, #e95b57, #bd362f);
+	background: linear-gradient(to bottom, #ea4a46, #911811);
 	color: #fff;
 	border: 1px solid #c44742;
 	text-shadow: 0px -1px 0px #666;
@@ -266,8 +277,14 @@ a.btn {
 	text-align: center;
 }
 
-.nav-list .item > a {
+.nav-list .item > a,
+.nav-list .item > span {
 	padding: 0 10px;
+}
+
+.nav-list .item > span {
+	font-style: italic;
+	color: #888;
 }
 
 .nav-list a:hover {
@@ -422,14 +439,14 @@ a.btn {
 }
 
 .alert-warn {
-	background: #ffe;
-	color: #c95;
+	background: #ffffe0;
+	color: #77501c;
 	border: 1px solid #eeb;
 }
 
 .alert-success {
-	background: #dfd;
-	color: #484;
+	background: #e8ffe8;
+	color: #2f602f;
 	border: 1px solid #cec;
 }
 
@@ -498,25 +515,19 @@ a.btn {
 	border-radius: 5px 5px 0 0;
 }
 
+.box .box-title .configure {
+	margin-left: 4px;
+}
+
 .box .box-content {
+	padding-right: 30px;
 	min-height: 2.5em;
 	max-height: 260px;
 }
 
 .box .box-content .item {
-	padding: 0 10px;
 	font-size: 0.9rem;
 	line-height: 2.5em;
-}
-
-.box .box-title .configure,
-.box .box-content .item .configure {
-	visibility: hidden;
-}
-
-.box .box-title:hover .configure,
-.box .box-content .item:hover .configure {
-	visibility: visible;
 }
 
 /*=== Tree */
@@ -579,7 +590,6 @@ a.btn {
 /*=== Header */
 .header {
 	background: #f4f4f4;
-	height: 85px;
 }
 
 .header > .item {
@@ -591,15 +601,6 @@ a.btn {
 
 .header > .item.title {
 	width: 230px;
-}
-
-.header > .item.title h1 {
-	margin: 0.5em 0;
-	text-shadow: -1px -1px 0 #ccc;
-}
-
-.header > .item.title h1 a {
-	text-decoration: none;
 }
 
 .header > .item.search input {
@@ -740,6 +741,7 @@ a.btn {
 
 /*=== New article notification */
 #new-article {
+	padding: 1em;
 	background: #0084cc;
 	text-align: center;
 	font-size: 0.9em;
@@ -750,7 +752,6 @@ a.btn {
 }
 
 #new-article > a {
-	line-height: 3em;
 	color: #fff;
 	font-weight: bold;
 }
@@ -998,18 +999,13 @@ a.btn {
 
 /*=== GLOBAL VIEW */
 /*================*/
-.box.category .box-title .title {
-	font-weight: normal;
-	text-decoration: none;
-	text-align: right;
-}
-
 .box.category:not([data-unread="0"]) .box-title {
 	background: #0084cc;
 }
 
-.box.category:not([data-unread="0"]) .box-title:active {
-	background: #3498db;
+.box.category .box-title .title {
+	display: block;
+	font-weight: normal;
 }
 
 .box.category:not([data-unread="0"]) .box-title .title {
@@ -1133,11 +1129,6 @@ a.btn {
 		text-align: right;
 	}
 
-	.box .box-title .configure,
-	.box .box-content .item .configure {
-		visibility: visible;
-	}
-
 	.aside {
 		transition: width 200ms linear;
 	}
@@ -1147,7 +1138,8 @@ a.btn {
 	}
 
 	.aside .toggle_aside,
-	#panel .close {
+	#panel .close,
+	.dropdown-menu .toggle_aside {
 		background: #f6f6f6;
 		display: block;
 		width: 100%;
@@ -1189,10 +1181,18 @@ a.btn {
 		padding: 3px 5px;
 		max-width: 97%;
 		width: 90px;
+		line-height: 2;
 	}
 
 	.nav_menu .search input:focus {
 		width: 400px;
+	}
+
+	.form-group.form-actions {
+		margin-right: -15px;
+		margin-left: -15px;
+		padding-right: 15px;
+		padding-left: 15px;
 	}
 
 	.day .name {

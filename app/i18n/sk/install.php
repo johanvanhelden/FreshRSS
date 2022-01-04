@@ -80,11 +80,12 @@ return array(
 			'nok' => 'Vaša verzia PHP je %s, ale FreshRSS vyžaduje minimálne verziu %s.',
 			'ok' => 'Vaša verzia PHP %s je kompatibilná s FreshRSS.',
 		),
+		'reload' => 'Tekrar kontrol et',
 		'tmp' => array(
 			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
-			'ok' => 'Permissions on the temp directory are good.',	// TODO - Translation
+			'ok' => 'Oprávnenia pre dočasný priečinok sú OK.',
 		),
-		'unknown_process_username' => 'unknown',	// TODO - Translation
+		'unknown_process_username' => 'neznámy',
 		'users' => array(
 			'nok' => 'Skontrolujte oprávnenia prístupu do priečinku <em>%s</em>. HTTP server musí mať právo doň zapisovať.',
 			'ok' => 'Oprávnenia prístupu do priečinku používateľov sú OK.',
@@ -100,7 +101,6 @@ return array(
 	),
 	'congratulations' => 'Nastavenia!',
 	'default_user' => 'Hlavné používateľské meno <small>(najviac 16 alfanumerických znakov)</small>',
-	'delete_articles_after' => 'Vymazať články po',
 	'fix_errors_before' => 'Prosím, pred pokračovaním opravte chyby.',
 	'javascript_is_better' => 'FreshRSS si užijete viac, keď povolíte JavaScript',
 	'js' => array(
@@ -111,10 +111,10 @@ return array(
 		'choose' => 'Vyberte jazyk pre FreshRSS',
 		'defined' => 'Jazyk bol nastavený.',
 	),
-	'missing_applied_migrations' => 'Something went wrong; you should create an empty file <em>%s</em> manually.',	// TODO - Translation
+	'missing_applied_migrations' => 'Niečo sa nepodarilo. Ručne vytvorte prázdny súbor <em>%s</em>.',
 	'ok' => 'Inštalácia bola úspešná.',
 	'session' => array(
-		'nok' => 'The web server seems to be incorrectly configured for cookies required for PHP sessions!',	// TODO - Translation
+		'nok' => 'Webový server pravdepodobne nie je správne nastavený na použitie cookies pre relácie PHP!',
 	),
 	'step' => 'krok %d',
 	'steps' => 'Kroky',

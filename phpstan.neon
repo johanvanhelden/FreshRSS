@@ -1,25 +1,52 @@
 parameters:
 	# TODO: Increase rule-level https://phpstan.org/user-guide/rule-levels
-	level: 1
+	level: 7
+	treatPhpDocTypesAsCertain: false
 	fileExtensions:
 		- php
 		- phtml
 	paths:
 		- .
 	excludePaths:
-		- lib/lib_phpQuery.php
-		- lib/PHPMailer/*
-		- lib/SimplePie/*
-		- node_modules/*
-		# TODO: include tests
-		- tests/*
-		- vendor/*
-	scanDirectories:
-		- lib/PHPMailer/
-		- lib/SimplePie/
+		analyse:
+			- lib/marienfressinaud/*
+			- lib/phpgt/*
+			- lib/phpmailer/*
+			- lib/SimplePie/*
+			- vendor/*
+		analyseAndScan:
+			- .git/*
+			- node_modules/*
 	bootstrapFiles:
 		- cli/_cli.php
 		- lib/favicons.php
-		- lib/lib_phpQuery.php
-		- lib/SimplePie/SimplePie.php
-		- app/SQL/install.sql.sqlite.php
+	dynamicConstantNames:
+		- CACHE_PATH
+		- COPY_LOG_TO_SYSLOG
+		- COPY_SYSLOG_TO_STDERR
+		- DATA_PATH
+		- MAX_LOG_SIZE
+		- PUBLIC_RELATIVE
+		- SIMPLEPIE_SYSLOG_ENABLED
+		- STDERR
+		- STDOUT
+		- TMP_PATH
+		- USERS_PATH
+	strictRules:
+		allRules: false
+		booleansInConditions: false	# TODO pass
+		closureUsesThis: true
+		disallowedConstructs: false
+		disallowedLooseComparison: false
+		matchingInheritedMethodNames: true
+		noVariableVariables: false	# TODO pass
+		numericOperandsInArithmeticOperators: true
+		overwriteVariablesWithLoop: true
+		requireParentConstructorCall: true
+		strictCalls: true
+		switchConditionsMatchingType: true
+		uselessCast: true
+includes:
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon

@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'action' => array(
 		'finish' => 'インストール作業を終わりにする',
@@ -100,7 +110,10 @@ return array(
 		'ok' => '一般設定は保存されました。',
 	),
 	'congratulations' => 'おめでとうございます!',
-	'default_user' => 'デフォルトのユーザー名 <small>(最大16文字の英数字)</small>',
+	'default_user' => array(
+		'_' => 'デフォルトのユーザー名',
+		'max_char' => '最大16文字の英数字',
+	),
 	'fix_errors_before' => 'エラーを次のステップへ移る前に修正してください。',
 	'javascript_is_better' => 'FreshRSS はJavascriptが有効だとより快適にご利用いただけます。',
 	'js' => array(

@@ -1,7 +1,10 @@
 /bin/
 /node_modules/
 /vendor/
+/data.back/
 /constants.local.php
+
+.vscode/
 
 # Temp files
 *~

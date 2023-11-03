@@ -8,7 +8,7 @@ echo htmlspecialchars(json_encode(array(
 		'anonymous' => !FreshRSS_Auth::hasAccess(),
 		'auto_remove_article' => !!FreshRSS_Context::isAutoRemoveAvailable(),
 		'hide_posts' => !(FreshRSS_Context::$user_conf->display_posts || Minz_Request::actionName() === 'reader'),
-		'display_order' => Minz_Request::param('order', FreshRSS_Context::$user_conf->sort_order),
+		'display_order' => Minz_Request::paramString('order') ?: FreshRSS_Context::$user_conf->sort_order,
 		'display_categories' => FreshRSS_Context::$user_conf->display_categories,
 		'auto_mark_article' => !!$mark['article'],
 		'auto_mark_site' => !!$mark['site'],
@@ -22,6 +22,10 @@ echo htmlspecialchars(json_encode(array(
 		'auth_type' => FreshRSS_Context::$system_conf->auth_type,
 		'current_view' => Minz_Request::actionName(),
 		'csrf' => FreshRSS_Auth::csrfToken(),
+		'mtime' => [
+			'extra.js' => @filemtime(PUBLIC_PATH . '/scripts/extra.js'),
+			'feed.js' => @filemtime(PUBLIC_PATH . '/scripts/feed.js'),
+		],
 	),
 	'shortcuts' => array(
 		'actualize' => @$s['actualize'],
@@ -57,9 +61,11 @@ echo htmlspecialchars(json_encode(array(
 	'i18n' => array(
 		'confirmation_default' => _t('gen.js.confirm_action'),
 		'notif_title_articles' => _t('gen.js.feedback.title_new_articles'),
-		'notif_body_articles' => _t('gen.js.feedback.body_new_articles'),
+		'notif_body_new_articles' => _t('gen.js.feedback.body_new_articles'),
+		'notif_body_unread_articles' => _t('gen.js.feedback.body_unread_articles'),
 		'notif_request_failed' => _t('gen.js.feedback.request_failed'),
 		'category_empty' => _t('gen.js.category_empty'),
+		'labels_empty' => _t('gen.js.labels_empty'),
 		'language' => FreshRSS_Context::$user_conf->language,
 	),
 	'icons' => array(
@@ -67,4 +73,4 @@ echo htmlspecialchars(json_encode(array(
 		'unread' => rawurlencode(_i('unread')),
 	),
 	'extensions' => $extData,
-), JSON_UNESCAPED_UNICODE), ENT_NOQUOTES, 'UTF-8');
+), JSON_UNESCAPED_UNICODE) ?: '', ENT_NOQUOTES, 'UTF-8');

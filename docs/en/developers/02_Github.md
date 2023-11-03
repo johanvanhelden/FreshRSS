@@ -4,7 +4,7 @@
 
 If you are new to Git, here are some of the resources you might find useful:
 
-* [GitHub's blog post](https://github.com/blog/120-new-to-git)
+* [GitHub’s blog post](https://github.com/blog/120-new-to-git)
 * <http://try.github.com/>
 * <http://sixrevisions.com/resources/git-tutorials-beginners/>
 * <http://rogerdudler.github.io/git-guide/>
@@ -53,7 +53,7 @@ Now you can create a PR based on your branch.
 
 ## How to write a commit message
 
-A commit message should succintly describe the changes on the first line. For example:
+A commit message should succinctly describe the changes on the first line. For example:
 
 > Fix broken icon
 

@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'archiving' => array(
 		'_' => 'Archius',
@@ -7,7 +17,7 @@ return array(
 		'help' => 'Mai d’opcions son disponiblas dins la configuracion individuala dels fluxes',
 		'keep_favourites' => 'Jamai suprimir los favorits',
 		'keep_labels' => 'Jamai suprimir las etiquetas',
-		'keep_max' => 'Nombre maximum d’articles de gardar',
+		'keep_max' => 'Nombre maximum d’articles de gardar per flux',
 		'keep_min_by_feed' => 'Nombre minimum d’articles de servar per flux',
 		'keep_period' => 'Atge maximum dels articles de gardar',
 		'keep_unreads' => 'Jamai suprimir los pas legits',
@@ -22,6 +32,11 @@ return array(
 	),
 	'display' => array(
 		'_' => 'Afichatge',
+		'darkMode' => array(
+			'_' => 'Automatic dark mode (beta)',	// TODO
+			'auto' => 'Auto',	// TODO
+			'no' => 'No',	// TODO
+		),
 		'icon' => array(
 			'bottom_line' => 'Linha enbàs',
 			'display_authors' => 'Autors',
@@ -38,7 +53,13 @@ return array(
 			'timeout' => 'Temps d’afichatge de las notificacions HTML5',
 		),
 		'show_nav_buttons' => 'Mostrar los botons de navigacion',
-		'theme' => 'Tèma',
+		'theme' => array(
+			'_' => 'Tèma',
+			'deprecated' => array(
+				'_' => 'Deprecated',	// TODO
+				'description' => 'This theme is no longer supported and will be not available anymore in a <a href="https://freshrss.github.io/FreshRSS/en/users/05_Configuration.html#theme" target="_blank">future release of FreshRSS</a>',	// TODO
+			),
+		),
 		'theme_not_available' => 'Lo tèma « %s » es pas pus disponible. Causissètz un autre tèma.',
 		'thumbnail' => array(
 			'label' => 'Vinheta',
@@ -47,13 +68,34 @@ return array(
 			'portrait' => 'Retrach',
 			'square' => 'Carrat',
 		),
+		'timezone' => 'Time zone',	// TODO
 		'title' => 'Afichatge',
+		'website' => array(
+			'full' => 'Icon and name',	// TODO
+			'icon' => 'Icon only',	// TODO
+			'label' => 'Website',	// TODO
+			'name' => 'Name only',	// TODO
+			'none' => 'None',	// TODO
+		),
 		'width' => array(
 			'content' => 'Largor del contengut',
 			'large' => 'Larga',
 			'medium' => 'Mejana',
 			'no_limit' => 'Cap de limit',
 			'thin' => 'Fina',
+		),
+	),
+	'logs' => array(
+		'loglist' => array(
+			'level' => 'Nivèl de log',
+			'message' => 'Messatge de log',
+			'timestamp' => 'Orodatatge',
+		),
+		'pagination' => array(
+			'first' => 'Debuta',
+			'last' => 'Fin',
+			'next' => 'Seguent',
+			'previous' => 'Precedent',
 		),
 	),
 	'profile' => array(
@@ -77,7 +119,7 @@ return array(
 			'categories' => 'Afichatge per categoria',
 			'feeds' => 'Afichatge per flux',
 			'order' => 'Triar per data',
-			'search' => 'Expression',
+			'search' => 'Expression',	// IGNORE
 			'state' => 'Estat',
 			'tags' => 'Afichatge per etiqueta',
 			'type' => 'Tipe',
@@ -114,12 +156,46 @@ return array(
 		'_' => 'Lectura',
 		'after_onread' => 'Aprèp « marcar coma legit »,',
 		'always_show_favorites' => 'Mostrar totes los articles dels favorits per defaut',
+		'article' => array(
+			'authors_date' => array(
+				'_' => 'Autors e data',
+				'both' => 'Dins l’entèsta e lo bas de pagina',
+				'footer' => 'Al pè de pagina',
+				'header' => 'Dins l’entèsta',
+				'none' => 'Cap',
+			),
+			'feed_name' => array(
+				'above_title' => 'Al dessús títol/etiquetas',
+				'none' => 'Cap',
+				'with_authors' => 'Dins la linha autors e data',
+			),
+			'feed_title' => 'Títol del flux',
+			'tags' => array(
+				'_' => 'Etiquetas',
+				'both' => 'Dins l’entèsta e lo bas de pagina',
+				'footer' => 'Al pè de pagina',
+				'header' => 'Dins l’entèsta',
+				'none' => 'Cap',
+			),
+			'tags_max' => array(
+				'_' => 'Nombre max d’etiquetas afichadas',
+				'help' => '0 significa : mostrar totas las etiquetas e las plegar pas',
+			),
+		),
 		'articles_per_page' => 'Nombre d’articles per pagina',
 		'auto_load_more' => 'Cargar los articles seguents enbàs de la pagina',
 		'auto_remove_article' => 'Rescondre los articles aprèp lectura',
 		'confirm_enabled' => 'Mostrar una confirmacion per las accions del tipe « o marcar tot coma legit »',
 		'display_articles_unfolded' => 'Mostrar los articles desplegats per defaut',
 		'display_categories_unfolded' => 'Categorias a desplegar',
+		'headline' => array(
+			'articles' => 'Articles : Dobrir/Tampar',
+			'articles_header_footer' => 'Articles : entèsta/pè de pagina',
+			'categories' => 'Navegacion esquèrra : categorias',
+			'mark_as_read' => 'Marcar los articles coma legits',
+			'misc' => 'Divèrs',
+			'view' => 'Vista',
+		),
 		'hide_read_feeds' => 'Rescondre las categorias & fluxes sens articles pas legits (fonciona pas amb la configuracion « Mostrar totes los articles »)',
 		'img_with_lazyload' => 'Utilizar lo mòde “cargament tardiu” pels imatges',
 		'jump_next' => 'sautar al vesin venent pas legit (flux o categoria)',
@@ -129,7 +205,8 @@ return array(
 			'article_open_on_website' => 'quand l’article es dobèrt sul site d’origina',
 			'article_viewed' => 'quand l’article es mostrat',
 			'keep_max_n_unread' => 'Nombre max d’articles a gardar pas legits',
-			'scroll' => 'en davalar la pagina',
+			'scroll' => 'en davalant la pagina',
+			'upon_gone' => 'quand es pas mai dins lo flux de novèla font',
 			'upon_reception' => 'en recebre un article novèl',
 			'when' => 'Marcar un article coma legit…',
 			'when_same_title' => 'se un títol identic existís ja demest lo <i>n</i> articles mai recents',
@@ -163,20 +240,21 @@ return array(
 	'sharing' => array(
 		'_' => 'Partatge',
 		'add' => 'Ajustar un metòde de partatge',
-		'blogotext' => 'Blogotext',
-		'diaspora' => 'Diaspora*',
+		'blogotext' => 'Blogotext',	// IGNORE
+		'deprecated' => 'Aqueste servici es obsolèt e serà tirat de la <a href="https://freshrss.github.io/FreshRSS/en/users/08_sharing_services.html" title="Dobrir la documentacion per mai d’informacions" target="_blank">futura version de FreshRSS</a>.',
+		'diaspora' => 'Diaspora*',	// IGNORE
 		'email' => 'Corrièl',
-		'facebook' => 'Facebook',
+		'facebook' => 'Facebook',	// IGNORE
 		'more_information' => 'Mai d’informacions',
-		'print' => 'Imprimir',
-		'raindrop' => 'Raindrop.io',
+		'print' => 'Imprimir',	// IGNORE
+		'raindrop' => 'Raindrop.io',	// IGNORE
 		'remove' => 'Suprimir lo metòde de partatge',
-		'shaarli' => 'Shaarli',
+		'shaarli' => 'Shaarli',	// IGNORE
 		'share_name' => 'Nom del partatge de mostrar',
 		'share_url' => 'URL del partatge d’utilizar',
 		'title' => 'Partatge',
-		'twitter' => 'Twitter',
-		'wallabag' => 'wallabag',
+		'twitter' => 'Twitter',	// IGNORE
+		'wallabag' => 'wallabag',	// IGNORE
 	),
 	'shortcut' => array(
 		'_' => 'Acorchis',
@@ -194,7 +272,7 @@ return array(
 		'load_more' => 'Cargar mai d’articles',
 		'mark_favorite' => 'Ajustar als favorits',
 		'mark_read' => 'Marcar coma legit',
-		'navigation' => 'Navigacion',
+		'navigation' => 'Navigacion',	// IGNORE
 		'navigation_help' => 'Amb lo modificador <kbd>⇧ Shift</kbd>, los acorchis de navigacion s’aplican als fluxes.<br/>Amb lo modificador <kbd>Alt ⎇</kbd>, los acorchis de navigacion s’aplican a las categorias.',
 		'navigation_no_mod_help' => 'Los acorchis clavièrs de navigacion son pas compatibles amb los modificadors.',
 		'next_article' => 'Passar a l’article seguent',
@@ -216,7 +294,7 @@ return array(
 		'views' => 'Vistas',
 	),
 	'user' => array(
-		'articles_and_size' => '%s articles (%s)',
+		'articles_and_size' => '%s articles (%s)',	// IGNORE
 		'current' => 'Utilizaire actual',
 		'is_admin' => 'es administrator',
 		'users' => 'Utilizaires',

@@ -19,12 +19,15 @@ class FreshRSS_Export_Service {
 	/** @var FreshRSS_TagDAO */
 	private $tag_dao;
 
+	public const FRSS_NAMESPACE = 'https://freshrss.org/opml';
+	public const TYPE_HTML_XPATH = 'HTML+XPath';
+	public const TYPE_XML_XPATH = 'XML+XPath';
+	public const TYPE_RSS_ATOM = 'rss';
+
 	/**
 	 * Initialize the service for the given user.
-	 *
-	 * @param string $username
 	 */
-	public function __construct($username) {
+	public function __construct(string $username) {
 		$this->username = $username;
 
 		$this->category_dao = FreshRSS_Factory::createCategoryDao($username);
@@ -35,22 +38,13 @@ class FreshRSS_Export_Service {
 
 	/**
 	 * Generate OPML file content.
-	 *
-	 * @return array First item is the filename, second item is the content
+	 * @return array{0:string,1:string} First item is the filename, second item is the content
 	 */
-	public function generateOpml() {
-		require_once(LIB_PATH . '/lib_opml.php');
-
+	public function generateOpml(): array {
 		$view = new FreshRSS_View();
 		$day = date('Y-m-d');
-		$categories = [];
-
-		foreach ($this->category_dao->listCategories() as $key => $category) {
-			$categories[$key]['name'] = $category->name();
-			$categories[$key]['feeds'] = $this->feed_dao->listByCategory($category->id());
-		}
-
-		$view->categories = $categories;
+		$view->categories = $this->category_dao->listCategories(true, true) ?: [];
+		$view->excludeMutedFeeds = false;
 
 		return [
 			"feeds_{$day}.opml.xml",
@@ -61,30 +55,28 @@ class FreshRSS_Export_Service {
 	/**
 	 * Generate the starred and labelled entries file content.
 	 *
-	 * Both starred and labelled entries are put into a "starred" file, that's
+	 * Both starred and labelled entries are put into a "starred" file, that’s
 	 * why there is only one method for both.
 	 *
+	 * @phpstan-param 'S'|'T'|'ST' $type
 	 * @param string $type must be one of:
 	 *     'S' (starred/favourite),
 	 *     'T' (taggued/labelled),
 	 *     'ST' (starred or labelled)
-	 *
-	 * @return array First item is the filename, second item is the content
+	 * @return array{0:string,1:string} First item is the filename, second item is the content
 	 */
-	public function generateStarredEntries($type) {
+	public function generateStarredEntries(string $type): array {
 		$view = new FreshRSS_View();
-		$view->categories = $this->category_dao->listCategories();
+		$view->categories = $this->category_dao->listCategories(true) ?: [];
 		$day = date('Y-m-d');
 
 		$view->list_title = _t('sub.import_export.starred_list');
 		$view->type = 'starred';
-		$view->entriesId = $this->entry_dao->listIdsWhere(
-			$type, '', FreshRSS_Entry::STATE_ALL, 'ASC', -1
-		);
-		$view->entryIdsTagNames = $this->tag_dao->getEntryIdsTagNames($view->entriesId);
+		$entriesId = $this->entry_dao->listIdsWhere($type, 0, FreshRSS_Entry::STATE_ALL, 'ASC', -1) ?? [];
+		$view->entryIdsTagNames = $this->tag_dao->getEntryIdsTagNames($entriesId);
 		// The following is a streamable query, i.e. must be last
-		$view->entriesRaw = $this->entry_dao->listWhereRaw(
-			$type, '', FreshRSS_Entry::STATE_ALL, 'ASC', -1
+		$view->entries = $this->entry_dao->listWhere(
+			$type, 0, FreshRSS_Entry::STATE_ALL, 'ASC', -1
 		);
 
 		return [
@@ -95,33 +87,31 @@ class FreshRSS_Export_Service {
 
 	/**
 	 * Generate the entries file content for the given feed.
-	 *
-	 * @param integer $feed_id
-	 * @param integer $max_number_entries
-	 *
-	 * @return array|null First item is the filename, second item is the content.
-	 *                    It also can return null if the feed doesn't exist.
+	 * @param int $feed_id
+	 * @param int $max_number_entries
+	 * @return array{0:string,1:string}|null First item is the filename, second item is the content.
+	 *                    It also can return null if the feed doesn’t exist.
 	 */
-	public function generateFeedEntries($feed_id, $max_number_entries) {
+	public function generateFeedEntries(int $feed_id, int $max_number_entries): ?array {
 		$feed = $this->feed_dao->searchById($feed_id);
-		if (!$feed) {
+		if ($feed === null) {
 			return null;
 		}
 
 		$view = new FreshRSS_View();
-		$view->categories = $this->category_dao->listCategories();
+		$view->categories = $this->category_dao->listCategories(true) ?: [];
 		$view->feed = $feed;
 		$day = date('Y-m-d');
-		$filename = "feed_{$day}_" . $feed->category() . '_' . $feed->id() . '.json';
+		$filename = "feed_{$day}_" . $feed->categoryId() . '_' . $feed->id() . '.json';
 
 		$view->list_title = _t('sub.import_export.feed_list', $feed->name());
 		$view->type = 'feed/' . $feed->id();
-		$view->entriesId = $this->entry_dao->listIdsWhere(
+		$entriesId = $this->entry_dao->listIdsWhere(
 			'f', $feed->id(), FreshRSS_Entry::STATE_ALL, 'ASC', $max_number_entries
-		);
-		$view->entryIdsTagNames = $this->tag_dao->getEntryIdsTagNames($view->entriesId);
+		) ?? [];
+		$view->entryIdsTagNames = $this->tag_dao->getEntryIdsTagNames($entriesId);
 		// The following is a streamable query, i.e. must be last
-		$view->entriesRaw = $this->entry_dao->listWhereRaw(
+		$view->entries = $this->entry_dao->listWhere(
 			'f', $feed->id(), FreshRSS_Entry::STATE_ALL, 'ASC', $max_number_entries
 		);
 
@@ -133,12 +123,10 @@ class FreshRSS_Export_Service {
 
 	/**
 	 * Generate the entries file content for all the feeds.
-	 *
-	 * @param integer $max_number_entries
-	 *
-	 * @return array Keys are filenames and values are contents.
+	 * @param int $max_number_entries
+	 * @return array<string,string> Keys are filenames and values are contents.
 	 */
-	public function generateAllFeedEntries($max_number_entries) {
+	public function generateAllFeedEntries(int $max_number_entries): array {
 		$feed_ids = $this->feed_dao->listFeedsIds();
 
 		$exported_files = [];
@@ -148,7 +136,7 @@ class FreshRSS_Export_Service {
 				continue;
 			}
 
-			list($filename, $content) = $result;
+			[$filename, $content] = $result;
 			$exported_files[$filename] = $content;
 		}
 
@@ -157,17 +145,18 @@ class FreshRSS_Export_Service {
 
 	/**
 	 * Compress several files in a Zip file.
-	 *
-	 * @param array $files where first item is the filename, second item is the content
-	 *
-	 * @return array First item is the zip filename, second item is the zip content
+	 * @param array<string,string> $files where the key is the filename, the value is the content
+	 * @return array{0:string,1:string|false} First item is the zip filename, second item is the zip content
 	 */
-	public function zip($files) {
+	public function zip(array $files): array {
 		$day = date('Y-m-d');
 		$zip_filename = 'freshrss_' . $this->username . '_' . $day . '_export.zip';
 
 		// From https://stackoverflow.com/questions/1061710/php-zip-files-on-the-fly
-		$zip_file = @tempnam('/tmp', 'zip');
+		$zip_file = tempnam('/tmp', 'zip');
+		if ($zip_file == false) {
+			return [$zip_filename, false];
+		}
 		$zip_archive = new ZipArchive();
 		$zip_archive->open($zip_file, ZipArchive::OVERWRITE);
 

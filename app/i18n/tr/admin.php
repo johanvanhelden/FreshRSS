@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'auth' => array(
 		'allow_anonymous' => 'Öntanımlı kullanıcının makalelerinin anonim okunmasına izin ver (%s)',
@@ -137,7 +147,7 @@ return array(
 		'main_stream' => 'Ana akış',
 		'no_idle' => 'Boşta akış yok!',
 		'number_entries' => '%d makale',
-		'percent_of_total' => '%% toplamın yüzdesi',
+		'percent_of_total' => '% toplamın yüzdesi',
 		'repartition' => 'Makale dağılımı',
 		'status_favorites' => 'Favoriler',
 		'status_read' => 'Okunmuş',
@@ -149,6 +159,10 @@ return array(
 	'system' => array(
 		'_' => 'Sistem yapılandırması',
 		'auto-update-url' => 'Otomatik güncelleme sunucu URL',
+		'base-url' => array(
+			'_' => 'Base URL',	// TODO
+			'recommendation' => 'Automatic recommendation: <kbd>%s</kbd>',	// TODO
+		),
 		'cookie-duration' => array(
 			'help' => 'saniye',
 			'number' => 'Oturum açık kalma süresi',
@@ -158,18 +172,45 @@ return array(
 		'max-categories' => 'Kullanıcı başına kategori limiti',
 		'max-feeds' => 'Kullanıcı başına akış limiti',
 		'registration' => array(
-			'help' => '0 sınır yok anlamındadır',
 			'number' => 'En fazla hesap sayısı',
+			'select' => array(
+				'label' => 'Kayıt Formu',
+				'option' => array(
+					'noform' => 'Devre Dışı: Kayıt Formu',
+					'nolimit' => 'Devrede: Hesap limiti yok',
+					'setaccountsnumber' => 'Maksimum hesap limitini ayarla',
+				),
+			),
+			'status' => array(
+				'disabled' => 'Form devre dışı',
+				'enabled' => 'Form devrede',
+			),
+			'title' => 'Kullanıcı kayıt formu',
+		),
+		'sensitive-parameter' => 'Sensitive parameter. Edit manually in <kbd>./data/config.php</kbd>',	// TODO
+		'tos' => array(
+			'disabled' => 'is not given',	// TODO
+			'enabled' => '<a href="./?a=tos">is enabled</a>',	// TODO
+			'help' => 'How to <a href="https://freshrss.github.io/FreshRSS/en/admins/12_User_management.html#enable-terms-of-service-tos" target="_blank">enable the Terms of Service</a>',	// TODO
 		),
 	),
 	'update' => array(
 		'_' => 'Sistem güncelleme',
 		'apply' => 'Uygula',
+		'changelog' => 'Changelog',	// TODO
 		'check' => 'Güncelleme kontrolü',
-		'current_version' => 'Mevcut FreshRSS sürümünüz %s.',
-		'last' => 'Son kontrol: %s',
+		'copiedFromURL' => 'update.php copied from %s to ./data',	// TODO
+		'current_version' => 'Mevcut sürümünüz',
+		'last' => 'Son kontrol',
+		'loading' => 'Updating…',	// TODO
 		'none' => 'Yeni güncelleme yok',
+		'releaseChannel' => array(
+			'_' => 'Release channel',	// TODO
+			'edge' => 'Rolling release (“edge”)',	// TODO
+			'latest' => 'Stable release (“latest”)',	// TODO
+		),
 		'title' => 'Sistem güncelleme',
+		'viaGit' => 'Update via git and Github.com started',	// TODO
 	),
 	'user' => array(
 		'admin' => 'Yönetici',

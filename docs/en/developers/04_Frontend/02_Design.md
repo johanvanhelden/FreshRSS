@@ -7,11 +7,11 @@
 The easiest way to create a theme is by copying and modifying the base theme (or another of the pre-installed themes). The base theme can be found in [/p/themes/base-theme](https://github.com/FreshRSS/FreshRSS/tree/edge/p/themes/base-theme). Themes require:
 
 - a **metadata.json** file to describe the theme.
-- a **loader.gif** file to use as a loading icon (assuming .loading's background has not been overridden)
+- a **loader.gif** file to use as a loading icon (assuming .loading’s background has not been overridden)
 - an **icons** folder containing .svg, .ico, and .png files to override existing icons
 - a **thumbs** folder containing a file, **original.png** that will be used as the preview for the theme
 
-"_template.css" is normally added to the metadata file as a fallback for missing aspects. The file is taken from the base theme. If submitting a pull request for a theme, please know that [pull request themes must include this file.](https://github.com/FreshRSS/FreshRSS/pull/2938#issuecomment-624085450)
+"_frss.css" is normally added to the metadata file as a fallback for missing aspects. The file is taken from the base theme. If submitting a pull request for a theme, please know that [pull request themes must include this file.](https://github.com/FreshRSS/FreshRSS/pull/2938#issuecomment-624085450)
 
 ## RTL Support
 
@@ -19,7 +19,7 @@ RTL (right-to-left) support for languages such as Hebrew and Arabic is handled t
 
 ## Overriding icons
 
-To replace the default icons, add an "icons" folder to your theme's folder. Use files with the same name as the default icon to override them.
+To replace the default icons, add an "icons" folder to your theme’s folder. Use files with the same name as the default icon to override them.
 
 ## Template file
 
@@ -31,7 +31,7 @@ To replace the default icons, add an "icons" folder to your theme's folder. Use 
 	"author": "Theme author",
 	"description": "Theme description",
 	"version": 0.1,
-	"files": ["_template.css", "file1.css", "file2.css"]
+	"files": ["_frss.css", "file1.css", "file2.css"]
 }
 ```
 

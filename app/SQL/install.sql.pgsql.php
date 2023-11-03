@@ -7,15 +7,19 @@ $GLOBALS['SQL_CREATE_TABLES'] = <<<'SQL'
 CREATE TABLE IF NOT EXISTS `_category` (
 	"id" SERIAL PRIMARY KEY,
 	"name" VARCHAR(255) UNIQUE NOT NULL,
+	"kind" SMALLINT DEFAULT 0,	-- 1.20.0
+	"lastUpdate" BIGINT DEFAULT 0,	-- 1.20.0
+	"error" SMALLINT DEFAULT 0,	-- 1.20.0
 	"attributes" TEXT	-- v1.15.0
 );
 
 CREATE TABLE IF NOT EXISTS `_feed` (
 	"id" SERIAL PRIMARY KEY,
-	"url" VARCHAR(511) UNIQUE NOT NULL,
-	"category" SMALLINT DEFAULT 0,
+	"url" VARCHAR(32768) NOT NULL,
+	"kind" SMALLINT DEFAULT 0, -- 1.20.0
+	"category" INT DEFAULT 0,	-- 1.20.0
 	"name" VARCHAR(255) NOT NULL,
-	"website" VARCHAR(255),
+	"website" VARCHAR(32768),
 	"description" TEXT,
 	"lastUpdate" INT DEFAULT 0,
 	"priority" SMALLINT NOT NULL DEFAULT 10,
@@ -43,8 +47,9 @@ CREATE TABLE IF NOT EXISTS `_entry` (
 	"hash" BYTEA,
 	"is_read" SMALLINT NOT NULL DEFAULT 0,
 	"is_favorite" SMALLINT NOT NULL DEFAULT 0,
-	"id_feed" SMALLINT,
+	"id_feed" INT,	-- 1.20.0
 	"tags" VARCHAR(1023),
+	"attributes" TEXT,	-- v1.20.0
 	FOREIGN KEY ("id_feed") REFERENCES `_feed` ("id") ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE ("id_feed","guid")
 );
@@ -57,13 +62,7 @@ INSERT INTO `_category` (id, name)
 	SELECT 1, 'Uncategorized'
 	WHERE NOT EXISTS (SELECT id FROM `_category` WHERE id = 1)
 	RETURNING nextval('`_category_id_seq`');
-SQL;
 
-$GLOBALS['SQL_CREATE_INDEX_ENTRY_1'] = <<<'SQL'
-CREATE INDEX IF NOT EXISTS `_entry_feed_read_index` ON `_entry` ("id_feed","is_read");	-- v1.7
-SQL;
-
-$GLOBALS['SQL_CREATE_TABLE_ENTRYTMP'] = <<<'SQL'
 CREATE TABLE IF NOT EXISTS `_entrytmp` (	-- v1.7
 	"id" BIGINT NOT NULL PRIMARY KEY,
 	"guid" VARCHAR(760) NOT NULL,
@@ -76,22 +75,21 @@ CREATE TABLE IF NOT EXISTS `_entrytmp` (	-- v1.7
 	"hash" BYTEA,
 	"is_read" SMALLINT NOT NULL DEFAULT 0,
 	"is_favorite" SMALLINT NOT NULL DEFAULT 0,
-	"id_feed" SMALLINT,
+	"id_feed" INT,	-- 1.20.0
 	"tags" VARCHAR(1023),
+	"attributes" TEXT,	-- v1.20.0
 	FOREIGN KEY ("id_feed") REFERENCES `_feed` ("id") ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE ("id_feed","guid")
 );
 CREATE INDEX IF NOT EXISTS `_entrytmp_date_index` ON `_entrytmp` ("date");
-SQL;
 
-$GLOBALS['SQL_CREATE_TABLE_TAGS'] = <<<'SQL'
 CREATE TABLE IF NOT EXISTS `_tag` (	-- v1.12
 	"id" SERIAL PRIMARY KEY,
 	"name" VARCHAR(63) UNIQUE NOT NULL,
 	"attributes" TEXT
 );
 CREATE TABLE IF NOT EXISTS `_entrytag` (
-	"id_tag" SMALLINT,
+	"id_tag" INT,	-- 1.20.0
 	"id_entry" BIGINT,
 	PRIMARY KEY ("id_tag","id_entry"),
 	FOREIGN KEY ("id_tag") REFERENCES `_tag` ("id") ON DELETE CASCADE ON UPDATE CASCADE,

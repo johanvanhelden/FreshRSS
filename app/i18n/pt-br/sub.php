@@ -1,26 +1,43 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'api' => array(
 		'documentation' => 'Copie a seguinte URL para utilizar com uma ferramenta externa',
-		'title' => 'API',
+		'title' => 'API',	// IGNORE
 	),
 	'bookmarklet' => array(
-		'documentation' => 'Arraste este botão para sua barra de favoritos ou clique com o botão direito e escolha "Adicionar este link aos favoritos". Depois clique no no link da barra de favoritos "Inscrever-se" em qualquer página que você queira se inscrever.',
+		'documentation' => 'Arraste este botão para sua barra de favoritos ou clique com o botão direito e escolha “Adicionar este link aos favoritos”. Depois clique no no link da barra de favoritos “Inscrever-se” em qualquer página que você queira se inscrever.',
 		'label' => 'Inscrever-se',
-		'title' => 'Bookmarklet',
+		'title' => 'Bookmarklet',	// IGNORE
 	),
 	'category' => array(
 		'_' => 'Categoria',
 		'add' => 'Adicionar categoria',
 		'archiving' => 'Arquivar',
+		'dynamic_opml' => array(
+			'_' => 'OPML Dinâmico',
+			'help' => 'Forneça uma URL para <a href="http://opml.org/" target="_blank">o arquivo OPML </a> para preencher dinamicamente esta categoria com feeds',
+		),
 		'empty' => 'Categoria vazia',
 		'information' => 'Informações',
+		'opml_url' => 'URL de OPML',
 		'position' => 'Posição de exibição',
 		'position_help' => 'Para controlar a ordem de exibição',
 		'title' => 'Título',
 	),
 	'feed' => array(
+		'accept_cookies' => 'Aceitar cookies',
+		'accept_cookies_help' => 'Permitir que o servidor de Feed defina os cookies (sarmazenados na memória apenas durante a solicitação)',
 		'add' => 'Adicionar um RSS feed',
 		'advanced' => 'Avançado',
 		'archiving' => 'Arquivar',
@@ -42,22 +59,80 @@ return array(
 		'css_cookie_help' => 'Exemplo: <kbd>foo=bar; gdpr_consent=true; cookie=value</kbd>',
 		'css_help' => 'Retorna RSS feeds truncados (atenção, requer mais tempo!)',
 		'css_path' => 'Caminho do CSS do artigo no site original',
+		'css_path_filter' => array(
+			'_' => 'Seletor CSS dos elementos a serem removidos',
+			'help' => 'O seletor CSS pode ser uma lista com: <kbd>.footer, .aside</kbd>',
+		),
 		'description' => 'Descrição',
 		'empty' => 'Este feed está vazio. Por favor verifique ele ainda é mantido.',
 		'error' => 'Este feed encontra-se com problema. Por favor verifique se ele ainda está disponível e atualize-o.',
 		'filteractions' => array(
 			'_' => 'Ações do filtro',
-			'help' => 'Escreva um filtro de pesquisa por linha.',
+			'help' => 'Escreva um filtro de pesquisa por linha. Operators <a href="https://freshrss.github.io/FreshRSS/en/users/10_filter.html#with-the-search-field" target="_blank">see documentation</a>.',	// DIRTY
 		),
 		'information' => 'Informações',
 		'keep_min' => 'Número mínimo de artigos para manter',
+		'kind' => array(
+			'_' => 'Tipo de fonte de alimentação do Feed',
+			'html_xpath' => array(
+				'_' => 'HTML + XPath (Web scraping)',	// IGNORE
+				'feed_title' => array(
+					'_' => 'Título do Feed',
+					'help' => 'Exemplo: <code>//title</code> ou uma string estática: <code>"Meu feed customizado"</code>',
+				),
+				'help' => '<dfn><a href="https://www.w3.org/TR/xpath-10/" target="_blank">XPath 1.0</a></dfn>é uma linguagem de consulta padrão para usuários avançados e que o FreshRSS suporta para habilitar o Web scraping.',
+				'item' => array(
+					'_' => 'encontrar notícias <strong>items</strong><br /><small>(mais importantes)</small>',
+					'help' => 'Exemplo: <code>//div[@class="news-item"]</code>',
+				),
+				'item_author' => array(
+					'_' => 'Autor do item',
+					'help' => 'Também pode ser uma string estática. Exemplo: <code>"Anônimo"</code>',
+				),
+				'item_categories' => 'Etiquetas do item',
+				'item_content' => array(
+					'_' => 'Conteúdo do item',
+					'help' => 'Exemplo para pegar o item completo: <code>.</code>',
+				),
+				'item_thumbnail' => array(
+					'_' => 'Miniatura do item',
+					'help' => 'Exemplo: <code>descendant::img/@src</code>',
+				),
+				'item_timeFormat' => array(
+					'_' => 'Custom date/time format',	// TODO
+					'help' => 'Optional. A format supported by <a href="https://php.net/datetime.createfromformat" target="_blank"><code>DateTime::createFromFormat()</code></a> such as <code>d-m-Y H:i:s</code>',	// TODO
+				),
+				'item_timestamp' => array(
+					'_' => 'Data do Item',
+					'help' => 'O resultado será parecido com: <a href="https://php.net/strtotime" target="_blank"><code>strtotime()</code></a>',
+				),
+				'item_title' => array(
+					'_' => 'Titulo do Item',
+					'help' => 'Utilize especialmente <a href="https://developer.mozilla.org/docs/Web/XPath/Axes" target="_blank">XPath axis</a> <code>descendant::</code> like <code>descendant::h2</code>',
+				),
+				'item_uid' => array(
+					'_' => 'ID único do item',
+					'help' => 'Opcional. Exemplo: <code>descendant::div/@data-uri</code>',
+				),
+				'item_uri' => array(
+					'_' => 'Link do item (URL)',
+					'help' => 'Exemplo: <code>descendant::a/@href</code>',
+				),
+				'relative' => 'XPath (relativo do item) para:',
+				'xpath' => 'XPath para:',
+			),
+			'rss' => 'RSS / Atom (padrão)',
+			'xml_xpath' => 'XML + XPath',	// TODO
+		),
 		'maintenance' => array(
 			'clear_cache' => 'Limpar o cache',
 			'clear_cache_help' => 'Limpar o cache em disco deste feed',
 			'reload_articles' => 'Recarregar artigos',
-			'reload_articles_help' => 'Recarregar artigos e buscar conteúdo completo',
+			'reload_articles_help' => 'Recarregar artigos e buscar conteúdo completo',	// DIRTY
 			'title' => 'Manutenção',
 		),
+		'max_http_redir' => 'Quantidade máxima de redirecionamentos HTTP',
+		'max_http_redir_help' => 'Defina como 0 ou deixe em branco para desabilitar, -1 para redirecionamentos ilimitados',
 		'moved_category_deleted' => 'Quando você deleta uma categoria, seus feeds são automaticamente classificados como <em>%s</em>.',
 		'mute' => 'silenciar',
 		'no_selected' => 'Nenhum feed selecionado.',
@@ -128,6 +203,7 @@ return array(
 		'_' => 'Gerenciamento de inscrições',
 		'add' => 'Adicionar um feed ou categoria',
 		'add_category' => 'Adicionar uma categoria',
+		'add_dynamic_opml' => 'Adicionar OPML dinâmico',
 		'add_feed' => 'Adicionar um feed',
 		'add_label' => 'Adicionar uma etiqueta',
 		'delete_label' => 'Deletar uma etiqueta',

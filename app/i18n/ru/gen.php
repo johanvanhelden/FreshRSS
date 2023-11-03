@@ -1,25 +1,38 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'action' => array(
-		'actualize' => 'Актуализировать ленту',
+		'actualize' => 'Обновить ленту',
 		'add' => 'Добавить',
 		'back' => '← Вернуться',
 		'back_to_rss_feeds' => '← Вернуться к вашим RSS-лентам',
 		'cancel' => 'Отменить',
 		'create' => 'Создать',
+		'delete_muted_feeds' => 'Удалить заглушенные ленты',
 		'demote' => 'Понизить',
 		'disable' => 'Отключить',
-		'empty' => 'Пусто',
+		'empty' => 'Опустошить',
 		'enable' => 'Включить',
 		'export' => 'Экспортировать',
-		'filter' => 'Фильтровать',
+		'filter' => 'Отфильтровать',
 		'import' => 'Импортировать',
 		'load_default_shortcuts' => 'Загрузить горячие клавиши по умолчанию',
 		'manage' => 'Настроить',
 		'mark_read' => 'Отметить прочитанным',
+		'open_url' => 'Открыть URL',
 		'promote' => 'Продвинуть',
 		'purge' => 'Запустить очистку',
+		'refresh_opml' => 'Обновить OPML',
 		'remove' => 'Удалить',
 		'rename' => 'Переименовать',
 		'see_website' => 'Посмотреть на сайте',
@@ -52,7 +65,7 @@ return array(
 		'Aug' => '\\а\\в\\г\\у\\с\\т\\а',
 		'Dec' => '\\д\\е\\к\\а\\б\\р\\я',
 		'Feb' => '\\ф\\е\\в\\р\\а\\л\\я',
-		'Jan' => '\\я\\н\\в\\а\\р\\я\\y',
+		'Jan' => '\\я\\н\\в\\а\\р\\я',
 		'Jul' => '\\и\\ю\\л\\я',
 		'Jun' => '\\и\\ю\\н\\я',
 		'Mar' => '\\м\\а\\р\\т\\а',
@@ -69,8 +82,8 @@ return array(
 		'december' => 'декабря',
 		'feb' => 'фев',
 		'february' => 'февраля',
-		'format_date' => 'j %s Y',
-		'format_date_hour' => 'j %s Y \\в H\\:i',
+		'format_date' => 'j %s Y',	// IGNORE
+		'format_date_hour' => 'j %s Y \\в H\\:i',	// IGNORE
 		'fri' => 'Пт',
 		'jan' => 'янв',
 		'january' => 'января',
@@ -88,8 +101,8 @@ return array(
 		'last_year' => 'Последний год',
 		'mar' => 'мар',
 		'march' => 'марта',
-		'may' => 'май',
-		'may_' => 'мая',
+		'may' => 'мая',
+		'may_' => 'май',
 		'mon' => 'Пн',
 		'month' => 'месяцы',
 		'nov' => 'ноя',
@@ -106,9 +119,9 @@ return array(
 		'wed' => 'Ср',
 		'yesterday' => 'Вчера',
 	),
-	'dir' => 'ltr',
+	'dir' => 'ltr',	// IGNORE
 	'freshrss' => array(
-		'_' => 'FreshRSS',
+		'_' => 'FreshRSS',	// IGNORE
 		'about' => 'О FreshRSS',
 	),
 	'js' => array(
@@ -117,31 +130,39 @@ return array(
 		'confirm_action_feed_cat' => 'Вы уверены, что хотите выполнить это действие? Вы потеряете связанные избранные статьи и пользовательские запросы. Это нельзя отменить!',
 		'feedback' => array(
 			'body_new_articles' => '%%d новых статей в FreshRSS.',
+			'body_unread_articles' => '(Непрочитанные: %%d)',
 			'request_failed' => 'Запрос не удался. Возможно, это вызвано проблемами с подключением к Интернет.',
 			'title_new_articles' => 'FreshRSS: новые статьи!',
 		),
+		'labels_empty' => 'No labels',	// TODO
 		'new_article' => 'Появились новые статьи. Нажмите, чтобы обновить страницу.',
 		'should_be_activated' => 'JavaScript должен быть включён',
 	),
 	'lang' => array(
-		'cz' => 'Čeština',
-		'de' => 'Deutsch',
-		'en' => 'English',
-		'en-us' => 'English (United States)',
-		'es' => 'Español',
-		'fr' => 'Français',
-		'he' => 'עברית',
-		'it' => 'Italiano',
-		'ja' => '日本語',
-		'ko' => '한국어',
-		'nl' => 'Nederlands',
-		'oc' => 'Occitan',
-		'pl' => 'Polski',
-		'pt-br' => 'Português (Brasil)',
-		'ru' => 'Русский',
-		'sk' => 'Slovenčina',
-		'tr' => 'Türkçe',
-		'zh-cn' => '简体中文',
+		'cz' => 'Čeština',	// IGNORE
+		'de' => 'Deutsch',	// IGNORE
+		'el' => 'Ελληνικά',	// IGNORE
+		'en' => 'English',	// IGNORE
+		'en-us' => 'English (United States)',	// IGNORE
+		'es' => 'Español',	// IGNORE
+		'fa' => 'فارسی',	// IGNORE
+		'fr' => 'Français',	// IGNORE
+		'he' => 'עברית',	// IGNORE
+		'hu' => 'Magyar',	// IGNORE
+		'id' => 'Bahasa Indonesia',	// IGNORE
+		'it' => 'Italiano',	// IGNORE
+		'ja' => '日本語',	// IGNORE
+		'ko' => '한국어',	// IGNORE
+		'lv' => 'Latviešu',	// IGNORE
+		'nl' => 'Nederlands',	// IGNORE
+		'oc' => 'Occitan',	// IGNORE
+		'pl' => 'Polski',	// IGNORE
+		'pt-br' => 'Português (Brasil)',	// IGNORE
+		'ru' => 'Русский',	// IGNORE
+		'sk' => 'Slovenčina',	// IGNORE
+		'tr' => 'Türkçe',	// IGNORE
+		'zh-cn' => '简体中文',	// IGNORE
+		'zh-tw' => '正體中文',	// IGNORE
 	),
 	'menu' => array(
 		'about' => 'О проекте',
@@ -153,26 +174,18 @@ return array(
 		'configuration' => 'Конфигурация',
 		'display' => 'Отображение',
 		'extensions' => 'Расширения',
-		'logs' => 'Логи',
+		'logs' => 'Журнал',
 		'queries' => 'Пользовательские запросы',
 		'reading' => 'Чтение',
 		'search' => 'Искать слова или #теги',
-		'sharing' => 'Поделиться',
+		'search_help' => 'See documentation for advanced <a href="https://freshrss.github.io/FreshRSS/en/users/10_filter.html#with-the-search-field" target="_blank">search parameters</a>',	// TODO
+		'sharing' => 'Обмен',
 		'shortcuts' => 'Горячие клавиши',
 		'stats' => 'Статистика',
 		'system' => 'Системные настройки',
 		'update' => 'Обновление системы',
 		'user_management' => 'Управление пользователями',
 		'user_profile' => 'Профиль',
-	),
-	'pagination' => array(
-		'first' => 'Первая',
-		'last' => 'Последняя',
-		'load_more' => 'Загрузить больше статей',
-		'mark_all_read' => 'Отметить всё прочитанным',
-		'next' => 'Следующая',
-		'nothing_to_load' => 'Больше нет статей',
-		'previous' => 'Предыдущая',
 	),
 	'period' => array(
 		'days' => 'дней',
@@ -183,25 +196,36 @@ return array(
 	),
 	'share' => array(
 		'Known' => 'Сайты на Known',
-		'blogotext' => 'Blogotext',
+		'archiveORG' => 'archive.org',	// IGNORE
+		'archivePH' => 'archive.ph',	// IGNORE
+		'blogotext' => 'Blogotext',	// IGNORE
+		'buffer' => 'Buffer',	// IGNORE
 		'clipboard' => 'Буфер обмена',
-		'diaspora' => 'Diaspora*',
+		'diaspora' => 'Diaspora*',	// IGNORE
 		'email' => 'Электронная почта',
-		'facebook' => 'Facebook',
-		'gnusocial' => 'GNU social',
-		'jdh' => 'Journal du hacker',
-		'lemmy' => 'Lemmy',
-		'linkedin' => 'LinkedIn',
-		'mastodon' => 'Mastodon',
-		'movim' => 'Movim',
-		'pinboard' => 'Pinboard',
-		'pocket' => 'Pocket',
+		'email-webmail-firefox-fix' => 'Email (webmail - fix for Firefox)',	// TODO
+		'facebook' => 'Facebook',	// IGNORE
+		'gnusocial' => 'GNU social',	// IGNORE
+		'jdh' => 'Journal du hacker',	// IGNORE
+		'lemmy' => 'Lemmy',	// IGNORE
+		'linkding' => 'Linkding',	// IGNORE
+		'linkedin' => 'LinkedIn',	// IGNORE
+		'mastodon' => 'Mastodon',	// IGNORE
+		'movim' => 'Movim',	// IGNORE
+		'omnivore' => 'Omnivore',	// IGNORE
+		'pinboard' => 'Pinboard',	// IGNORE
+		'pinterest' => 'Pinterest',	// IGNORE
+		'pocket' => 'Pocket',	// IGNORE
 		'print' => 'Распечатать',
-		'raindrop' => 'Raindrop.io',
-		'shaarli' => 'Shaarli',
-		'twitter' => 'Twitter',
-		'wallabag' => 'wallabag v1',
-		'wallabagv2' => 'wallabag v2',
+		'raindrop' => 'Raindrop.io',	// IGNORE
+		'reddit' => 'Reddit',	// IGNORE
+		'shaarli' => 'Shaarli',	// IGNORE
+		'twitter' => 'Twitter',	// IGNORE
+		'wallabag' => 'wallabag v1',	// IGNORE
+		'wallabagv2' => 'wallabag v2',	// IGNORE
+		'web-sharing-api' => 'Системный обмен',
+		'whatsapp' => 'Whatsapp',	// IGNORE
+		'xing' => 'Xing',	// IGNORE
 	),
 	'short' => array(
 		'attention' => 'Предупреждение!',
@@ -215,5 +239,10 @@ return array(
 		'ok' => 'Отлично!',
 		'or' => 'или',
 		'yes' => 'Да',
+	),
+	'stream' => array(
+		'load_more' => 'Загрузить больше статей',
+		'mark_all_read' => 'Отметить всё прочитанным',
+		'nothing_to_load' => 'Больше нет статей',
 	),
 );

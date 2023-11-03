@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'auth' => array(
 		'allow_anonymous' => 'Permitir a leitura anónima dos artigos pelo usuário padrão (%s)',
@@ -130,18 +140,18 @@ return array(
 		'entry_per_hour' => 'Por hora (média: %.2f mensagens)',
 		'entry_per_month' => 'Por mês(média: %.2f mensagens)',
 		'entry_repartition' => 'Repartição de entradas',
-		'feed' => 'Feed',
+		'feed' => 'Feed',	// IGNORE
 		'feed_per_category' => 'Feeds por categoria',
 		'idle' => 'Feeds inativos',
 		'main' => 'Estatísticas principais',
 		'main_stream' => 'Stream principal',
 		'no_idle' => 'Não há nenhum feed inativo!',
 		'number_entries' => '%d artigos',
-		'percent_of_total' => '%% do total',
+		'percent_of_total' => '% do total',
 		'repartition' => 'Repartição de artigos',
 		'status_favorites' => 'Favoritos',
 		'status_read' => 'Lido',
-		'status_total' => 'Total',
+		'status_total' => 'Total',	// IGNORE
 		'status_unread' => 'Não lidos',
 		'title' => 'Estatísticas',
 		'top_feed' => 'Top10 feeds',
@@ -149,6 +159,10 @@ return array(
 	'system' => array(
 		'_' => 'Configuração do sistema',
 		'auto-update-url' => 'URL do servidor para atualização automática',
+		'base-url' => array(
+			'_' => 'Base URL',	// TODO
+			'recommendation' => 'Automatic recommendation: <kbd>%s</kbd>',	// TODO
+		),
 		'cookie-duration' => array(
 			'help' => 'em segundos',
 			'number' => 'Manter seção ativa durante',
@@ -158,18 +172,45 @@ return array(
 		'max-categories' => 'Limite de categorias por usuário',
 		'max-feeds' => 'Limite de Feeds por usuário',
 		'registration' => array(
-			'help' => '0 significa que não há limite para a conta',
 			'number' => 'Máximo número de contas',
+			'select' => array(
+				'label' => 'Formulário de Registro',
+				'option' => array(
+					'noform' => 'Desativado: Sem formulário de registro',
+					'nolimit' => 'Atividado: Sem limites de contas',
+					'setaccountsnumber' => 'Definir o máximo de número de contas',
+				),
+			),
+			'status' => array(
+				'disabled' => 'Formulário desabilitado',
+				'enabled' => 'Formulário habilitado',
+			),
+			'title' => 'Formulário de Cadastro de Usuário',
+		),
+		'sensitive-parameter' => 'Sensitive parameter. Edit manually in <kbd>./data/config.php</kbd>',	// TODO
+		'tos' => array(
+			'disabled' => 'is not given',	// TODO
+			'enabled' => '<a href="./?a=tos">is enabled</a>',	// TODO
+			'help' => 'How to <a href="https://freshrss.github.io/FreshRSS/en/admins/12_User_management.html#enable-terms-of-service-tos" target="_blank">enable the Terms of Service</a>',	// TODO
 		),
 	),
 	'update' => array(
 		'_' => 'Atualização do sistema',
 		'apply' => 'Aplicar',
+		'changelog' => 'Changelog',	// TODO
 		'check' => 'Buscar por novas atualizações',
-		'current_version' => 'Sua versão do FreshRSS é %s.',
-		'last' => 'Última verificação: %s',
+		'copiedFromURL' => 'update.php copied from %s to ./data',	// TODO
+		'current_version' => 'Sua versão',
+		'last' => 'Última verificação',
+		'loading' => 'Updating…',	// TODO
 		'none' => 'Nenhuma atualização para se aplicar',
+		'releaseChannel' => array(
+			'_' => 'Release channel',	// TODO
+			'edge' => 'Rolling release (“edge”)',	// TODO
+			'latest' => 'Stable release (“latest”)',	// TODO
+		),
 		'title' => 'Sistema de atualização',
+		'viaGit' => 'Update via git and Github.com started',	// TODO
 	),
 	'user' => array(
 		'admin' => 'Administrador',
@@ -179,7 +220,7 @@ return array(
 		'database_size' => 'Tamanho do banco de dados',
 		'email' => 'Endereço de email',
 		'enabled' => 'Habilitado',
-		'feed_count' => 'Feeds',
+		'feed_count' => 'Feeds',	// IGNORE
 		'is_admin' => 'É administrador',
 		'language' => 'Idioma',
 		'last_user_activity' => 'Última Atividade do Usuário',

@@ -4,8 +4,7 @@ class FreshRSS extends Minz_FrontController {
 	/**
 	 * Initialize the different FreshRSS / Minz components.
 	 *
-	 * PLEASE DON'T CHANGE THE ORDER OF INITIALIZATIONS UNLESS YOU KNOW WHAT
-	 * YOU DO!!
+	 * PLEASE DON’T CHANGE THE ORDER OF INITIALIZATIONS UNLESS YOU KNOW WHAT YOU DO!!
 	 *
 	 * Here is the list of components:
 	 * - Create a configuration setter and register it to system conf
@@ -19,32 +18,40 @@ class FreshRSS extends Minz_FrontController {
 	 * - Init notifications
 	 * - Enable user extensions (need all the other initializations)
 	 */
-	public function init() {
+	public function init(): void {
 		if (!isset($_SESSION)) {
 			Minz_Session::init('FreshRSS');
 		}
 
-		Minz_ActionController::$viewType = 'FreshRSS_View';
+		Minz_ActionController::$defaultViewType = FreshRSS_View::class;
 
 		FreshRSS_Context::initSystem();
 		if (FreshRSS_Context::$system_conf == null) {
 			$message = 'Error during context system init!';
-			Minz_Error::error(500, [$message], false);
+			Minz_Error::error(500, $message, false);
 			die($message);
+		}
+
+		if (FreshRSS_Context::$system_conf->logo_html != '') {
+			// Relax Content Security Policy to allow external images if a custom logo HTML is used
+			Minz_ActionController::_defaultCsp([
+				'default-src' => "'self'",
+				'img-src' => '* data:',
+			]);
 		}
 
 		// Load list of extensions and enable the "system" ones.
 		Minz_ExtensionManager::init();
 
 		// Auth has to be initialized before using currentUser session parameter
-		// because it's this part which create this parameter.
+		// because it’s this part which create this parameter.
 		self::initAuth();
 		if (FreshRSS_Context::$user_conf == null) {
 			FreshRSS_Context::initUser();
 		}
 		if (FreshRSS_Context::$user_conf == null) {
 			$message = 'Error during context user init!';
-			Minz_Error::error(500, [$message], false);
+			Minz_Error::error(500, $message, false);
 			die($message);
 		}
 
@@ -54,7 +61,7 @@ class FreshRSS extends Minz_FrontController {
 		// Enable extensions for the current (logged) user.
 		if (FreshRSS_Auth::hasAccess() || FreshRSS_Context::$system_conf->allow_anonymous) {
 			$ext_list = FreshRSS_Context::$user_conf->extensions_enabled;
-			Minz_ExtensionManager::enableByList($ext_list);
+			Minz_ExtensionManager::enableByList($ext_list, 'user');
 		}
 
 		if (FreshRSS_Context::$system_conf->force_email_validation && !FreshRSS_Auth::hasAccess('admin')) {
@@ -64,10 +71,10 @@ class FreshRSS extends Minz_FrontController {
 		Minz_ExtensionManager::callHook('freshrss_init');
 	}
 
-	private static function initAuth() {
+	private static function initAuth(): void {
 		FreshRSS_Auth::init();
 		if (Minz_Request::isPost()) {
-			if (!(FreshRSS_Auth::isCsrfOk() ||
+			if (FreshRSS_Context::$system_conf == null || !(FreshRSS_Auth::isCsrfOk() ||
 				(Minz_Request::controllerName() === 'auth' && Minz_Request::actionName() === 'login') ||
 				(Minz_Request::controllerName() === 'user' && Minz_Request::actionName() === 'create' && !FreshRSS_Auth::hasAccess('admin')) ||
 				(Minz_Request::controllerName() === 'feed' && Minz_Request::actionName() === 'actualize'
@@ -77,29 +84,35 @@ class FreshRSS extends Minz_FrontController {
 				)) {
 				// Token-based protection against XSRF attacks, except for the login or self-create user forms
 				self::initI18n();
-				Minz_Error::error(403, array('error' => array(
-						_t('feedback.access.denied'),
-						' [CSRF]'
-					)));
+				Minz_Error::error(403, ['error' => [_t('feedback.access.denied'), ' [CSRF]']]);
 			}
 		}
 	}
 
-	private static function initI18n() {
+	private static function initI18n(): void {
 		$userLanguage = isset(FreshRSS_Context::$user_conf) ? FreshRSS_Context::$user_conf->language : null;
 		$systemLanguage = isset(FreshRSS_Context::$system_conf) ? FreshRSS_Context::$system_conf->language : null;
 		$language = Minz_Translate::getLanguage($userLanguage, Minz_Request::getPreferredLanguages(), $systemLanguage);
 
 		Minz_Session::_param('language', $language);
 		Minz_Translate::init($language);
+
+		$timezone = isset(FreshRSS_Context::$user_conf) ? FreshRSS_Context::$user_conf->timezone : '';
+		if ($timezone == '') {
+			$timezone = FreshRSS_Context::defaultTimeZone();
+		}
+		date_default_timezone_set($timezone);
 	}
 
-	private static function getThemeFileUrl($theme_id, $filename) {
+	private static function getThemeFileUrl(string $theme_id, string $filename): string {
 		$filetime = @filemtime(PUBLIC_PATH . '/themes/' . $theme_id . '/' . $filename);
 		return '/themes/' . $theme_id . '/' . $filename . '?' . $filetime;
 	}
 
-	public static function loadStylesAndScripts() {
+	public static function loadStylesAndScripts(): void {
+		if (FreshRSS_Context::$user_conf == null) {
+			return;
+		}
 		$theme = FreshRSS_Themes::load(FreshRSS_Context::$user_conf->theme);
 		if ($theme) {
 			foreach(array_reverse($theme['files']) as $file) {
@@ -125,6 +138,10 @@ class FreshRSS extends Minz_FrontController {
 						FreshRSS_View::prependStyle(Minz_Url::display(FreshRSS::getThemeFileUrl($theme_id, $filename)));
 				}
 			}
+
+			if (!empty($theme['theme-color'])) {
+				FreshRSS_View::appendThemeColors($theme['theme-color']);
+			}
 		}
 		//Use prepend to insert before extensions. Added in reverse order.
 		if (Minz_Request::controllerName() !== 'index') {
@@ -133,22 +150,23 @@ class FreshRSS extends Minz_FrontController {
 		FreshRSS_View::prependScript(Minz_Url::display('/scripts/main.js?' . @filemtime(PUBLIC_PATH . '/scripts/main.js')));
 	}
 
-	private static function loadNotifications() {
+	private static function loadNotifications(): void {
 		$notif = Minz_Request::getNotification();
-		if ($notif) {
+		if (!empty($notif)) {
 			FreshRSS_View::_param('notification', $notif);
 		}
 	}
 
-	public static function preLayout() {
+	public static function preLayout(): void {
 		header("X-Content-Type-Options: nosniff");
 
 		FreshRSS_Share::load(join_path(APP_PATH, 'shares.php'));
 		self::loadStylesAndScripts();
 	}
 
-	private static function checkEmailValidated() {
-		$email_not_verified = FreshRSS_Auth::hasAccess() && FreshRSS_Context::$user_conf->email_validation_token !== '';
+	private static function checkEmailValidated(): void {
+		$email_not_verified = FreshRSS_Auth::hasAccess() &&
+			FreshRSS_Context::$user_conf !== null && FreshRSS_Context::$user_conf->email_validation_token !== '';
 		$action_is_allowed = (
 			Minz_Request::is('user', 'validateEmail') ||
 			Minz_Request::is('user', 'sendValidationEmail') ||
@@ -159,10 +177,10 @@ class FreshRSS extends Minz_FrontController {
 			Minz_Request::is('javascript', 'nonce')
 		);
 		if ($email_not_verified && !$action_is_allowed) {
-			Minz_Request::forward(array(
+			Minz_Request::forward([
 				'c' => 'user',
 				'a' => 'validateEmail',
-			), true);
+			], true);
 		}
 	}
 }

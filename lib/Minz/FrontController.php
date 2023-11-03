@@ -19,10 +19,13 @@
 # ***** END LICENSE BLOCK *****
 
 /**
- * La classe FrontController est le Dispatcher du framework, elle lance l'application
- * Elle est appelée en général dans le fichier index.php à la racine du serveur
+ * The Minz_FrontController class is the framework Dispatcher.
+ * It runs the application.
+ * It is generally invoqued by an index.php file at the root.
  */
 class Minz_FrontController {
+
+	/** @var Minz_Dispatcher */
 	protected $dispatcher;
 
 	/**
@@ -35,78 +38,58 @@ class Minz_FrontController {
 
 			Minz_Request::init();
 
-			$url = $this->buildUrl();
-			$url['params'] = array_merge (
-				$url['params'],
+			$url = Minz_Url::build();
+			$url['params'] = array_merge(
+				empty($url['params']) || !is_array($url['params']) ? [] : $url['params'],
 				$_POST
 			);
-			Minz_Request::forward ($url);
+			Minz_Request::forward($url);
 		} catch (Minz_Exception $e) {
 			Minz_Log::error($e->getMessage());
-			$this->killApp ($e->getMessage());
+			self::killApp($e->getMessage());
 		}
 
 		$this->dispatcher = Minz_Dispatcher::getInstance();
 	}
 
 	/**
-	 * Retourne un tableau représentant l'url passée par la barre d'adresses
-	 * @return array représentant l'url
-	 */
-	private function buildUrl() {
-		$url = array();
-
-		$url['c'] = $_GET['c'] ?? Minz_Request::defaultControllerName();
-		$url['a'] = $_GET['a'] ?? Minz_Request::defaultActionName();
-		$url['params'] = $_GET;
-
-		// post-traitement
-		unset($url['params']['c']);
-		unset($url['params']['a']);
-
-		return $url;
-	}
-
-	/**
 	 * Démarre l'application (lance le dispatcher et renvoie la réponse)
 	 */
-	public function run() {
+	public function run(): void {
 		try {
 			$this->dispatcher->run();
 		} catch (Minz_Exception $e) {
 			try {
 				Minz_Log::error($e->getMessage());
 			} catch (Minz_PermissionDeniedException $e) {
-				$this->killApp ($e->getMessage ());
+				self::killApp($e->getMessage());
 			}
 
 			if ($e instanceof Minz_FileNotExistException ||
 					$e instanceof Minz_ControllerNotExistException ||
 					$e instanceof Minz_ControllerNotActionControllerException ||
 					$e instanceof Minz_ActionException) {
-				Minz_Error::error (
-					404,
-					array('error' => array ($e->getMessage ())),
-					true
-				);
+				Minz_Error::error(404, ['error' => [$e->getMessage()]], true);
 			} else {
-				$this->killApp($e->getMessage());
+				self::killApp($e->getMessage());
 			}
 		}
 	}
 
 	/**
-	* Permet d'arrêter le programme en urgence
-	*/
-	private function killApp ($txt = '') {
-		if (function_exists('errorMessage')) {
+	 * Kills the programme
+	 * @return never
+	 */
+	public static function killApp(string $txt = '') {
+		header('HTTP/1.1 500 Internal Server Error', true, 500);
+		if (function_exists('errorMessageInfo')) {
 			//If the application has defined a custom error message function
-			exit(errorMessage('Application problem', $txt));
+			die(errorMessageInfo('Application problem', $txt));
 		}
-		exit('### Application problem ###<br />' . "\n" . $txt);
+		die('### Application problem ###<br />' . "\n" . $txt);
 	}
 
-	private function setReporting() {
+	private function setReporting(): void {
 		$envType = getenv('FRESHRSS_ENV');
 		if ($envType == '') {
 			$conf = Minz_Configuration::get('system');

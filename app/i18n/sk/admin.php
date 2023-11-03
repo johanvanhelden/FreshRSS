@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'auth' => array(
 		'allow_anonymous' => 'Povoliť čítanie článkov prednastaveného používateľa (%s) bez prihlásenia.',
@@ -137,7 +147,7 @@ return array(
 		'main_stream' => 'Všetky kanály',
 		'no_idle' => 'Žiadne neaktívne kanály!',
 		'number_entries' => 'Počet článkov: %d',
-		'percent_of_total' => 'Z celkového počtu: %%',
+		'percent_of_total' => 'Z celkového počtu: %',
 		'repartition' => 'Rozdelenie článkov',
 		'status_favorites' => 'Obľúbené',
 		'status_read' => 'Prečítané',
@@ -149,6 +159,10 @@ return array(
 	'system' => array(
 		'_' => 'Nastavenia systému',
 		'auto-update-url' => 'Odkaz na aktualizačný server',
+		'base-url' => array(
+			'_' => 'Base URL',	// TODO
+			'recommendation' => 'Automatic recommendation: <kbd>%s</kbd>',	// TODO
+		),
 		'cookie-duration' => array(
 			'help' => 'v sekundách',
 			'number' => 'Dobra, počas ktorej ste prihlásený',
@@ -158,18 +172,45 @@ return array(
 		'max-categories' => 'Limit počtu kategórií pre používateľa',
 		'max-feeds' => 'Limit počtu kanálov pre používateľov',
 		'registration' => array(
-			'help' => '0 znamená žiadny limit počtu účtov',
 			'number' => 'Maximálny počt účtov',
+			'select' => array(
+				'label' => 'Registračný formulár',
+				'option' => array(
+					'noform' => 'Zakázané: Žiadny registračný formulár',
+					'nolimit' => 'Povolené: Bez obmedzenia účtov',
+					'setaccountsnumber' => 'Určiť max. počet účtov',
+				),
+			),
+			'status' => array(
+				'disabled' => 'Formulár zakázaný',
+				'enabled' => 'Formulár povolený',
+			),
+			'title' => 'Registračný formulár používateľa',
+		),
+		'sensitive-parameter' => 'Sensitive parameter. Edit manually in <kbd>./data/config.php</kbd>',	// TODO
+		'tos' => array(
+			'disabled' => 'is not given',	// TODO
+			'enabled' => '<a href="./?a=tos">is enabled</a>',	// TODO
+			'help' => 'How to <a href="https://freshrss.github.io/FreshRSS/en/admins/12_User_management.html#enable-terms-of-service-tos" target="_blank">enable the Terms of Service</a>',	// TODO
 		),
 	),
 	'update' => array(
 		'_' => 'Aktualizácia systému',
 		'apply' => 'Použiť',
+		'changelog' => 'Changelog',	// TODO
 		'check' => 'Skontrolovať aktualizácie',
-		'current_version' => 'Vaša aktuálna verzia FreshRSS: %s',
-		'last' => 'Posledná kontrola: %s',
+		'copiedFromURL' => 'update.php copied from %s to ./data',	// TODO
+		'current_version' => 'Vaša aktuálna verzia',
+		'last' => 'Posledná kontrola',
+		'loading' => 'Updating…',	// TODO
 		'none' => 'Žiadna nová aktualizácia',
+		'releaseChannel' => array(
+			'_' => 'Release channel',	// TODO
+			'edge' => 'Rolling release (“edge”)',	// TODO
+			'latest' => 'Stable release (“latest”)',	// TODO
+		),
 		'title' => 'Aktualizácia systému',
+		'viaGit' => 'Update via git and Github.com started',	// TODO
 	),
 	'user' => array(
 		'admin' => 'Administrátor',

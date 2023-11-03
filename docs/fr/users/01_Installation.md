@@ -7,7 +7,7 @@ Il est toutefois de votre responsabilité de vérifier que votre hébergement pe
 | Logiciel         | Recommandé                                                                                                     | Fonctionne aussi avec          |
 | --------         | -----------                                                                                                    | ---------------------          |
 | Serveur web      | **Apache 2**                                                                                                   | Nginx                          |
-| PHP              | **PHP 7+**                                                                                                     |                                |
+| PHP              | **PHP 7.2+**                                                                                                   |                                |
 | Modules PHP      | Requis : libxml, cURL, JSON, PDO_MySQL, PCRE et ctype<br />Requis (32 bits seulement) : GMP<br />Recommandé : Zlib, mbstring et iconv, ZipArchive<br />*Pour une liste complète des modules nécessaires voir le [Dockerfile](https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/Dockerfile-Alpine#L7-L9)* |                                |
 | Base de données  | **MySQL 5.5.3+**                                                                                               | SQLite 3.7.4+, PostgreSQL 9.5+   |
 | Navigateur       | **Firefox**                                                                                                    | Chrome, Opera, Safari, or Edge   |
@@ -88,7 +88,7 @@ Comme son nom l’indique, il s’agit de la version sur laquelle les développe
 
 Voici un fichier de configuration pour nginx. Il couvre la configuration pour HTTP, HTTPS, et PHP.
 
-_Vous pourrez trouver d’autres fichiers de configuration plus simples mais ces derniers ne seront peut-être pas compatibles avec l’API FreshRSS._
+*Vous pourrez trouver d’autres fichiers de configuration plus simples mais ces derniers ne seront peut-être pas compatibles avec l’API FreshRSS.*
 
 ```nginx
 server {
@@ -119,7 +119,7 @@ server {
 		fastcgi_split_path_info ^(.+\.php)(/.*)$;
 		# Par défaut la variable PATH_INFO n’est pas définie sous PHP-FPM
 		# or l’API FreshRSS greader.php en a besoin. Si vous avez un “Bad Request”, vérifiez bien cette dernière !
-		# REMARQUE : l'utilisation de la variable $path_info est requis. Pour plus de détails, voir :
+		# REMARQUE : l’utilisation de la variable $path_info est requis. Pour plus de détails, voir :
 		# https://trac.nginx.org/nginx/ticket/321
 		set $path_info $fastcgi_path_info;
 		fastcgi_param PATH_INFO $path_info;

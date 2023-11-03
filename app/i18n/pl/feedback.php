@@ -1,5 +1,15 @@
 <?php
 
+/******************************************************************************/
+/* Each entry of that file can be associated with a comment to indicate its   */
+/* state. When there is no comment, it means the entry is fully translated.   */
+/* The recognized comments are (comment matching is case-insensitive):        */
+/*   + TODO: the entry has never been translated.                             */
+/*   + DIRTY: the entry has been translated but needs to be updated.          */
+/*   + IGNORE: the entry does not need to be translated.                      */
+/* When a comment is not recognized, it is discarded.                         */
+/******************************************************************************/
+
 return array(
 	'access' => array(
 		'denied' => 'Nie masz uprawnień dostępu do tej strony',
@@ -25,7 +35,7 @@ return array(
 	),
 	'conf' => array(
 		'error' => 'Podczas zapisywania konfiguracji wystąpił błąd',
-		'query_created' => 'Zapytanie "%s" zostało utworzone.',
+		'query_created' => 'Zapytanie “%s” zostało utworzone.',
 		'shortcuts_updated' => 'Skróty zostały zaktualizowane',
 		'updated' => 'Ustawienia zostały zaktualizowane',
 	),
@@ -47,11 +57,11 @@ return array(
 	),
 	'import_export' => array(
 		'export_no_zip_extension' => 'Rozszerzenie ZIP nie jest dostępne na serwerze. Spróbuj eksportować pliki pojedynczo.',
-		'feeds_imported' => 'Kanały zostały zaimportowane i zostaną teraz zaktualizowane',
-		'feeds_imported_with_errors' => 'Kanały zostały zaimportowane, jednakże wystąpiło kilka błędów',
+		'feeds_imported' => 'Kanały zostały zaimportowane i zostaną teraz zaktualizowane / Your feeds have been imported. If you are done importing, you can now click the <i>Update feeds</i> button.',	// DIRTY
+		'feeds_imported_with_errors' => 'Kanały zostały zaimportowane, jednakże wystąpiło kilka błędów / Your feeds have been imported, but some errors occurred. If you are done importing, you can now click the <i>Update feeds</i> button.',	// DIRTY
 		'file_cannot_be_uploaded' => 'Plik nie może zostać wgrany!',
 		'no_zip_extension' => 'Rozszerzenie ZIP nie jest dostępne na serwerze.',
-		'zip_error' => 'Wystąpił błąd podczas importu pliku ZIP.',
+		'zip_error' => 'Wystąpił błąd podczas importu pliku ZIP.',	// DIRTY
 	),
 	'profile' => array(
 		'error' => 'Nie można modyfikować profilu',
@@ -88,7 +98,7 @@ return array(
 			'invalid_url' => 'Adres URL <em>%s</em> nie jest prawidłowy',
 			'n_actualized' => 'Liczba zaktualizowanych kanałów: %d',
 			'n_entries_deleted' => 'Liczba usuniętych wiadomości: %d',
-			'no_refresh' => 'Brak kanałó do odświeżenia',
+			'no_refresh' => 'Brak kanałów do odświeżenia',
 			'not_added' => 'Kanał <em>%s</em> nie mógł zostać dodany',
 			'not_found' => 'Kanał nie może zostać znaleziony',
 			'over_max' => 'Osiągnięto ustawiony limit kanałów (%d)',
@@ -105,9 +115,9 @@ return array(
 		'purge_completed' => 'Oczyszczanie ukończone (liczba skasowanych wiadomości: %d)',
 	),
 	'tag' => array(
-		'created' => 'Etykieta "%s" została stworzona.',
+		'created' => 'Etykieta “%s” została stworzona.',
 		'name_exists' => 'Etykieta o podanej nazwie już istnieje.',
-		'renamed' => 'Etykieta "%s" została zmieniona na "%s".',
+		'renamed' => 'Etykieta “%s” została zmieniona na “%s”.',
 	),
 	'update' => array(
 		'can_apply' => 'FreshRSS zostanie zaktualizowany do <strong>wersji %s</strong>.',

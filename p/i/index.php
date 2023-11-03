@@ -33,10 +33,10 @@ if (!file_exists($applied_migrations_path)) {
 
 	if (!file_exists(DATA_PATH . '/no-cache.txt')) {
 		require(LIB_PATH . '/http-conditional.php');
-		$currentUser = Minz_Session::param('currentUser', '');
-		$dateLastModification = $currentUser === '' ? time() : max(
-			@filemtime(join_path(USERS_PATH, $currentUser, 'log.txt')),
-			@filemtime(join_path(DATA_PATH, 'config.php'))
+		$currentUser = Minz_User::name();
+		$dateLastModification = $currentUser === null ? time() : max(
+			@filemtime(USERS_PATH . '/' . $currentUser . '/' . LOG_FILENAME) ?: 0,
+			@filemtime(DATA_PATH . '/config.php') ?: 0
 		);
 		if (httpConditional($dateLastModification, 0, 0, false, PHP_COMPRESSION, true)) {
 			Minz_Session::init('FreshRSS');
@@ -62,9 +62,8 @@ if (!file_exists($applied_migrations_path)) {
 		$error = $e->getMessage();
 	}
 
-	if ($error) {
+	if ($error !== false) {
 		syslog(LOG_INFO, 'FreshRSS Fatal error! ' . $error);
-		Minz_Log::error($error);
-		die(errorMessage('Fatal error', $error));
+		FreshRSS::killApp($error);
 	}
 }

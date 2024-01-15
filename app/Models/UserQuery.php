@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Contains the description of a user query
@@ -8,30 +9,18 @@
  */
 class FreshRSS_UserQuery {
 
-	/** @var bool */
-	private $deprecated = false;
-	/** @var string */
-	private $get = '';
-	/** @var string */
-	private $get_name = '';
-	/** @var string */
-	private $get_type = '';
-	/** @var string */
-	private $name = '';
-	/** @var string */
-	private $order = '';
-	/** @var FreshRSS_BooleanSearch */
-	private $search;
-	/** @var int */
-	private $state = 0;
-	/** @var string */
-	private $url = '';
-	/** @var FreshRSS_FeedDAO|null */
-	private $feed_dao;
-	/** @var FreshRSS_CategoryDAO|null */
-	private $category_dao;
-	/** @var FreshRSS_TagDAO|null */
-	private $tag_dao;
+	private bool $deprecated = false;
+	private string $get = '';
+	private string $get_name = '';
+	private string $get_type = '';
+	private string $name = '';
+	private string $order = '';
+	private FreshRSS_BooleanSearch $search;
+	private int $state = 0;
+	private string $url = '';
+	private ?FreshRSS_FeedDAO $feed_dao;
+	private ?FreshRSS_CategoryDAO $category_dao;
+	private ?FreshRSS_TagDAO $tag_dao;
 
 	/**
 	 * @param array{'get'?:string,'name'?:string,'order'?:string,'search'?:string,'state'?:int,'url'?:string} $query
@@ -120,8 +109,6 @@ class FreshRSS_UserQuery {
 
 	/**
 	 * Parse the query string when it is a "category" query
-	 *
-	 * @throws FreshRSS_DAO_Exception
 	 */
 	private function parseCategory(int $id): void {
 		if ($this->category_dao === null) {
@@ -138,8 +125,6 @@ class FreshRSS_UserQuery {
 
 	/**
 	 * Parse the query string when it is a "feed" query
-	 *
-	 * @throws FreshRSS_DAO_Exception
 	 */
 	private function parseFeed(int $id): void {
 		if ($this->feed_dao === null) {
@@ -156,8 +141,6 @@ class FreshRSS_UserQuery {
 
 	/**
 	 * Parse the query string when it is a "tag" query
-	 *
-	 * @throws FreshRSS_DAO_Exception
 	 */
 	private function parseTag(int $id): void {
 		if ($this->tag_dao === null) {

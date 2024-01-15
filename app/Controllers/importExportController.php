@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Controller to handle every import and export actions.
  */
 class FreshRSS_importExport_Controller extends FreshRSS_ActionController {
 
-	/** @var FreshRSS_EntryDAO */
-	private $entryDAO;
+	private FreshRSS_EntryDAO $entryDAO;
 
-	/** @var FreshRSS_FeedDAO */
-	private $feedDAO;
+	private FreshRSS_FeedDAO $feedDAO;
 
 	/**
 	 * This action is called before every other action in that class. It is
@@ -290,7 +289,7 @@ class FreshRSS_importExport_Controller extends FreshRSS_ActionController {
 	 */
 	private function importJson(string $article_file, bool $starred = false): bool {
 		$article_object = json_decode($article_file, true);
-		if ($article_object == null) {
+		if (!is_array($article_object)) {
 			if (FreshRSS_Context::$isCli) {
 				fwrite(STDERR, 'FreshRSS error trying to import a non-JSON file' . "\n");
 			} else {
@@ -300,14 +299,14 @@ class FreshRSS_importExport_Controller extends FreshRSS_ActionController {
 		}
 		$items = $article_object['items'] ?? $article_object;
 
-		$mark_as_read = FreshRSS_Context::$user_conf->mark_when['reception'] ? 1 : 0;
+		$mark_as_read = FreshRSS_Context::userConf()->mark_when['reception'] ? 1 : 0;
 
 		$error = false;
 		$article_to_feed = [];
 
 		$nb_feeds = count($this->feedDAO->listFeeds());
 		$newFeedGuids = [];
-		$limits = FreshRSS_Context::$system_conf->limits;
+		$limits = FreshRSS_Context::systemConf()->limits;
 
 		// First, we check feeds of articles are in DB (and add them if needed).
 		foreach ($items as &$item) {
@@ -602,7 +601,7 @@ class FreshRSS_importExport_Controller extends FreshRSS_ActionController {
 			return;
 		}
 
-		$username = Minz_User::name();
+		$username = Minz_User::name() ?? '_';
 		$export_service = new FreshRSS_Export_Service($username);
 
 		$export_opml = Minz_Request::paramBoolean('export_opml');

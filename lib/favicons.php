@@ -38,6 +38,7 @@ function downloadHttp(string &$url, array $curlOptions = []): string {
 			CURLOPT_MAXREDIRS => 10,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_ENCODING => '',	//Enable all encodings
+			//CURLOPT_VERBOSE => 1,	// To debug sent HTTP headers
 		]);
 
 	FreshRSS_Context::initSystem();
@@ -92,7 +93,7 @@ function searchFavicon(string &$url): string {
 
 		// Handle protocol-relative URLs by adding the current URL's scheme
 		if (substr($href, 0, 2) === '//') {
-			$href = ($urlParts['scheme'] ?? 'https') . '://' . $href;
+			$href = ($urlParts['scheme'] ?? 'https') . ':' . $href;
 		}
 
 		$href = SimplePie_IRI::absolutize($baseUrl, $href);

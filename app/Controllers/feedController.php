@@ -10,6 +10,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 	 * the common boiler plate for every action. It is triggered by the
 	 * underlying framework.
 	 */
+	#[\Override]
 	public function firstAction(): void {
 		if (!FreshRSS_Auth::hasAccess()) {
 			// Token is useful in the case that anonymous refresh is forbidden
@@ -258,7 +259,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 				if (!empty($xPathSettings)) {
 					$attributes['xpath'] = $xPathSettings;
 				}
-			} elseif ($feed_kind === FreshRSS_Feed::KIND_JSON_DOTPATH) {
+			} elseif ($feed_kind === FreshRSS_Feed::KIND_JSON_DOTNOTATION) {
 				$jsonSettings = [];
 				if (Minz_Request::paramString('jsonFeedTitle') !== '') {
 					$jsonSettings['feedTitle'] = Minz_Request::paramString('jsonFeedTitle', true);
@@ -294,7 +295,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 					$jsonSettings['itemUid'] = Minz_Request::paramString('jsonItemUid', true);
 				}
 				if (!empty($jsonSettings)) {
-					$attributes['json_dotpath'] = $jsonSettings;
+					$attributes['json_dotnotation'] = $jsonSettings;
 				}
 			}
 
@@ -454,8 +455,8 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 				continue;	//When PubSubHubbub is used, do not pull refresh so often
 			}
 
-			if ($feed->mute()) {
-				continue;	//Feed refresh is disabled
+			if ($feed->mute() && $feed_id === null) {
+				continue;	// If the feed is disabled, only allow refresh if manually requested for that specific feed
 			}
 			$mtime = $feed->cacheModifiedTime() ?: 0;
 			$ttl = $feed->ttl();
@@ -496,10 +497,10 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 					if ($simplePie === null) {
 						throw new FreshRSS_Feed_Exception('XML+XPath parsing failed for [' . $feed->url(false) . ']');
 					}
-				} elseif ($feed->kind() === FreshRSS_Feed::KIND_JSON_DOTPATH) {
+				} elseif ($feed->kind() === FreshRSS_Feed::KIND_JSON_DOTNOTATION) {
 					$simplePie = $feed->loadJson();
 					if ($simplePie === null) {
-						throw new FreshRSS_Feed_Exception('JSON dotpath parsing failed for [' . $feed->url(false) . ']');
+						throw new FreshRSS_Feed_Exception('JSON dot notation parsing failed for [' . $feed->url(false) . ']');
 					}
 				} elseif ($feed->kind() === FreshRSS_Feed::KIND_JSONFEED) {
 					$simplePie = $feed->loadJson();
@@ -572,6 +573,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 						$existingHash = $existingHashForGuids[$entry->guid()];
 						if (strcasecmp($existingHash, $entry->hash()) !== 0) {
 							//This entry already exists but has been updated
+							$entry->_isUpdated(true);
 							//Minz_Log::debug('Entry with GUID `' . $entry->guid() . '` updated in feed ' . $feed->url(false) .
 								//', old hash ' . $existingHash . ', new hash ' . $entry->hash());
 							$entry->_isFavorite(null);	// Do not change favourite state
@@ -584,6 +586,11 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 							if (!($entry instanceof FreshRSS_Entry)) {
 								// An extension has returned a null value, there is nothing to insert.
 								continue;
+							}
+
+							$entry->applyFilterActions($titlesAsRead);
+							if ($readWhenSameTitleInFeed > 0) {
+								$titlesAsRead[$entry->title()] = true;
 							}
 
 							if (!$entry->isRead()) {
@@ -600,17 +607,19 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 							$entryDAO->updateEntry($entry->toArray());
 						}
 					} else {
+						$entry->_isUpdated(false);
 						$id = uTimeString();
 						$entry->_id($id);
-						$entry->applyFilterActions($titlesAsRead);
-						if ($readWhenSameTitleInFeed > 0) {
-							$titlesAsRead[$entry->title()] = true;
-						}
 
 						$entry = Minz_ExtensionManager::callHook('entry_before_insert', $entry);
 						if (!($entry instanceof FreshRSS_Entry)) {
 							// An extension has returned a null value, there is nothing to insert.
 							continue;
+						}
+
+						$entry->applyFilterActions($titlesAsRead);
+						if ($readWhenSameTitleInFeed > 0) {
+							$titlesAsRead[$entry->title()] = true;
 						}
 
 						if ($pubSubHubbubEnabled && !$simplePiePush) {	//We use push, but have discovered an article by pull!
@@ -741,11 +750,12 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 	}
 
 	/**
-	 * @param array<int,int> $newUnreadEntriesPerFeed
 	 * @return int|false The number of articles marked as read, of false if error
 	 */
-	private static function keepMaxUnreads(array $newUnreadEntriesPerFeed) {
+	private static function keepMaxUnreads() {
 		$affected = 0;
+		$entryDAO = FreshRSS_Factory::createEntryDao();
+		$newUnreadEntriesPerFeed = $entryDAO->newUnreadEntriesPerFeed();
 		$feedDAO = FreshRSS_Factory::createFeedDao();
 		$feeds = $feedDAO->listFeedsOrderUpdate(-1);
 		foreach ($feeds as $feed) {
@@ -775,7 +785,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 	 */
 	private static function applyLabelActions(int $nbNewEntries) {
 		$tagDAO = FreshRSS_Factory::createTagDao();
-		$labels = $tagDAO->listTags() ?: [];
+		$labels = FreshRSS_Context::labels();
 		$labels = array_filter($labels, static function (FreshRSS_Tag $label) {
 			return !empty($label->filtersAction('label'));
 		});
@@ -800,26 +810,23 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 		return $tagDAO->tagEntries($applyLabels);
 	}
 
-	public static function commitNewEntries(): bool {
+	public static function commitNewEntries(): void {
 		$entryDAO = FreshRSS_Factory::createEntryDao();
-		$newUnreadEntriesPerFeed = $entryDAO->newUnreadEntriesPerFeed();
-		$nbNewEntries = array_sum($newUnreadEntriesPerFeed);
+		['all' => $nbNewEntries, 'unread' => $nbNewUnreadEntries] = $entryDAO->countNewEntries();
 		if ($nbNewEntries > 0) {
 			if (!$entryDAO->inTransaction()) {
 				$entryDAO->beginTransaction();
 			}
 			if ($entryDAO->commitNewEntries()) {
-				self::keepMaxUnreads($newUnreadEntriesPerFeed);
 				self::applyLabelActions($nbNewEntries);
+				if ($nbNewUnreadEntries > 0) {
+					self::keepMaxUnreads();
+				}
 			}
 			if ($entryDAO->inTransaction()) {
 				$entryDAO->commit();
 			}
 		}
-
-		$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
-		$databaseDAO->minorDbMaintenance();
-		return true;
 	}
 
 	/**
@@ -845,6 +852,12 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 			self::commitNewEntries();
 		} else {
 			if ($id === 0 && $url === '') {
+				// Case of a batch refresh (e.g. cron)
+				$databaseDAO = FreshRSS_Factory::createDatabaseDAO();
+				$databaseDAO->minorDbMaintenance();
+				Minz_ExtensionManager::callHookVoid('freshrss_user_maintenance');
+
+				FreshRSS_feed_Controller::commitNewEntries();
 				FreshRSS_category_Controller::refreshDynamicOpmls();
 			}
 			[$updated_feeds, $feed, $nbNewArticles] = self::actualizeFeeds($id, $url, $maxFeeds);
@@ -1108,7 +1121,7 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 		$feed_id = Minz_Request::paramInt('id');
 		$content_selector = Minz_Request::paramString('selector');
 
-		if (!$content_selector) {
+		if ($content_selector === '') {
 			$this->view->fatalError = _t('feedback.sub.feed.selector_preview.selector_empty');
 			return;
 		}
@@ -1130,22 +1143,16 @@ class FreshRSS_feed_Controller extends FreshRSS_ActionController {
 
 		//Get feed.
 		$feed = $entry->feed();
-
 		if ($feed === null) {
 			$this->view->fatalError = _t('feedback.sub.feed.selector_preview.no_feed');
 			return;
 		}
-
-		$attributes = $feed->attributes();
-		$attributes['path_entries_filter'] = Minz_Request::paramString('selector_filter', true);
+		$feed->_pathEntries($content_selector);
+		$feed->_attribute('path_entries_filter', Minz_Request::paramString('selector_filter', true));
 
 		//Fetch & select content.
 		try {
-			$fullContent = FreshRSS_Entry::getContentByParsing(
-				htmlspecialchars_decode($entry->link(), ENT_QUOTES),
-				htmlspecialchars_decode($content_selector, ENT_QUOTES),
-				$attributes
-			);
+			$fullContent = $entry->getContentByParsing();
 
 			if ($fullContent != '') {
 				$this->view->selectorSuccess = true;

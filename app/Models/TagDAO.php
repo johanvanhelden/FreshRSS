@@ -184,16 +184,16 @@ SQL;
 	public function searchById(int $id): ?FreshRSS_Tag {
 		$res = $this->fetchAssoc('SELECT * FROM `_tag` WHERE id=:id', [':id' => $id]);
 		/** @var array<array{'id':int,'name':string,'attributes'?:string}>|null $res */
-		return $res === null ? null : self::daoToTag($res)[0] ?? null;
+		return $res === null ? null : (current(self::daoToTags($res)) ?: null);
 	}
 
 	public function searchByName(string $name): ?FreshRSS_Tag {
 		$res = $this->fetchAssoc('SELECT * FROM `_tag` WHERE name=:name', [':name' => $name]);
 		/** @var array<array{'id':int,'name':string,'attributes'?:string}>|null $res */
-		return $res === null ? null : self::daoToTag($res)[0] ?? null;
+		return $res === null ? null : (current(self::daoToTags($res)) ?: null);
 	}
 
-	/** @return array<FreshRSS_Tag>|false */
+	/** @return array<int,FreshRSS_Tag>|false */
 	public function listTags(bool $precounts = false) {
 		if ($precounts) {
 			$sql = <<<'SQL'
@@ -211,7 +211,7 @@ SQL;
 		$stm = $this->pdo->query($sql);
 		if ($stm !== false) {
 			$res = $stm->fetchAll(PDO::FETCH_ASSOC) ?: [];
-			return self::daoToTag($res);
+			return self::daoToTags($res);
 		} else {
 			$info = $this->pdo->errorInfo();
 			Minz_Log::error('SQL error ' . __METHOD__ . json_encode($info));
@@ -383,6 +383,7 @@ SQL;
 			}
 			$sql .= ' AND et.id_entry IN (' . str_repeat('?,', count($entries) - 1). '?)';
 			if (is_array($entries[0])) {
+				/** @var array<array<string,string>> $entries */
 				foreach ($entries as $entry) {
 					if (!empty($entry['id'])) {
 						$values[] = $entry['id'];
@@ -394,6 +395,7 @@ SQL;
 					$values[] = $entry->id();
 				}
 			} else {
+				/** @var array<numeric-string> $entries */
 				foreach ($entries as $entry) {
 					$values[] = $entry;
 				}
@@ -430,9 +432,9 @@ SQL;
 
 	/**
 	 * @param iterable<array{'id':int,'name':string,'attributes'?:string}> $listDAO
-	 * @return array<FreshRSS_Tag>
+	 * @return array<int,FreshRSS_Tag>
 	 */
-	private static function daoToTag(iterable $listDAO): array {
+	private static function daoToTags(iterable $listDAO): array {
 		$list = [];
 		foreach ($listDAO as $dao) {
 			if (empty($dao['id']) || empty($dao['name'])) {
@@ -446,7 +448,7 @@ SQL;
 			if (isset($dao['unreads'])) {
 				$tag->_nbUnread($dao['unreads']);
 			}
-			$list[] = $tag;
+			$list[$tag->id()] = $tag;
 		}
 		return $list;
 	}
